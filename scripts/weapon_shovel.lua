@@ -1,0 +1,76 @@
+--Shovel that spawns and pushes a rock
+weap_brute_shovel = Skill:new{
+    Name = "Mining Shovel",
+    Description = "Charge and place a rock, or charge into an enemy, damaging and pushing it.",
+    Damage = 1,
+    PowerCost = 1,
+    Class = "Brute",
+    Icon = "weapons/weapon2.png",
+	LaunchSound = "/weapons/charge",
+    TipImage = {
+        Unit = Point(2, 4),
+        Enemy = Point(2, 1),
+        Target = Point(2, 1)
+    }
+}
+
+-- Spawn a rock without a preview
+local function HiddenRock(effect, p)
+	-- spawn rock via script so the preview doesn't know about it
+	effect:AddScript([[
+		local effect = SkillEffect()
+        local damage = SpaceDamage(Point(]].. p.x ..",".. p.y ..[[), 0)
+        damage.sPawn = "Wall"
+        effect:AddDamage(damage)
+		Board:AddEffect(effect)
+	]])
+end
+
+-- Skill Effect that creates and charges self and a rock
+function weap_brute_shovel:GetSkillEffect(p1,p2)
+    local ret = SkillEffect()
+    local targeting = Board:IsBlocked(p2, PATH_FLYER)   --If we are targeting something, a non-empty tile
+    local direction = GetDirection(p2 - p1)             --The direction we are travelling in
+    local useMelee = p1:Manhattan(p2) == 1
+
+    local bruteFinal = p2 - DIR_VECTORS[direction]      --The landing location of this mech
+    local spawnStart = p1 + DIR_VECTORS[direction]      --The starting location of the rock
+
+    if not targeting then 
+        HiddenRock(ret, spawnStart)                     --Spawn a rock without previewing it
+        ret:AddDelay(0.05)                              --Timing is off without this delay
+    end
+
+    if not useMelee then
+        ret:AddCharge(Board:GetSimplePath(p1, bruteFinal), NO_DELAY)    --Shovel charge
+    end
+
+    if not targeting then
+        ret:AddCharge(Board:GetSimplePath(spawnStart, p2), NO_DELAY)    --Rock charge
+    end
+
+    local temp = p1                             --Add bounce effects like charge mech
+    while temp ~= p2  do
+        ret:AddBounce(temp, 2)
+        temp = temp + DIR_VECTORS[direction]
+        if temp ~= p2 then
+            ret:AddDelay(0.06)
+        end
+    end
+    
+    local damage = SpaceDamage(p2, 0)
+    if targeting then                           --Damage vek if targeting
+        damage.iPush = direction                --Damage
+        damage.iDamage = self.Damage            --Damage
+    else                                        --Indicate rock spawn if not targeting
+        damage.sImageMark = "units/aliens/rock_1.png"
+    end
+
+    if useMelee then                            --Show melee effect if in melee range
+        ret:AddMelee(p1, damage)                --Melee damage
+    else
+        ret:AddDamage(damage)                   --Charge damage
+    end
+
+    return ret
+end
