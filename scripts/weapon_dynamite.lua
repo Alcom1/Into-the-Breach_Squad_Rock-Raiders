@@ -1,14 +1,11 @@
 --Science weapon that deploys a dynamite spawn.
-weap_science_deploy_dynamite = Deployable:new{
+weap_science_deploy_dynamite = weapon_base_transporter:new{
     Name = "Dynamite Charge",
     Class = "Science",
     Description = "Teleport in an explosive that detonates when triggered or destroyed, pushing adjacent tiles.",
     Icon = "weapons/weapon3.png",
     Deployed = "pawn_spawn_dynamite",
-    Projectile = "effects/shotup_tank.png",
     PowerCost = 1,
-    LaunchSound = "/weapons/deploy_tank",
-    ImpactSound = "/impact/generic/mech",
     Limited = 2,
     TipImage = {
         Unit = Point(2,4),

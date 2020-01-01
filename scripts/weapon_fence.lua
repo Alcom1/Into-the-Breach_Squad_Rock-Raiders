@@ -1,14 +1,11 @@
 --Science weapon that deploys a fence spawn.
-weap_science_deploy_fence = Deployable:new{
+weap_science_deploy_fence = weapon_base_transporter:new{
     Name = "Electric Fence",
     Class = "Science",
     Description = "Teleport in a stationary Electric fence that deals chain damage through adjacent units.",
     Icon = "weapons/weapon3.png",
     Deployed = "pawn_spawn_fence",
-    Projectile = "effects/shotup_tank.png",
     PowerCost = 1,
-    LaunchSound = "/weapons/deploy_tank",
-    ImpactSound = "/impact/generic/mech",
     Limited = 2,
     TipImage = {
         Unit = Point(2,4),
@@ -25,6 +22,7 @@ weap_science_deploy_fence = Deployable:new{
 weap_spawn_lightning = Skill:new{
     LaunchSound = "/weapons/electric_whip",
     Icon = "weapons/prime_lightning.png",
+	PathSize = 1,
     Damage = 1
 }
 

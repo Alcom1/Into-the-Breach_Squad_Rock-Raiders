@@ -4,7 +4,6 @@ weap_prime_drill = Skill:new{
     Description = "Charge and drill through tiles, pulling and damaging each one.",
     Class = "Prime",
     Icon = "weapons/weapon1.png",
-    Rarity = 2,
     Damage = 1,
     PowerCost = 1,
     Upgrades = 2,
