@@ -29,6 +29,9 @@ weap_spawn_lightning = Skill:new{
 --Skill Effect for lightning attack
 function weap_spawn_lightning:GetSkillEffect(p1, p2)
     local ret = SkillEffect()
+
+    if not Board:IsPawnSpace(p2) then return ret end                        -- Don't attack empty spaces
+
     local hash = function(point) return point.x + point.y * 8 end           -- Hash Point into an int for indexing
     local past = { [hash(p1)] = true }                                      -- We're not Pichu
 
