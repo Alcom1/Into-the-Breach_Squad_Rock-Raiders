@@ -61,7 +61,7 @@ function mod:init()
             ResourcePath = "units/player",
 
             Default =           { PosX = -21, PosY = -17 },
-            Animated =          { PosX = -21, PosY = -17, NumFrames = 1},
+            Animated =          { PosX = -21, PosY = -17, NumFrames = 16, Time = 0.15},
             Broken =            { PosX = -21, PosY = -17 },
             Submerged =         { PosX = -21, PosY = -17 },
             SubmergedBroken =	{ PosX = -21, PosY = -17 },
