@@ -27,7 +27,7 @@ local function HiddenRock(effect, p)
 end
 
 -- Skill Effect that creates and charges self and a rock
-function weap_brute_shovel:GetSkillEffect(p1,p2)
+function weap_brute_shovel:GetSkillEffect(p1, p2)
     local ret = SkillEffect()
     local targeting = Board:IsBlocked(p2, PATH_FLYER)   --If we are targeting something, a non-empty tile
     local direction = GetDirection(p2 - p1)             --The direction we are travelling in
@@ -35,10 +35,14 @@ function weap_brute_shovel:GetSkillEffect(p1,p2)
 
     local bruteFinal = p2 - DIR_VECTORS[direction]      --The landing location of this mech
     local spawnStart = p1 + DIR_VECTORS[direction]      --The starting location of the rock
+    
+    if useMelee or not targeting then
+        ret:AddMelee(p1, SpaceDamage(p2, 0))            --Melee effect for building a rock or attacking a unit
+    end
 
-    if not targeting then 
+    if not targeting then
         HiddenRock(ret, spawnStart)                     --Spawn a rock without previewing it
-        ret:AddDelay(0.05)                              --Timing is off without this delay
+        ret:AddDelay(useMelee and 0.05 or 0.25)         --Timing is off without this delay
     end
 
     if not useMelee then
@@ -58,19 +62,14 @@ function weap_brute_shovel:GetSkillEffect(p1,p2)
         end
     end
     
-    local damage = SpaceDamage(p2, 0)
-    if targeting then                           --Damage vek if targeting
+    local damage = SpaceDamage(p2, 0)           --Will either be a Damage & Push or a rock spawn indicator
+    if targeting then                           --Damage unit if targeting
         damage.iPush = direction                --Damage
         damage.iDamage = self.Damage            --Damage
     else                                        --Indicate rock spawn if not targeting
         damage.sImageMark = "units/aliens/rock_1.png"
     end
-
-    if useMelee then                            --Show melee effect if in melee range
-        ret:AddMelee(p1, damage)                --Melee damage
-    else
-        ret:AddDamage(damage)                   --Charge damage
-    end
+    ret:AddDamage(damage)                       --Damage
 
     return ret
 end
