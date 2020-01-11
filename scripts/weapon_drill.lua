@@ -11,6 +11,8 @@ Weap_RR_Prime_Drill = Skill:new{
     UpgradeList = { "Impact Ramp", "Ally Immune" },
     ImpactRamp = false,
     FriendlyDamage = true,
+    DamageAnimation = "rock1d",
+    DamageSound = "/weapons/charge",
     TipImage = {
         Unit = Point(2, 4),
         Building = Point(2, 3),
@@ -77,6 +79,7 @@ function Weap_RR_Prime_Drill:GetSkillEffect(p1, p2)
     local damagePoints = p1:PointsBetween(p2, 1, 1)                             --Points from here to there
     local pullDirection = GetDirection(p1 - p2)                                 --Direction to pull in
     
+    ret:AddAnimation(p1, self.DamageAnimation)                                  --Initial Animation
     ret:AddCharge(Board:GetPath(p1, p2, PATH_FLYER), NO_DELAY)                  --Charge!
     
     local ramp = 0
@@ -85,6 +88,8 @@ function Weap_RR_Prime_Drill:GetSkillEffect(p1, p2)
         if self.FriendlyDamage or not Board:IsPawnTeam(point, TEAM_PLAYER) then --If ally immune, skip damage for allies
             local damage = SpaceDamage(point, self.Damage + ramp)               --Damage
             damage.iPush = pullDirection                                        --Damage pull
+            damage.sAnimation = self.DamageAnimation
+            damage.sSound = self.DamageSound
             ret:AddDamage(damage)                                               --Damage
             ret:AddDelay(0.1)                                                   --Damage delay as we travel
         end

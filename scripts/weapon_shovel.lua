@@ -1,12 +1,15 @@
 --Shovel that spawns and pushes a rock
 Weap_RR_Brute_Shovel = Skill:new{
-    Name = "Mining Shovel",
+    Name = "Mining Scoop",
     Description = "Charge and place a rock, or charge into an enemy, damaging and pushing it.",
-    Damage = 1,
-    PowerCost = 1,
     Class = "Brute",
     Icon = "weapons/weapon2.png",
-	LaunchSound = "/weapons/charge",
+    Damage = 1,
+    PowerCost = 1,
+    CreateSound = "/enemy/digger_1/attack_queued",
+    ChargeSound = "/weapons/charge",
+    DamageAnimation = "ExploAir2",
+    DamageMarker = "units/aliens/rock_1.png",
     TipImage = {
         Unit = Point(2, 4),
         Enemy = Point(2, 1),
@@ -37,7 +40,9 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
     local spawnStart = p1 + DIR_VECTORS[direction]      --The starting location of the rock
     
     if useMelee or not targeting then
-        ret:AddMelee(p1, SpaceDamage(p2, 0))            --Melee effect for building a rock or attacking a unit
+        create = SpaceDamage(p2, 0)                     --Melee effect for creating a rock or attacking a unit
+        --create.sSound = self.CreateSound
+        ret:AddMelee(p1, create)
     end
 
     if not targeting then
@@ -46,6 +51,7 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
     end
 
     if not useMelee then
+        ret:AddSound(self.ChargeSound)
         ret:AddCharge(Board:GetSimplePath(p1, bruteFinal), NO_DELAY)    --Shovel charge
     end
 
@@ -66,8 +72,9 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
     if targeting then                           --Damage unit if targeting
         damage.iPush = direction                --Damage
         damage.iDamage = self.Damage            --Damage
+        damage.sAnimation = self.DamageAnimation
     else                                        --Indicate rock spawn if not targeting
-        damage.sImageMark = "units/aliens/rock_1.png"
+        damage.sImageMark = self.DamageMarker
     end
     ret:AddDamage(damage)                       --Damage
 
