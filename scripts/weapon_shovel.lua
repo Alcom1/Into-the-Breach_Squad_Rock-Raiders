@@ -30,8 +30,9 @@ local function RR_HiddenRock(effect, p)
 end
 
 --If terrain is water
-local function IsWater(point)
-	return	Board:GetTerrain(point) == TERRAIN_WATER
+local function RR_IsLiquid(point)
+    local terrain = Board:GetTerrain(point)
+	return	terrain == TERRAIN_WATER or terrain == TERRAIN_LAVA
 end
 
 -- Skill Effect that creates and charges self and a rock
@@ -44,9 +45,9 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
     local bruteFinal = p2 - DIR_VECTORS[direction]      --The landing location of this mech
     local spawnStart = p1 + DIR_VECTORS[direction]      --The starting location of the rock
 
-    local waterBlocked =                                --If the rock starting or ending positions is water
-        IsWater(spawnStart) or 
-        IsWater(p2)
+    local liquidBlocked =                                --If the rock starting or ending positions is water
+        RR_IsLiquid(spawnStart) or 
+        RR_IsLiquid(p2)
 
     ret:AddSound(self.ChargeSound)
     
@@ -84,7 +85,7 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
         damage.iDamage = self.Damage            --Damage
         damage.sAnimation = self.DamageAnimation
         ret:AddDamage(damage)                   --Damage
-    elseif not waterBlocked then                --Indicate rock spawn if not targeting or blocked by water
+    elseif not liquidBlocked then                --Indicate rock spawn if not targeting or blocked by water
         damage.sImageMark = self.DamageMarker
         ret:AddDamage(damage)                   --Damage
     end
