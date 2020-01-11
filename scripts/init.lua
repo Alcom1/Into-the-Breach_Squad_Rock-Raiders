@@ -108,7 +108,7 @@ function mod:init()
     require(self.scriptPath.."passive")
     require(self.scriptPath.."pawns")
     require(self.scriptPath.."point")
-    require(self.scriptPath.."weapon_base_transporter")
+    require(self.scriptPath.."weapon_transporter")
     require(self.scriptPath.."weapon_drill")
     require(self.scriptPath.."weapon_dynamite")
     require(self.scriptPath.."weapon_fossilizer")
@@ -124,9 +124,9 @@ function mod:load(options, version)
     modApi:addSquadTrue(
     {
         "Rock Raiders",
-        "pawn_mech_drill", 
-        "pawn_mech_loader", 
-        "pawn_mech_transport"
+        "Pawn_RR_Mech_Drill", 
+        "Pawn_RR_Mech_Loader", 
+        "Pawn_RR_Mech_Transport"
     }, "Rock Raiders", self.description, self.resourcePath..self.icon_squad)
     
     require(self.scriptPath .."passive"):load(self.modApiExt)

@@ -1,5 +1,5 @@
 --Shovel that spawns and pushes a rock
-weap_brute_shovel = Skill:new{
+Weap_RR_Brute_Shovel = Skill:new{
     Name = "Mining Shovel",
     Description = "Charge and place a rock, or charge into an enemy, damaging and pushing it.",
     Damage = 1,
@@ -15,7 +15,7 @@ weap_brute_shovel = Skill:new{
 }
 
 -- Spawn a rock without a preview
-local function HiddenRock(effect, p)
+local function RR_HiddenRock(effect, p)
 	-- spawn rock via script so the preview doesn't know about it
 	effect:AddScript([[
 		local effect = SkillEffect()
@@ -27,7 +27,7 @@ local function HiddenRock(effect, p)
 end
 
 -- Skill Effect that creates and charges self and a rock
-function weap_brute_shovel:GetSkillEffect(p1, p2)
+function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
     local ret = SkillEffect()
     local targeting = Board:IsBlocked(p2, PATH_FLYER)   --If we are targeting something, a non-empty tile
     local direction = GetDirection(p2 - p1)             --The direction we are travelling in
@@ -41,7 +41,7 @@ function weap_brute_shovel:GetSkillEffect(p1, p2)
     end
 
     if not targeting then
-        HiddenRock(ret, spawnStart)                     --Spawn a rock without previewing it
+        RR_HiddenRock(ret, spawnStart)                  --Spawn a rock without previewing it
         ret:AddDelay(useMelee and 0.05 or 0.25)         --Timing is off without this delay
     end
 

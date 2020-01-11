@@ -1,5 +1,5 @@
 --Science weapon that deploys a fence spawn.
-weap_science_deploy_fence = weapon_base_transporter:new{
+Weap_RR_Science_Deploy_Fence = Weap_RR_Base_Transporter:new{
     Name = "Electric Fence",
     Class = "Science",
     Description = "Teleport in a stationary Electric fence that deals chain damage through adjacent units.",
@@ -19,7 +19,7 @@ weap_science_deploy_fence = weapon_base_transporter:new{
 }
 
 --Generic weapon used by Electric Fence spawn
-weap_spawn_lightning = Skill:new{
+Weap_RR_Spawn_Lightning = Skill:new{
     LaunchSound = "/weapons/electric_whip",
     Icon = "weapons/prime_lightning.png",
 	PathSize = 1,
@@ -27,7 +27,7 @@ weap_spawn_lightning = Skill:new{
 }
 
 --Skill Effect for lightning attack
-function weap_spawn_lightning:GetSkillEffect(p1, p2)
+function Weap_RR_Spawn_Lightning:GetSkillEffect(p1, p2)
     local ret = SkillEffect()
 
     if not Board:IsPawnSpace(p2) then return ret end                        -- Don't attack empty spaces

@@ -1,5 +1,5 @@
 --Passive weapon that turns all dead vek into rocks
-pass_generic_fossilizer = PassiveSkill:new{
+Pass_RR_Generic_Fossilizer = PassiveSkill:new{
     Name = "Vek Fossilizer",
     Description = "All Vek will spawn a rock on death.",
     Passive = "lmn_Passive_RockOnDeath",
@@ -15,7 +15,7 @@ pass_generic_fossilizer = PassiveSkill:new{
 }
 
 --Skill Effect for mouseover preview
-function pass_generic_fossilizer:GetSkillEffect(p1, p2)
+function Pass_RR_Generic_Fossilizer:GetSkillEffect(p1, p2)
     local ret = SkillEffect()
     for xPos = 1, 3 do                                              --Kill all 3 vek
         ret:AddDamage(SpaceDamage(Point(xPos, 2), DAMAGE_DEATH))

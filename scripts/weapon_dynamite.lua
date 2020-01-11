@@ -1,5 +1,5 @@
 --Science weapon that deploys a dynamite spawn.
-weap_science_deploy_dynamite = weapon_base_transporter:new{
+Weap_RR_Science_Deploy_Dynamite = Weap_RR_Base_Transporter:new{
     Name = "Dynamite Charge",
     Class = "Science",
     Description = "Teleport in an explosive that detonates when triggered or destroyed, pushing adjacent tiles.",

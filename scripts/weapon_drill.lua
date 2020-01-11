@@ -1,5 +1,5 @@
 --Drill weapon with a charge, pass-through, damage, and pull effect
-weap_prime_drill = Skill:new{
+Weap_RR_Prime_Drill = Skill:new{
     Name = "Mining Drill",
     Description = "Charge and drill through tiles, pulling and damaging each one.",
     Class = "Prime",
@@ -21,7 +21,7 @@ weap_prime_drill = Skill:new{
 }
 
 --Damage ramp upgrade
-weap_prime_drill_A = weap_prime_drill:new{
+Weap_RR_Prime_Drill_A = Weap_RR_Prime_Drill:new{
     UpgradeDescription = "Damage increases by 1 for each unit you pass through.",
     ImpactRamp = true,
     TipImage = {
@@ -34,7 +34,7 @@ weap_prime_drill_A = weap_prime_drill:new{
 }
 
 --Ally Immune upgrade
-weap_prime_drill_B = weap_prime_drill:new{
+Weap_RR_Prime_Drill_B = Weap_RR_Prime_Drill:new{
     UpgradeDescription = "Friendly units will not take damage or be pulled by this attack.",
     FriendlyDamage = false,
     TipImage = {
@@ -47,13 +47,13 @@ weap_prime_drill_B = weap_prime_drill:new{
 }
 
 --Both upgrades combined
-weap_prime_drill_AB = weap_prime_drill:new{
+Weap_RR_Prime_Drill_AB = Weap_RR_Prime_Drill:new{
     ImpactRamp = true,
     FriendlyDamage = false,
 }	
 
 --Target Area for pass-through
-function weap_prime_drill:GetTargetArea(p1)
+function Weap_RR_Prime_Drill:GetTargetArea(p1)
     local ret = PointList()
     for i = DIR_START, DIR_END do                           --For each direction
         for k = 1, INT_MAX do                               --For each tile in a line
@@ -72,7 +72,7 @@ function weap_prime_drill:GetTargetArea(p1)
 end
 
 --Skill Effect for charge, damage, pull, and upgrades
-function weap_prime_drill:GetSkillEffect(p1, p2)
+function Weap_RR_Prime_Drill:GetSkillEffect(p1, p2)
     local ret = SkillEffect()
     local damagePoints = p1:PointsBetween(p2, 1, 1)                             --Points from here to there
     local pullDirection = GetDirection(p1 - p2)                                 --Direction to pull in

@@ -1,39 +1,39 @@
-pawn_mech_drill = Pawn:new {
+Pawn_RR_Mech_Drill = Pawn:new {
     Name = "Drill Mech",
     Class = "Prime",
     Health = 3,
     MoveSpeed = 3,
     Image = "Drill Mech",
     ImageOffset = FURL_COLORS.colorsRockRaider,
-    SkillList = { "weap_prime_drill" }, --  
+    SkillList = { "Weap_RR_Prime_Drill" }, --  
     SoundLocation = "/mech/prime/punch_mech/",
     DefaultTeam = TEAM_PLAYER,
     ImpactMaterial = IMPACT_METAL,
     Massive = true
 }
 
-pawn_mech_loader = Pawn:new {
+Pawn_RR_Mech_Loader = Pawn:new {
     Name = "Loader Mech",
     Class = "Brute",
     Health = 3,
     MoveSpeed = 3,
     Image = "Loader Mech",
     ImageOffset = FURL_COLORS.colorsRockRaider,
-    SkillList = { "weap_brute_shovel", "pass_generic_fossilizer" },
+    SkillList = { "Weap_RR_Brute_Shovel", "Pass_RR_Generic_Fossilizer" },
     SoundLocation = "/mech/brute/tank/",
     DefaultTeam = TEAM_PLAYER,
     ImpactMaterial = IMPACT_METAL,
     Massive = true,
 }
 
-pawn_mech_transport = Pawn:new {
+Pawn_RR_Mech_Transport = Pawn:new {
     Name = "Transport Mech",
     Class = "Science",
     Health = 2,
     MoveSpeed = 3,
     Image = "Transport Mech",
     ImageOffset = FURL_COLORS.colorsRockRaider,
-    SkillList = { "weap_science_deploy_fence", "weap_science_deploy_dynamite" },
+    SkillList = { "Weap_RR_Science_Deploy_Fence", "Weap_RR_Science_Deploy_Dynamite" },
 	SoundLocation = "/mech/flying/jet_mech/",
     Flying = true,
     DefaultTeam = TEAM_PLAYER,
@@ -46,7 +46,7 @@ pawn_spawn_fence = Pawn:new{
     Health = 1,
     MoveSpeed = 0,
     Image = "Electric Fence",
-    SkillList = { "weap_spawn_lightning" },
+    SkillList = { "Weap_RR_Spawn_Lightning" },
     SoundLocation = "/mech/prime/punch_mech/",
     ImageOffset = FURL_COLORS.colorsRockRaider,
     DefaultTeam = TEAM_PLAYER,
