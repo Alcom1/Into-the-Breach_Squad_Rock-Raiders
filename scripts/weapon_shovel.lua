@@ -39,9 +39,11 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
     local bruteFinal = p2 - DIR_VECTORS[direction]      --The landing location of this mech
     local spawnStart = p1 + DIR_VECTORS[direction]      --The starting location of the rock
     
+    ret:AddSound(self.ChargeSound)
+    
     if useMelee or not targeting then
         create = SpaceDamage(p2, 0)                     --Melee effect for creating a rock or attacking a unit
-        --create.sSound = self.CreateSound
+        create.sSound = self.CreateSound
         ret:AddMelee(p1, create)
     end
 
@@ -51,7 +53,6 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
     end
 
     if not useMelee then
-        ret:AddSound(self.ChargeSound)
         ret:AddCharge(Board:GetSimplePath(p1, bruteFinal), NO_DELAY)    --Shovel charge
     end
 
