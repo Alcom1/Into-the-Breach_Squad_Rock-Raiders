@@ -91,6 +91,7 @@ function Weap_RR_Prime_Drill:GetSkillEffect(p1, p2)
             damage.sAnimation = self.DamageAnimation
             damage.sSound = self.DamageSound
             ret:AddDamage(damage)                                               --Damage
+            ret:AddBounce(point, 4)                                             --Bounce
             ret:AddDelay(0.1)                                                   --Damage delay as we travel
         end
         if self.ImpactRamp and Board:IsPawnSpace(point) then                    --If ramp, ramp

@@ -85,7 +85,7 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
         damage.iDamage = self.Damage            --Damage
         damage.sAnimation = self.DamageAnimation
         ret:AddDamage(damage)                   --Damage
-    elseif not liquidBlocked then                --Indicate rock spawn if not targeting or blocked by water
+    elseif not liquidBlocked then               --Indicate rock spawn if not targeting or blocked by water
         damage.sImageMark = self.DamageMarker
         ret:AddDamage(damage)                   --Damage
     end
