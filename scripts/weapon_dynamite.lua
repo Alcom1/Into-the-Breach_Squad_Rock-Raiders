@@ -23,9 +23,9 @@ Weap_RR_Science_Deploy_Dynamite = Weap_RR_Base_Transporter:new{
 }
 
 --A LANDSLIDE HAS OCCURRED 
-Weap_RR_Science_Deploy_Dynamite_A = Weap_RR_Science_Deploy_Dynamite:new{                                                --A LANDSLIDE HAS OCCURRED
-    Description = "Dynamite destroys adjacent mountains when it explodes. Destroyed mountains push adjacent enemies.",  --A LANDSLIDE HAS OCCURRED
-    Deployed = "pawn_spawn_dynamite2",                                                                                  --A LANDSLIDE HAS OCCURRED
+Weap_RR_Science_Deploy_Dynamite_A = Weap_RR_Science_Deploy_Dynamite:new{                                                        --A LANDSLIDE HAS OCCURRED
+    UpgradeDescription = "Dynamite destroys adjacent mountains when it explodes. Destroyed mountains push adjacent enemies.",   --A LANDSLIDE HAS OCCURRED
+    Deployed = "pawn_spawn_dynamite2",                                                                                          --A LANDSLIDE HAS OCCURRED
     TipImage = {                    --A LANDSLIDE HAS OCCURRED
         Unit = Point(2,4),          --A LANDSLIDE HAS OCCURRED
         Mountain = Point(2,1),      --A LANDSLIDE HAS OCCURRED
@@ -48,7 +48,7 @@ Weap_RR_Science_Deploy_Dynamite_B = Weap_RR_Science_Deploy_Dynamite:new{
 
 --Both upgrades combined
 Weap_RR_Science_Deploy_Dynamite_AB = Weap_RR_Science_Deploy_Dynamite:new{
-    UpgradeDescription = "pawn_spawn_dynamite2",        --A LANDSLIDE HAS OCCURRED
+    Deployed = "pawn_spawn_dynamite2",        --A LANDSLIDE HAS OCCURRED
 	Limited = 0
 }
 
