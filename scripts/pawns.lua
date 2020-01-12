@@ -54,15 +54,23 @@ pawn_spawn_fence = Pawn:new{
     Corpse = false,
 }
 
+pawn_spawn_fence2 = pawn_spawn_fence:new{
+    SkillList = { "Weap_RR_Spawn_Lightning2" }
+}
+
 pawn_spawn_dynamite = Pawn:new{
     Name = "Dynamite Charge",
     Health = 1,
     MoveSpeed = 0,
     Image = "Dynamite",
-    SkillList = { "weap_spawn_dynamite" },
+    SkillList = { "Weap_RR_Spawn_Dynamite" },
     SoundLocation = "/mech/prime/punch_mech/",
     ImageOffset = FURL_COLORS.colorsRockRaider,
     DefaultTeam = TEAM_PLAYER,
     ImpactMaterial = IMPACT_METAL,
     Corpse = false,
+}
+
+pawn_spawn_dynamite2 = pawn_spawn_dynamite:new{
+    SkillList = { "Weap_RR_Spawn_Dynamite2" }
 }
