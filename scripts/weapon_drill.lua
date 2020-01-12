@@ -3,7 +3,7 @@ Weap_RR_Prime_Drill = Skill:new{
     Name = "Mining Drill",
     Description = "Charge and drill through tiles, pulling and damaging each one.",
     Class = "Prime",
-    Icon = "weapons/weapon1.png",
+    Icon = "weapons/weapon_drill.png",
     Damage = 1,
     PowerCost = 1,
     Upgrades = 2,
@@ -80,6 +80,7 @@ function Weap_RR_Prime_Drill:GetSkillEffect(p1, p2)
     local pullDirection = GetDirection(p1 - p2)                                 --Direction to pull in
     
     ret:AddAnimation(p1, self.DamageAnimation)                                  --Initial Animation
+    ret:AddSound(self.DamageSound)                                              --Initial Drill Sound
     ret:AddCharge(Board:GetPath(p1, p2, PATH_FLYER), NO_DELAY)                  --Charge!
     
     local ramp = 0
