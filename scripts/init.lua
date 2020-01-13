@@ -98,7 +98,7 @@ function mod:init()
     })
 
     modApi:appendAsset("img/weapons/weapon_drill.png",self.resourcePath.."img/weapons/weapon_drill.png")
-    modApi:appendAsset("img/weapons/weapon2.png",self.resourcePath.."img/weapons/weapon2.png")
+    modApi:appendAsset("img/weapons/weapon_scoop.png",self.resourcePath.."img/weapons/weapon_scoop.png")
     modApi:appendAsset("img/weapons/weapon3.png",self.resourcePath.."img/weapons/weapon3.png")
     modApi:appendAsset("img/weapons/passive1.png",self.resourcePath.."img/weapons/passive1.png")
 
