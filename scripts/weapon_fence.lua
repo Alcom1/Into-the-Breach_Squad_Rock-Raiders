@@ -8,7 +8,7 @@ Weap_RR_Science_Deploy_Fence = Weap_RR_Base_Transporter:new{
     PowerCost = 1,
     Upgrades = 2,
     UpgradeCost = { 3, 1 },
-    UpgradeList = { "+1 Damage", "Unlimited Uses" },
+    UpgradeList = { "+2 Damage", "Unlimited Uses" },
     Limited = 2,
     TipImage = {
         Unit = Point(2,4),
@@ -23,7 +23,7 @@ Weap_RR_Science_Deploy_Fence = Weap_RR_Base_Transporter:new{
 
 --More zappy damage
 Weap_RR_Science_Deploy_Fence_A = Weap_RR_Science_Deploy_Fence:new{
-    UpgradeDescription = "Increases the Electric Fence's attack damage to 2.",
+    UpgradeDescription = "Increases the Electric Fence's attack damage by 2.",
     Deployed = "pawn_spawn_fence2"
 }
 
@@ -49,7 +49,7 @@ Weap_RR_Spawn_Lightning = Skill:new{
 
 --Electric Fence with damage upgrade
 Weap_RR_Spawn_Lightning2 = Weap_RR_Spawn_Lightning:new{
-    Damage = 2
+    Damage = 3
 }
 
 --Skill Effect for lightning attack
