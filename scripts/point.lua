@@ -8,11 +8,25 @@ function Point:PointsBetween(p2, offsetStart, offsetFinal)
         
         local horz = math.max(x, y)             -- Length of the stairs, steps are always 1px high
         local vert = math.min(x, y)             -- Height of the stairs
-        
-        for i = 0, vert - 1 do                  -- Go up the stairs
-            local step = math.floor(0.5 + horz / (vert - i)) -- Length of this step
-            steps[i] = step                     -- Add step
-            horz = horz - step                  -- Go along the stairs
+
+        local step = 0 
+        local diff = -horz
+        local inc = 0
+        for i = 0, horz do                      --Bresenham
+            diff = diff + 2 * vert
+
+            step = step + 1
+    
+            if diff > 0 then
+                steps[inc] = step
+                inc = inc + 1
+
+                step = 0
+                diff = diff - 2 * horz
+            end
+        end
+        if(step > 0) then
+            steps[inc] = step
         end
         
         return steps
@@ -24,8 +38,8 @@ function Point:PointsBetween(p2, offsetStart, offsetFinal)
     
     local points = {}
     local p1 = self
-    local lengthX = math.abs(p1.x - p2.x) + 1   -- x distance from here to there
-    local lengthY = math.abs(p1.y - p2.y) + 1   -- y distance from here to there
+    local lengthX = math.abs(p1.x - p2.x)       -- x distance from here to there
+    local lengthY = math.abs(p1.y - p2.y)       -- y distance from here to there
     local tall = lengthY > lengthX              -- if the slope > 1
     local steps = GetSteps(lengthX, lengthY)    -- get the steps across the length
     local start = offsetStart or 0              -- range is limited between start and final
@@ -37,10 +51,10 @@ function Point:PointsBetween(p2, offsetStart, offsetFinal)
         for i = 1, step do                      -- across the length of the step
             local pos1 = inc                    -- coordinate along the stairs
             local pos2 = j                      -- coordinate going up the stairs
-            if(inc >= start and inc < final) then   -- limit the range between start and final
-                points[inc] = Point(                -- map stair to actual point, add point
+            if(inc >= start and inc <= final) then  -- limit the range between start and final
+                table.insert(points, Point(         -- map stair to actual point, add point
                     p1.x + (tall and pos2 or pos1) * GetSign(p2.x - p1.x),
-                    p1.y + (tall and pos1 or pos2) * GetSign(p2.y - p1.y))
+                    p1.y + (tall and pos1 or pos2) * GetSign(p2.y - p1.y)))
             end
             inc = inc + 1                       -- increment as we travel across the stairs
         end
