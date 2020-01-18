@@ -1,36 +1,7 @@
 -- extension of the point class
 
 -- returns the points between self and p2, in order from p1 to p2
-function Point:PointsBetween(p2, offsetStart, offsetFinal)
-
-    local function GetSteps(x, y)               -- Get the stair steps to an (x,y) position
-        local steps = {}
-        
-        local horz = math.max(x, y)             -- Length of the stairs, steps are always 1px high
-        local vert = math.min(x, y)             -- Height of the stairs
-
-        local step = 0 
-        local diff = -horz
-        local inc = 0
-        for i = 0, horz do                      --Bresenham
-            diff = diff + 2 * vert
-
-            step = step + 1
-    
-            if diff > 0 then
-                steps[inc] = step
-                inc = inc + 1
-
-                step = 0
-                diff = diff - 2 * horz
-            end
-        end
-        if(step > 0) then
-            steps[inc] = step
-        end
-        
-        return steps
-    end
+function Point:Bresenham(p2, limitStart, limitFinal)
     
     local function GetSign(x)                   -- Get the sign (-1, 0, 1) of a number
         return x > 0 and 1 or x < 0 and -1 or 0
@@ -38,25 +9,33 @@ function Point:PointsBetween(p2, offsetStart, offsetFinal)
     
     local points = {}
     local p1 = self
-    local lengthX = math.abs(p1.x - p2.x)       -- x distance from here to there
-    local lengthY = math.abs(p1.y - p2.y)       -- y distance from here to there
-    local tall = lengthY > lengthX              -- if the slope > 1
-    local steps = GetSteps(lengthX, lengthY)    -- get the steps across the length
-    local start = offsetStart or 0              -- range is limited between start and final
-    local final = math.max(lengthX, lengthY) - (offsetFinal or 0)
-    
-    local inc = 0
-    for j = 0, #steps do                        -- for each step across the stairs
-        local step = steps[j]                   -- step
-        for i = 1, step do                      -- across the length of the step
-            local pos1 = inc                    -- coordinate along the stairs
-            local pos2 = j                      -- coordinate going up the stairs
-            if(inc >= start and inc <= final) then  -- limit the range between start and final
-                table.insert(points, Point(         -- map stair to actual point, add point
-                    p1.x + (tall and pos2 or pos1) * GetSign(p2.x - p1.x),
-                    p1.y + (tall and pos1 or pos2) * GetSign(p2.y - p1.y)))
-            end
-            inc = inc + 1                       -- increment as we travel across the stairs
+
+    local lengthX = math.abs(p1.x - p2.x)   -- x distance from here to there
+    local lengthY = math.abs(p1.y - p2.y)   -- y distance from here to there
+    local tall = lengthY > lengthX          -- if the slope > 1 (Shoutout to Tall Mech!)
+    local start = limitStart or 0 + 1       -- range is limited between start and final
+    local final = math.max(lengthX, lengthY) - (limitFinal or 0) + 1
+
+    local horz = math.max(lengthX, lengthY) -- Length of the stairs, steps are always 1px high
+    local vert = math.min(lengthX, lengthY) -- Height of the stairs
+
+    local diff = -horz                      --Difference in Bresenham's algorithm
+    local curr = 0                          --Current height that we're at
+    local index = 1                         --Index of insertion
+
+    for i = 0, horz do                      --Bresenham's algorithm
+        diff = diff + 2 * vert              --Diff upwards
+
+        if(index >= start and index <= final) then  -- limit the range between start and final
+            points[index - start] = Point(          -- map stair to actual point, add point
+                p1.x + (tall and curr or i) * GetSign(p2.x - p1.x), --Tall switches octants, Sign switches quadrants
+                p1.y + (tall and i or curr) * GetSign(p2.y - p1.y))
+        end
+        index = index + 1                   -- increment as we travel across the stairs
+
+        if diff > 0 then                    -- If difference has gone above 0, go up a step
+            curr = curr + 1                 -- Step upwards
+            diff = diff - 2 * horz          -- Diff downwards
         end
     end
 

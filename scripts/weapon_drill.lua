@@ -76,7 +76,7 @@ end
 --Skill Effect for charge, damage, pull, and upgrades
 function Weap_RR_Prime_Drill:GetSkillEffect(p1, p2)
     local ret = SkillEffect()
-    local damagePoints = p1:PointsBetween(p2, 1, 1)                             --Points from here to there
+    local damagePoints = p1:Bresenham(p2, 1, 1)                                 --Points from here to there
     local pullDirection = GetDirection(p1 - p2)                                 --Direction to pull in
     
     ret:AddAnimation(p1, self.DamageAnimation)                                  --Initial Animation
