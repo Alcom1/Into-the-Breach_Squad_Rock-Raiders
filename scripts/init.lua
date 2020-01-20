@@ -46,11 +46,11 @@ function mod:init()
             Path = "img/units/player",
             ResourcePath = "units/player",
 
-            Default =           { PosX = -25, PosY = -6 },
-            Animated =          { PosX = -25, PosY = -6, NumFrames = 1},
-            Broken =            { PosX = -25, PosY = -6 },
-            Submerged =         { PosX = -25, PosY = -6 },
-            SubmergedBroken =	{ PosX = -25, PosY = -6 },
+            Default =           { PosX = -25, PosY = -3 },
+            Animated =          { PosX = -25, PosY = -3, NumFrames = 1},
+            Broken =            { PosX = -25, PosY = -3 },
+            Submerged =         { PosX = -25, PosY = -3 },
+            SubmergedBroken =	{ PosX = -25, PosY = -3 },
             Icon =              {},
         },
         {
@@ -100,7 +100,7 @@ function mod:init()
     modApi:appendAsset("img/weapons/weapon_drill.png",self.resourcePath.."img/weapons/weapon_drill.png")
     modApi:appendAsset("img/weapons/weapon_scoop.png",self.resourcePath.."img/weapons/weapon_scoop.png")
     modApi:appendAsset("img/weapons/weapon3.png",self.resourcePath.."img/weapons/weapon3.png")
-    modApi:appendAsset("img/weapons/passive1.png",self.resourcePath.."img/weapons/passive1.png")
+    modApi:appendAsset("img/weapons/passive_fossilizer.png",self.resourcePath.."img/weapons/passive_fossilizer.png")
 
     self.modApiExt = require(self.scriptPath .."modApiExt/modApiExt")
     self.modApiExt:init()
