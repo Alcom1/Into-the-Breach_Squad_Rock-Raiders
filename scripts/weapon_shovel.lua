@@ -1,7 +1,7 @@
 --Shovel that spawns and pushes a rock
 Weap_RR_Brute_Shovel = Skill:new{
     Name = "Mining Scoop",
-    Description = "Charge and place a rock, or charge into an enemy, damaging and pushing it.",
+    Description = "Dig up and move a rock. Optionally shove the rock into an enemy, damaging and pushing it.",
     Class = "Brute",
     Icon = "weapons/weapon_scoop.png",
     Damage = 1,
@@ -38,39 +38,43 @@ end
 -- Skill Effect that creates and charges self and a rock
 function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
     local ret = SkillEffect()
-    local targeting = Board:IsBlocked(p2, PATH_FLYER)   --If we are targeting something, a non-empty tile
-    local direction = GetDirection(p2 - p1)             --The direction we are travelling in
-    local useMelee = p1:Manhattan(p2) == 1
+    local isTargeting = Board:IsBlocked(p2, PATH_FLYER)     --If we are targeting something, a non-empty tile
+    local direction = GetDirection(p2 - p1)                 --The direction we are travelling in
+    local isMeleeRange = p1:Manhattan(p2) == 1
 
-    local bruteFinal = p2 - DIR_VECTORS[direction]      --The landing location of this mech
-    local spawnStart = p1 + DIR_VECTORS[direction]      --The starting location of the rock
+    local bruteFinal = p2 - DIR_VECTORS[direction]          --The landing location of this mech
+    local spawnStart = p1 + DIR_VECTORS[direction]          --The starting location of the rock
+    local spawnFinal = p2                                   --The landing location of the rock
 
-    local liquidBlocked =                                --If the rock starting or ending positions is water
-        RR_IsLiquid(spawnStart) or 
-        RR_IsLiquid(p2)
+    if(isTargeting and isMeleeRange) then                   --Can't do anything to enemies within melee range so just stop.
+        return ret
+    end
 
-    ret:AddSound(self.ChargeSound)
+    if isTargeting then                                     --Move landing locations backwards if we're targeting an enemy
+        spawnFinal = bruteFinal
+        bruteFinal = bruteFinal - DIR_VECTORS[direction]
+    end
+
+    local isStartLiquid = RR_IsLiquid(spawnStart)           --If the rock starting position is water
+    local isFinalLiquid = RR_IsLiquid(spawnFinal)           --If the rock ending position is water
+
+    if isStartLiquid then
+        isTargeting = false                                 --Stop targeting if the start is water, we can't spawn a rock
+        bruteFinal = bruteFinal + DIR_VECTORS[direction]    --Wait no go back
+    end
+
+    ret:AddSound(self.ChargeSound)                          --Charge SFX
     
-    if useMelee or not targeting then
-        create = SpaceDamage(p2, 0)                     --Melee effect for creating a rock or attacking a unit
-        create.sSound = self.CreateSound
-        ret:AddMelee(p1, create)
-    end
+    create = SpaceDamage(p2, 0)                             --Melee effect for creating a rock or attacking a unit
+    create.sSound = self.CreateSound                        --Rock creating SFX
+    ret:AddMelee(p1, create)                                --Rock creating visual
+    RR_HiddenRock(ret, spawnStart)                          --Spawn a rock without previewing it
+    ret:AddDelay(isMeleeRange and 0.05 or 0.25)             --Timing is off without this delay
 
-    if not targeting then
-        RR_HiddenRock(ret, spawnStart)                  --Spawn a rock without previewing it
-        ret:AddDelay(useMelee and 0.05 or 0.25)         --Timing is off without this delay
-    end
+    ret:AddCharge(Board:GetSimplePath(p1, bruteFinal), NO_DELAY)            --Shovel charge
+    ret:AddCharge(Board:GetSimplePath(spawnStart, spawnFinal), NO_DELAY)    --Rock charge
 
-    if not useMelee then
-        ret:AddCharge(Board:GetSimplePath(p1, bruteFinal), NO_DELAY)    --Shovel charge
-    end
-
-    if not targeting then
-        ret:AddCharge(Board:GetSimplePath(spawnStart, p2), NO_DELAY)    --Rock charge
-    end
-
-    local temp = p1                             --Add bounce effects like charge mech
+    local temp = p1                                         --Add bounce effects like charge mech because we charging!
     while temp ~= p2  do
         ret:AddBounce(temp, 2)
         temp = temp + DIR_VECTORS[direction]
@@ -79,15 +83,27 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
         end
     end
     
-    local damage = SpaceDamage(p2, 0)           --Will either be a Damage & Push or a rock spawn indicator
-    if targeting then                           --Damage unit if targeting
-        damage.iPush = direction                --Damage
-        damage.iDamage = self.Damage            --Damage
-        damage.sAnimation = self.DamageAnimation
-        ret:AddDamage(damage)                   --Damage
-    elseif not liquidBlocked then               --Indicate rock spawn if not targeting or blocked by water
-        damage.sImageMark = self.DamageMarker
-        ret:AddDamage(damage)                   --Damage
+    if not isStartLiquid then                               --We can't spawn rocks in water, so don't even bother.
+        local damage = SpaceDamage(p2, 0)                   --Will either be a Damage & Push or a rock spawn indicator
+
+        if isTargeting then                                 --Deal damage to and push a target
+            damage.iPush = direction                        --Damage
+            damage.iDamage = self.Damage                    --Damage
+            damage.sAnimation = self.DamageAnimation        --Damage
+
+            if not isFinalLiquid then                       --If a rock lands here show it
+                local marker = SpaceDamage(spawnFinal, 0)   --Show that we're placing a rock before here.
+                marker.sImageMark = self.DamageMarker       --Show
+                ret:AddDamage(marker)                       --Show
+            end
+
+            ret:AddMelee(bruteFinal, SpaceDamage(p2, 0), NO_DELAY)  --Melee animation for pushing rock into enemy
+            ret:AddMelee(spawnFinal, SpaceDamage(p2, 0), NO_DELAY)  --Melee animation for pushing rock into enemy
+
+        elseif not isFinalLiquid then                       --If a rock lands here show it
+            damage.sImageMark = self.DamageMarker           --Show that we're placing a rock here.
+        end
+        ret:AddDamage(damage)
     end
 
     return ret
