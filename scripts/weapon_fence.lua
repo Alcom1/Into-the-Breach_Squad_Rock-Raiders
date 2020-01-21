@@ -8,7 +8,7 @@ Weap_RR_Science_Deploy_Fence = Weap_RR_Base_Transporter:new{
     PowerCost = 1,
     Upgrades = 2,
     UpgradeCost = { 3, 1 },
-    UpgradeList = { "+2 Damage", "Unlimited Uses" },
+    UpgradeList = { "+2 Damage", "+1 Use" },
     Limited = 2,
     TipImage = {
         Unit = Point(2,4),
@@ -29,14 +29,14 @@ Weap_RR_Science_Deploy_Fence_A = Weap_RR_Science_Deploy_Fence:new{
 
 --Unlimited Uses
 Weap_RR_Science_Deploy_Fence_B = Weap_RR_Science_Deploy_Fence:new{
-    UpgradeDescription = "Unlimited Uses",
-	Limited = 0
+    UpgradeDescription = "Increases uses per battle by 1.",
+	Limited = 3
 }
 
 --Both upgrades combined
 Weap_RR_Science_Deploy_Fence_AB = Weap_RR_Science_Deploy_Fence:new{
     Deployed = "pawn_spawn_fence2",
-	Limited = 0
+	Limited = 3
 }
 
 --Generic weapon used by Electric Fence spawn

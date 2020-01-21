@@ -8,7 +8,7 @@ Weap_RR_Science_Deploy_Dynamite = Weap_RR_Base_Transporter:new{
     PowerCost = 1,
     Upgrades = 2,
     UpgradeCost = { 1, 1 },
-    UpgradeList = { "Landslide!", "Unlimited Uses" },
+    UpgradeList = { "Landslide!", "+1 Use" },
     Limited = 2,
     TipImage = {
         Unit = Point(2,4),
@@ -42,14 +42,14 @@ Weap_RR_Science_Deploy_Dynamite_A = Weap_RR_Science_Deploy_Dynamite:new{        
 
 --Unlimited Uses
 Weap_RR_Science_Deploy_Dynamite_B = Weap_RR_Science_Deploy_Dynamite:new{
-    UpgradeDescription = "Unlimited Uses",
-	Limited = 0
+    UpgradeDescription = "Increases uses per battle by 1.",
+	Limited = 3
 }
 
 --Both upgrades combined
 Weap_RR_Science_Deploy_Dynamite_AB = Weap_RR_Science_Deploy_Dynamite:new{
     Deployed = "pawn_spawn_dynamite2",        --A LANDSLIDE HAS OCCURRED
-	Limited = 0
+	Limited = 3
 }
 
 --Generic weapon used by Dynamite spawn, destroys self and push
