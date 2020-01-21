@@ -86,12 +86,12 @@ function Weap_RR_Spawn_Dynamite:GetSkillEffect(p1, p2)
                                                                                     --A LANDSLIDE HAS OCCURRED
             for dir2 = DIR_START, DIR_END do                                        --A LANDSLIDE HAS OCCURRED
                 local damage2 = SpaceDamage(target + DIR_VECTORS[dir2], 0, dir2)    --A LANDSLIDE HAS OCCURRED
-                damage2.sAnimation = "airpush_"..(dir2 %4)                          --A LANDSLIDE HAS OCCURRED
+                damage2.sAnimation = "airpush_"..(dir2 % 4)                         --A LANDSLIDE HAS OCCURRED
                 ret:AddDamage(damage2)                                              --A LANDSLIDE HAS OCCURRED
             end                                                                     --A LANDSLIDE HAS OCCURRED
         else
             damage.iPush = dir                          --Push
-            damage.sAnimation = "airpush_"..(dir %4)    --Damage
+            damage.sAnimation = "airpush_"..(dir % 4)   --Damage
         end
         
         ret:AddDamage(damage)                           --Damage

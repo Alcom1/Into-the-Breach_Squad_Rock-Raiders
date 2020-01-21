@@ -8,7 +8,7 @@ Weap_RR_Prime_Drill = Skill:new{
     PowerCost = 1,
     Upgrades = 2,
     UpgradeCost = { 3, 1 },
-    UpgradeList = { "Impact Ramp", "Ally Immune" },
+    UpgradeList = { "Driller Knight!", "Ally Immune" },
     ImpactRamp = false,
     FriendlyDamage = true,
     DamageAnimation = "rock1d",
@@ -51,7 +51,7 @@ Weap_RR_Prime_Drill_B = Weap_RR_Prime_Drill:new{
 --Both upgrades combined
 Weap_RR_Prime_Drill_AB = Weap_RR_Prime_Drill:new{
     ImpactRamp = true,
-    FriendlyDamage = false,
+    FriendlyDamage = false
 }	
 
 --Target Area for pass-through

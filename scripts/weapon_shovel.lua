@@ -6,16 +6,38 @@ Weap_RR_Brute_Shovel = Skill:new{
     Icon = "weapons/weapon_scoop.png",
     Damage = 1,
     PowerCost = 1,
+    Upgrades = 2,
+    UpgradeCost = { 3, 1 },
+    UpgradeList = { "+2 Damage", "Oresome!" },
     CreateSound = "/enemy/digger_1/attack_queued",
     ChargeSound = "/weapons/charge",
-    DamageAnimation = "ExploAir2",
+    ImpactSound = "/impact/generic/explosion",
     DamageMarker = "units/aliens/rock_1.png",
+    Oresome = false,
     TipImage = {
         Unit = Point(2, 4),
         Enemy = Point(2, 1),
         Target = Point(2, 1)
     }
 }
+
+--Damage ramp upgrade
+Weap_RR_Brute_Shovel_A = Weap_RR_Brute_Shovel:new{
+    UpgradeDescription = "Increases damage by 2.",
+    Damage = 3,
+}
+
+--Ally Immune upgrade
+Weap_RR_Brute_Shovel_B = Weap_RR_Brute_Shovel:new{
+    UpgradeDescription = "Placing a rock pushes units to the side.",
+    Oresome = true
+}
+
+--Both upgrades combined
+Weap_RR_Brute_Shovel_AB = Weap_RR_Brute_Shovel:new{
+    Damage = 3,
+    Oresome = true
+}	
 
 -- Spawn a rock without a preview
 local function RR_HiddenRock(effect, p)
@@ -84,12 +106,27 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
     end
     
     if not isStartLiquid then                               --We can't spawn rocks in water, so don't even bother.
+
+        if self.Oresome then
+            ret:AddBounce(spawnFinal, 3)
+            local left = (direction - 1) % 4                --left direction
+            local right = (direction + 1) % 4               --right direction
+            local damageLeft = SpaceDamage(spawnFinal + DIR_VECTORS[left], 0, left)     --Damage left
+            local damageRight = SpaceDamage(spawnFinal + DIR_VECTORS[right], 0, right)  --Damage right
+            damageLeft.sAnimation = "airpush_"..left        --Damage left anim
+            damageRight.sAnimation = "airpush_"..right      --Damage right anim
+            damageLeft.sSound = self.ImpactSound            --Damage sfx
+            ret:AddDamage(damageLeft)
+            ret:AddDamage(damageRight)
+        end
+
         local damage = SpaceDamage(p2, 0)                   --Will either be a Damage & Push or a rock spawn indicator
 
         if isTargeting then                                 --Deal damage to and push a target
-            damage.iPush = direction                        --Damage
-            damage.iDamage = self.Damage                    --Damage
-            damage.sAnimation = self.DamageAnimation        --Damage
+            damage.iPush = direction                        --Damage push
+            damage.iDamage = self.Damage                    --Damage damage
+            damage.sSound = self.ImpactSound                --Damage sfx
+            damage.sAnimation = "airpush_"..(direction % 4) --Damage anim
 
             if not isFinalLiquid then                       --If a rock lands here show it
                 local marker = SpaceDamage(spawnFinal, 0)   --Show that we're placing a rock before here.
@@ -103,6 +140,7 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
         elseif not isFinalLiquid then                       --If a rock lands here show it
             damage.sImageMark = self.DamageMarker           --Show that we're placing a rock here.
         end
+        
         ret:AddDamage(damage)
     end
 
