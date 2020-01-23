@@ -66,11 +66,6 @@ Weap_RR_Spawn_Dynamite2 = Weap_RR_Spawn_Dynamite:new{   --A LANDSLIDE HAS OCCURR
     ALandslideHasOccured = true                         --A LANDSLIDE HAS OCCURRED
 }                                                       --A LANDSLIDE HAS OCCURRED
 
---If terrain is mountain
-local function RR_IsMountain(point)
-	return	Board:GetTerrain(point) == TERRAIN_MOUNTAIN
-end
-
 --Skill Effect for self destruction and push
 function Weap_RR_Spawn_Dynamite:GetSkillEffect(p1, p2)
     local ret = SkillEffect()

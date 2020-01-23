@@ -10,7 +10,8 @@ function Weap_RR_Base_Transporter:GetTargetArea(p1)
 
     for i = 0, points:size() do                             --For each point in the diamond
         local point = points:index(i)                       --The point
-        if not Board:IsBlocked(point, PATH_FLYER) then      --If the point is not blocked
+        if not Board:IsBlocked(point, PATH_FLYER) and       --If the point is not blocked
+           not RR_IsLiquid(point) then                      --and not liquid
             ret:push_back(point)                            --the point is valid, add it
         end
     end
@@ -18,7 +19,7 @@ function Weap_RR_Base_Transporter:GetTargetArea(p1)
     return ret
 end
 
-function RR_HiddenTeleport(effect, p)
+local function RR_HiddenTeleport(effect, p)
 	--Fail a teleport to an invalid point, creating an enter effect here, in a script so it's not in the preview.
 	effect:AddScript([[
 		local effect = SkillEffect()

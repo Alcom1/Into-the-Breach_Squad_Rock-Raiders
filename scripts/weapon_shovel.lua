@@ -1,7 +1,7 @@
 --Shovel that spawns and pushes a rock
 Weap_RR_Brute_Shovel = Skill:new{
     Name = "Mining Scoop",
-    Description = "Dig up and move a rock. Optionally shove the rock into an enemy, damaging and pushing it.",
+    Description = "Dig a rock out of a ground tile. Push that rock to a location, optionally damaging and pushing an enemy.",
     Class = "Brute",
     Icon = "weapons/weapon_scoop.png",
     Damage = 1,
@@ -49,12 +49,6 @@ local function RR_HiddenRock(effect, p)
         effect:AddDamage(damage)
 		Board:AddEffect(effect)
 	]])
-end
-
---If terrain is water
-local function RR_IsLiquid(point)
-    local terrain = Board:GetTerrain(point)
-	return	terrain == TERRAIN_WATER or terrain == TERRAIN_LAVA
 end
 
 -- Skill Effect that creates and charges self and a rock
