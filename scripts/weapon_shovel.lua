@@ -1,7 +1,7 @@
 --Shovel that spawns and pushes a rock
 Weap_RR_Brute_Shovel = Skill:new{
     Name = "Mining Scoop",
-    Description = "Dig a rock out of a ground tile. Push that rock to a location, optionally damaging and pushing an enemy.",
+    Description = "Dig a rock out of the ground and push it to a tile or into an enemy.",
     Class = "Brute",
     Icon = "weapons/weapon_scoop.png",
     Damage = 1,
