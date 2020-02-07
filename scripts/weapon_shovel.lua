@@ -60,7 +60,14 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
 
     local bruteFinal = p2 - DIR_VECTORS[direction]          --The landing location of this mech
     local spawnStart = p1 + DIR_VECTORS[direction]          --The starting location of the rock
-    local spawnFinal = p2                                   --The landing location of the rock
+
+    local pointWet = GetProjectileEnd(p1, p2, PATH_GROUND)  --Get a wet landing point for the rock
+    local isWet =                                           --If the landing point is wet
+        math.abs(p1:Manhattan(p2)) >= 
+        math.abs(p1:Manhattan(pointWet)) +
+        (isTargeting and 1 or 0)                            --Move comparison over by one if we are targeting something so we still attack it.
+           
+    local spawnFinal = isWet and pointWet or p2             --The landing location of the rock
 
     if(isTargeting and isMeleeRange) then                   --Can't do anything to enemies within melee range so just stop.
         return ret
@@ -71,10 +78,7 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
         bruteFinal = bruteFinal - DIR_VECTORS[direction]
     end
 
-    local isStartLiquid = RR_IsLiquid(spawnStart)           --If the rock starting position is water
-    local isFinalLiquid = RR_IsLiquid(spawnFinal)           --If the rock ending position is water
-
-    if isStartLiquid then
+    if isWet then
         isTargeting = false                                 --Stop targeting if the start is water, we can't spawn a rock
         bruteFinal = bruteFinal + DIR_VECTORS[direction]    --Wait no go back
     end
@@ -99,7 +103,9 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
         end
     end
     
-    if not isStartLiquid then                               --We can't spawn rocks in water, so don't even bother.
+    if not isWet then                               --We can't spawn rocks in water, so don't even bother.
+
+        LOG("ASDF "..(isTargeting and "TRUE" or "FALSE"))
 
         if self.Oresome then
             ret:AddBounce(spawnFinal, 3)
@@ -122,7 +128,7 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
             damage.sSound = self.ImpactSound                --Damage sfx
             damage.sAnimation = "airpush_"..(direction % 4) --Damage anim
 
-            if not isFinalLiquid then                       --If a rock lands here show it
+            if not isWet then                       --If a rock lands here show it
                 local marker = SpaceDamage(spawnFinal, 0)   --Show that we're placing a rock before here.
                 marker.sImageMark = self.DamageMarker       --Show
                 ret:AddDamage(marker)                       --Show
@@ -131,7 +137,7 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
             ret:AddMelee(bruteFinal, SpaceDamage(p2, 0), NO_DELAY)  --Melee animation for pushing rock into enemy
             ret:AddMelee(spawnFinal, SpaceDamage(p2, 0), NO_DELAY)  --Melee animation for pushing rock into enemy
 
-        elseif not isFinalLiquid then                       --If a rock lands here show it
+        elseif not isWet then                       --If a rock lands here show it
             damage.sImageMark = self.DamageMarker           --Show that we're placing a rock here.
         end
         
