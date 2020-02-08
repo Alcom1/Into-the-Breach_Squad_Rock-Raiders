@@ -1,7 +1,7 @@
 --Science weapon that deploys a dynamite spawn.
 Weap_RR_Science_Deploy_Dynamite = Weap_RR_Base_Transporter:new{
     Name = "Dynamite Charge",
-    Description = "Teleport in an explosive that detonates when triggered or destroyed, pushing adjacent tiles.",
+    Description = "Teleport in an explosive that detonates when triggered, pushing adjacent tiles.",
     Class = "Science",
     Icon = "weapons/weapon3.png",
     Deployed = "pawn_spawn_dynamite",
@@ -75,7 +75,7 @@ function Weap_RR_Spawn_Dynamite:GetSkillEffect(p1, p2)
         local damage = SpaceDamage(target, 0)           --Damage surrounding tiles
 
         if self.ALandslideHasOccured and RR_IsMountain(target) then                 --A LANDSLIDE HAS OCCURRED
-            LOG('A LANDSLIDE HAS OCCURRED')                                         --A LANDSLIDE HAS OCCURRED
+            LOG('A LANDSLIDE HAS OCCURRED!')                                        --A LANDSLIDE HAS OCCURRED
                                                                                     --A LANDSLIDE HAS OCCURRED
             ret:AddDamage(SpaceDamage(target, DAMAGE_DEATH))                        --A LANDSLIDE HAS OCCURRED
                                                                                     --A LANDSLIDE HAS OCCURRED
