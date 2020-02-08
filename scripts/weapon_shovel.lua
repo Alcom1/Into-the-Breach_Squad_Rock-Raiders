@@ -77,8 +77,7 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
     local pointSink = RR_GetEarthPathEnd(p1, p2)            --Get a sink landing point for the rock
     local isSink =                                          --If the landing point will cause a sink
         math.abs(p1:Manhattan(p2)) > 
-        math.abs(p1:Manhattan(pointSink)) +
-        (isTargeting and 1 or 0)                            --Move comparison over by one if we are targeting something so we still attack it.
+        math.abs(p1:Manhattan(pointSink))                   --Move comparison over by one if we are targeting something so we still attack it.
            
     local spawnFinal =                                      --The landing location of the rock
         isSink and                                          --Stop at the sink location if we're sinking, go to the target point otherwise
@@ -90,7 +89,9 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
     end
 
     if isTargeting then                                     --Move landing locations backwards if we're targeting an enemy
-        spawnFinal = bruteFinal
+        if not isSink then                                  --Move spawnFinal back if the rock didn't sink
+            spawnFinal = bruteFinal
+        end
         bruteFinal = bruteFinal - DIR_VECTORS[direction]
     end
 
