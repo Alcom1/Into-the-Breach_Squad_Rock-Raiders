@@ -101,6 +101,7 @@ function mod:init()
     modApi:appendAsset("img/weapons/weapon_scoop.png",self.resourcePath.."img/weapons/weapon_scoop.png")
     modApi:appendAsset("img/weapons/weapon3.png",self.resourcePath.."img/weapons/weapon3.png")
     modApi:appendAsset("img/weapons/passive_fossilizer.png",self.resourcePath.."img/weapons/passive_fossilizer.png")
+    modApi:appendAsset("img/combat/rock_l.png",self.resourcePath.."img/combat/rock_l.png")
 
     self.modApiExt = require(self.scriptPath .."modApiExt/modApiExt")
     self.modApiExt:init()
@@ -116,7 +117,7 @@ function mod:init()
     require(self.scriptPath.."weapon_shovel")
     require(self.scriptPath.."weapon_fence")
 
-    Location["units/aliens/rock_1.png"] = Point(-18, 0)
+    Location["combat/rock_l.png"] = Point(-18, 0)
 end
 
 function mod:load(options, version)
