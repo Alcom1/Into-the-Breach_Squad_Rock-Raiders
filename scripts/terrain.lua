@@ -1,7 +1,7 @@
 --If terrain is water/lava
-function RR_IsLiquid(point)
+function RR_IsSink(point)
     local terrain = Board:GetTerrain(point)
-	return	terrain == TERRAIN_WATER or terrain == TERRAIN_LAVA
+	return	terrain == TERRAIN_WATER or terrain == TERRAIN_LAVA or terrain == TERRAIN_HOLE
 end
 
 --If terrain is mountain

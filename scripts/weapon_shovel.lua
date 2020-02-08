@@ -39,6 +39,19 @@ Weap_RR_Brute_Shovel_AB = Weap_RR_Brute_Shovel:new{
     Oresome = true
 }	
 
+--Get the end of an earth path, a path that continues until before the ground ends
+local function RR_GetEarthPathEnd(p1, p2)
+    local travelPoints = p1:Bresenham(p2)       --Get all points from here to there
+
+    for i, point in ipairs(travelPoints) do
+        if RR_IsSink(point) then                --If this point will sink the rock
+            return travelPoints[i - 1]          --Return the previous point
+        end
+    end
+
+    return p2                                   --Return the last point if the ground never ends
+end
+
 -- Spawn a rock without a preview
 local function RR_HiddenRock(effect, p)
 	-- spawn rock via script so the preview doesn't know about it
@@ -61,13 +74,16 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
     local bruteFinal = p2 - DIR_VECTORS[direction]          --The landing location of this mech
     local spawnStart = p1 + DIR_VECTORS[direction]          --The starting location of the rock
 
-    local pointWet = GetProjectileEnd(p1, p2, PATH_GROUND)  --Get a wet landing point for the rock
-    local isWet =                                           --If the landing point is wet
-        math.abs(p1:Manhattan(p2)) >= 
-        math.abs(p1:Manhattan(pointWet)) +
+    local pointSink = RR_GetEarthPathEnd(p1, p2)            --Get a sink landing point for the rock
+    local isSink =                                          --If the landing point will cause a sink
+        math.abs(p1:Manhattan(p2)) > 
+        math.abs(p1:Manhattan(pointSink)) +
         (isTargeting and 1 or 0)                            --Move comparison over by one if we are targeting something so we still attack it.
            
-    local spawnFinal = isWet and pointWet or p2             --The landing location of the rock
+    local spawnFinal =                                      --The landing location of the rock
+        isSink and                                          --Stop at the sink location if we're sinking, go to the target point otherwise
+        pointSink + DIR_VECTORS[direction]                  --Move forward one so the spawn falls into the hole.
+        or p2                                               --Go to the target point
 
     if(isTargeting and isMeleeRange) then                   --Can't do anything to enemies within melee range so just stop.
         return ret
@@ -78,7 +94,7 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
         bruteFinal = bruteFinal - DIR_VECTORS[direction]
     end
 
-    if isWet then
+    if isSink then
         isTargeting = false                                 --Stop targeting if the start is water, we can't spawn a rock
         bruteFinal = bruteFinal + DIR_VECTORS[direction]    --Wait no go back
     end
@@ -103,9 +119,7 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
         end
     end
     
-    if not isWet then                               --We can't spawn rocks in water, so don't even bother.
-
-        LOG("ASDF "..(isTargeting and "TRUE" or "FALSE"))
+    if not isSink then                                      --The rock sunk, so don't even bother.
 
         if self.Oresome then
             ret:AddBounce(spawnFinal, 3)
@@ -128,7 +142,7 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
             damage.sSound = self.ImpactSound                --Damage sfx
             damage.sAnimation = "airpush_"..(direction % 4) --Damage anim
 
-            if not isWet then                       --If a rock lands here show it
+            if not isSink then                              --If a rock lands here show it
                 local marker = SpaceDamage(spawnFinal, 0)   --Show that we're placing a rock before here.
                 marker.sImageMark = self.DamageMarker       --Show
                 ret:AddDamage(marker)                       --Show
@@ -137,7 +151,7 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
             ret:AddMelee(bruteFinal, SpaceDamage(p2, 0), NO_DELAY)  --Melee animation for pushing rock into enemy
             ret:AddMelee(spawnFinal, SpaceDamage(p2, 0), NO_DELAY)  --Melee animation for pushing rock into enemy
 
-        elseif not isWet then                       --If a rock lands here show it
+        elseif not isSink then                              --If a rock lands here show it
             damage.sImageMark = self.DamageMarker           --Show that we're placing a rock here.
         end
         
