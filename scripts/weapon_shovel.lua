@@ -1,7 +1,7 @@
 --Shovel that spawns and pushes a rock
 Weap_RR_Brute_Shovel = Skill:new{
     Name = "Mining Scoop",
-    Description = "Dig a rock out of the ground and push it to a tile or into an enemy.",
+    Description = "Dig up a rock and dash in a line with it, damaging and pushing a target.",
     Class = "Brute",
     Icon = "weapons/weapon_scoop.png",
     Damage = 1,
@@ -66,11 +66,27 @@ end
 
 -- Skill Effect that creates and charges self and a rock
 function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
+    --Initial points and conditions
     local ret = SkillEffect()
     local isTargeting = Board:IsBlocked(p2, PATH_FLYER)     --If we are targeting something, a non-empty tile
     local direction = GetDirection(p2 - p1)                 --The direction we are travelling in
     local isMeleeRange = p1:Manhattan(p2) == 1
 
+    --Intial Sound effect
+    ret:AddSound(self.ChargeSound)                          --Charge SFX
+
+    --Special case where we melee a target
+    if(isTargeting and isMeleeRange) then
+        local meleeDamage = SpaceDamage(p2, self.Damage, direction) --Damage
+        meleeDamage.sSound = self.ImpactSound                       --Damage sfx
+        meleeDamage.sAnimation = "airpush_"..(direction % 4)        --Damage anim
+        ret:AddMelee(p1, meleeDamage, NO_DELAY)                     --Melee
+        ret:AddBounce(p1, 2)                                        --Bounce
+        ret:AddBounce(p2, 2)                                        --Bounce
+        return ret
+    end
+
+    --Repositioning based on conditions
     local bruteFinal = p2 - DIR_VECTORS[direction]          --The landing location of this mech
     local spawnStart = p1 + DIR_VECTORS[direction]          --The starting location of the rock
 
@@ -84,10 +100,6 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
         pointSink + DIR_VECTORS[direction]                  --Move forward one so the spawn falls into the hole.
         or p2                                               --Go to the target point
 
-    if(isTargeting and isMeleeRange) then                   --Can't do anything to enemies within melee range so just stop.
-        return ret
-    end
-
     if isTargeting then                                     --Move landing locations backwards if we're targeting an enemy
         if not isSink then                                  --Move spawnFinal back if the rock didn't sink
             spawnFinal = bruteFinal
@@ -96,12 +108,10 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
     end
 
     if isSink then
-        isTargeting = false                                 --Stop targeting if the start is water, we can't spawn a rock
         bruteFinal = bruteFinal + DIR_VECTORS[direction]    --Wait no go back
     end
 
-    ret:AddSound(self.ChargeSound)                          --Charge SFX
-    
+    --Actions and movement
     create = SpaceDamage(p2, 0)                             --Melee effect for creating a rock or attacking a unit
     create.sSound = self.CreateSound                        --Rock creating SFX
     ret:AddMelee(p1, create)                                --Rock creating visual
@@ -119,45 +129,44 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
             ret:AddDelay(0.06)
         end
     end
-    
-    if not isSink then                                      --The rock sunk, so don't even bother.
 
-        if self.Oresome then
-            ret:AddBounce(spawnFinal, 3)
-            local left = (direction - 1) % 4                --left direction
-            local right = (direction + 1) % 4               --right direction
-            local damageLeft = SpaceDamage(spawnFinal + DIR_VECTORS[left], 0, left)     --Damage left
-            local damageRight = SpaceDamage(spawnFinal + DIR_VECTORS[right], 0, right)  --Damage right
-            damageLeft.sAnimation = "airpush_"..left        --Damage left anim
-            damageRight.sAnimation = "airpush_"..right      --Damage right anim
-            damageLeft.sSound = self.ImpactSound            --Damage sfx
-            ret:AddDamage(damageLeft)
-            ret:AddDamage(damageRight)
-        end
-
-        local damage = SpaceDamage(p2, 0)                   --Will either be a Damage & Push or a rock spawn indicator
-
-        if isTargeting then                                 --Deal damage to and push a target
-            damage.iPush = direction                        --Damage push
-            damage.iDamage = self.Damage                    --Damage damage
-            damage.sSound = self.ImpactSound                --Damage sfx
-            damage.sAnimation = "airpush_"..(direction % 4) --Damage anim
-
-            if not isSink then                              --If a rock lands here show it
-                local marker = SpaceDamage(spawnFinal, 0)   --Show that we're placing a rock before here.
-                marker.sImageMark = self.DamageMarker       --Show
-                ret:AddDamage(marker)                       --Show
-            end
-
-            ret:AddMelee(bruteFinal, SpaceDamage(p2, 0), NO_DELAY)  --Melee animation for pushing rock into enemy
-            ret:AddMelee(spawnFinal, SpaceDamage(p2, 0), NO_DELAY)  --Melee animation for pushing rock into enemy
-
-        elseif not isSink then                              --If a rock lands here show it
-            damage.sImageMark = self.DamageMarker           --Show that we're placing a rock here.
-        end
-        
-        ret:AddDamage(damage)
+    --Damage
+    if self.Oresome then
+        ret:AddBounce(spawnFinal, 3)
+        local left = (direction - 1) % 4                --left direction
+        local right = (direction + 1) % 4               --right direction
+        local damageLeft = SpaceDamage(spawnFinal + DIR_VECTORS[left], 0, left)     --Damage left
+        local damageRight = SpaceDamage(spawnFinal + DIR_VECTORS[right], 0, right)  --Damage right
+        damageLeft.sAnimation = "airpush_"..left        --Damage left anim
+        damageRight.sAnimation = "airpush_"..right      --Damage right anim
+        damageLeft.sSound = self.ImpactSound            --Damage sfx
+        ret:AddDamage(damageLeft)
+        ret:AddDamage(damageRight)
     end
 
+    local damage = SpaceDamage(p2, 0)                   --Will either be a Damage & Push or a rock spawn indicator
+
+    if isTargeting then                                 --Deal damage to and push a target
+        damage.iPush = direction                        --Damage push
+        damage.iDamage = self.Damage                    --Damage damage
+        damage.sSound = self.ImpactSound                --Damage sfx
+        damage.sAnimation = "airpush_"..(direction % 4) --Damage anim
+
+        if not isSink then                              --If a rock lands here show it
+            local marker = SpaceDamage(spawnFinal, 0)   --Show that we're placing a rock before here.
+            marker.sImageMark = self.DamageMarker       --Show
+            ret:AddDamage(marker)                       --Show
+        end
+
+        ret:AddMelee(bruteFinal, SpaceDamage(p2, 0), NO_DELAY)  --Melee animation for pushing rock into enemy
+        ret:AddMelee(spawnFinal, SpaceDamage(p2, 0), NO_DELAY)  --Melee animation for pushing rock into enemy
+
+    elseif not isSink then                              --If a rock lands here show it
+        damage.sImageMark = self.DamageMarker           --Show that we're placing a rock here.
+    end
+    
+    ret:AddDamage(damage)
+
+    --It's finally over
     return ret
 end
