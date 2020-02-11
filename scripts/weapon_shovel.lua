@@ -8,12 +8,12 @@ Weap_RR_Brute_Shovel = Skill:new{
     PowerCost = 1,
     Upgrades = 2,
     UpgradeCost = { 3, 1 },
-    UpgradeList = { "+2 Damage", "Oresome!" },
+    UpgradeList = { "+2 Damage", "Frozen Frenzy!" },
     CreateSound = "/enemy/digger_1/attack_queued",
     ChargeSound = "/weapons/charge",
     ImpactSound = "/impact/generic/explosion",
     DamageMarker = "combat/rock_l.png",
-    Oresome = false,
+    FFrenzy = false,
     TipImage = {
         Unit = Point(2, 4),
         Enemy = Point(2, 1),
@@ -29,14 +29,14 @@ Weap_RR_Brute_Shovel_A = Weap_RR_Brute_Shovel:new{
 
 --Ally Immune upgrade
 Weap_RR_Brute_Shovel_B = Weap_RR_Brute_Shovel:new{
-    UpgradeDescription = "Placing a rock pushes units to the side.",
-    Oresome = true
+    UpgradeDescription = "Freeze the rock you dig up.",
+    FFrenzy = true
 }
 
 --Both upgrades combined
 Weap_RR_Brute_Shovel_AB = Weap_RR_Brute_Shovel:new{
     Damage = 3,
-    Oresome = true
+    FFrenzy = true
 }	
 
 --Get the end of an earth path, a path that continues until before the ground ends
@@ -118,10 +118,16 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
     RR_HiddenRock(ret, spawnStart)                          --Spawn a rock without previewing it
     ret:AddDelay(isMeleeRange and 0.05 or 0.25)             --Timing is off without this delay
 
+    if self.FFrenzy then                                    --Frozen Frenzy, freeze the location where the rock spawned
+        damageFreeze = SpaceDamage(spawnStart, 0)           --Damage, Damage is overridden if we melee a target
+        damageFreeze.iFrozen = 1                            --Damage Freeze
+        ret:AddDamage(damageFreeze)                         --Damage
+    end
+
     ret:AddCharge(Board:GetSimplePath(p1, bruteFinal), NO_DELAY)            --Shovel charge
     ret:AddCharge(Board:GetSimplePath(spawnStart, spawnFinal), NO_DELAY)    --Rock charge
 
-    local temp = p1                                         --Add bounce effects like charge mech because we charging!
+    local temp = p1                                     --Add bounce effects like charge mech because we charging!
     while temp ~= p2  do
         ret:AddBounce(temp, 2)
         temp = temp + DIR_VECTORS[direction]
@@ -131,19 +137,6 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
     end
 
     --Damage
-    if self.Oresome then
-        ret:AddBounce(spawnFinal, 3)
-        local left = (direction - 1) % 4                --left direction
-        local right = (direction + 1) % 4               --right direction
-        local damageLeft = SpaceDamage(spawnFinal + DIR_VECTORS[left], 0, left)     --Damage left
-        local damageRight = SpaceDamage(spawnFinal + DIR_VECTORS[right], 0, right)  --Damage right
-        damageLeft.sAnimation = "airpush_"..left        --Damage left anim
-        damageRight.sAnimation = "airpush_"..right      --Damage right anim
-        damageLeft.sSound = self.ImpactSound            --Damage sfx
-        ret:AddDamage(damageLeft)
-        ret:AddDamage(damageRight)
-    end
-
     local damage = SpaceDamage(p2, 0)                   --Will either be a Damage & Push or a rock spawn indicator
 
     if isTargeting then                                 --Deal damage to and push a target
@@ -152,14 +145,14 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
         damage.sSound = self.ImpactSound                --Damage sfx
         damage.sAnimation = "airpush_"..(direction % 4) --Damage anim
 
+        ret:AddMelee(bruteFinal, SpaceDamage(p2, 0), NO_DELAY)  --Melee animation for pushing rock into enemy
+        ret:AddMelee(spawnFinal, SpaceDamage(p2, 0), NO_DELAY)  --Melee animation for pushing rock into enemy
+
         if not isSink then                              --If a rock lands here show it
-            local marker = SpaceDamage(spawnFinal, 0)   --Show that we're placing a rock before here.
+            local marker = SpaceDamage(spawnFinal, 1)   --Show that we're placing a rock before here.
             marker.sImageMark = self.DamageMarker       --Show
             ret:AddDamage(marker)                       --Show
         end
-
-        ret:AddMelee(bruteFinal, SpaceDamage(p2, 0), NO_DELAY)  --Melee animation for pushing rock into enemy
-        ret:AddMelee(spawnFinal, SpaceDamage(p2, 0), NO_DELAY)  --Melee animation for pushing rock into enemy
 
     elseif not isSink then                              --If a rock lands here show it
         damage.sImageMark = self.DamageMarker           --Show that we're placing a rock here.
