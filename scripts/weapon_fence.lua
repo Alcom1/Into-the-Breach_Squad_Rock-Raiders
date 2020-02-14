@@ -7,8 +7,8 @@ Weap_RR_Science_Deploy_Fence = Weap_RR_Base_Transporter:new{
     Deployed = "pawn_spawn_fence",
     PowerCost = 1,
     Upgrades = 2,
-    UpgradeCost = { 3, 1 },
-    UpgradeList = { "+2 Damage", "+1 Use" },
+    UpgradeCost = { 3, 2 },
+    UpgradeList = { "+1 Damage", "+1 Damage" },
     Limited = 2,
     TipImage = {
         Unit = Point(2,4),
@@ -23,20 +23,19 @@ Weap_RR_Science_Deploy_Fence = Weap_RR_Base_Transporter:new{
 
 --More zappy damage
 Weap_RR_Science_Deploy_Fence_A = Weap_RR_Science_Deploy_Fence:new{
-    UpgradeDescription = "Increases the Electric Fence's attack damage by 2.",
+    UpgradeDescription = "Increases the Electric Fence's attack damage by 1.",
     Deployed = "pawn_spawn_fence2"
 }
 
---Unlimited Uses
+--More zappy damage (for less!)
 Weap_RR_Science_Deploy_Fence_B = Weap_RR_Science_Deploy_Fence:new{
-    UpgradeDescription = "Increases uses per battle by 1.",
-	Limited = 3
+    UpgradeDescription = "Increases the Electric Fence's attack damage by 1.",
+    Deployed = "pawn_spawn_fence2"
 }
 
---Both upgrades combined
+--Even more zappy damage!
 Weap_RR_Science_Deploy_Fence_AB = Weap_RR_Science_Deploy_Fence:new{
-    Deployed = "pawn_spawn_fence2",
-	Limited = 3
+    Deployed = "pawn_spawn_fence3"
 }
 
 --Generic weapon used by Electric Fence spawn
@@ -49,6 +48,11 @@ Weap_RR_Spawn_Lightning = Skill:new{
 
 --Electric Fence with damage upgrade
 Weap_RR_Spawn_Lightning2 = Weap_RR_Spawn_Lightning:new{
+    Damage = 2
+}
+
+--Electric Fence with damage upgrade
+Weap_RR_Spawn_Lightning3 = Weap_RR_Spawn_Lightning:new{
     Damage = 3
 }
 
@@ -61,7 +65,7 @@ function Weap_RR_Spawn_Lightning:GetSkillEffect(p1, p2)
     local hash = function(point) return point.x + point.y * 8 end           -- Hash Point into an int for indexing
     local past = { [hash(p1)] = true }                                      -- We're not Pichu
 
-    function recurseLightning(prev, curr, ret)
+    function RR_RecurseLightning(prev, curr, ret)
         past[hash(curr)] = true                                             -- Mark tile as past
 
         local damage = SpaceDamage(curr, self.Damage)                       -- Damage adjacent tiles
@@ -71,13 +75,13 @@ function Weap_RR_Spawn_Lightning:GetSkillEffect(p1, p2)
         for dir = DIR_START, DIR_END do                                     -- Loop through adjacent tiles
             local next = curr + DIR_VECTORS[dir]                            -- Adjacent tile Point
             if not past[hash(next)] and Board:IsPawnSpace(next) then        -- If tile is not past and has a pawn then
-                ret = recurseLightning(curr, next, ret)                     -- Recurse to adjacent tiles
+                ret = RR_RecurseLightning(curr, next, ret)                     -- Recurse to adjacent tiles
             end
         end
         
         return ret
     end
     
-    ret = recurseLightning(p1, p2, ret)                                     -- Start recursion
+    ret = RR_RecurseLightning(p1, p2, ret)                                     -- Start recursion
     return ret
 end

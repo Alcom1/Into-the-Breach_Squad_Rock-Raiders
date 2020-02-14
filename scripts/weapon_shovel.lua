@@ -7,7 +7,7 @@ Weap_RR_Brute_Shovel = Skill:new{
     Damage = 1,
     PowerCost = 1,
     Upgrades = 2,
-    UpgradeCost = { 3, 1 },
+    UpgradeCost = { 3, 2 },
     UpgradeList = { "+2 Damage", "Frozen Frenzy!" },
     CreateSound = "/enemy/digger_1/attack_queued",
     ChargeSound = "/weapons/charge",
@@ -118,7 +118,7 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
     RR_HiddenRock(ret, spawnStart)                          --Spawn a rock without previewing it
     ret:AddDelay(isMeleeRange and 0.05 or 0.25)             --Timing is off without this delay
 
-    if self.FFrenzy then                                    --Frozen Frenzy, freeze the location where the rock spawned
+    if self.FFrenzy and not RR_IsSink(spawnStart) then      --Frozen Frenzy, freeze the location where the rock spawned unless it's a sink
         damageFreeze = SpaceDamage(spawnStart, 0)           --Damage, Damage is overridden if we melee a target
         damageFreeze.iFrozen = 1                            --Damage Freeze
         ret:AddDamage(damageFreeze)                         --Damage

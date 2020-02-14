@@ -58,6 +58,10 @@ pawn_spawn_fence2 = pawn_spawn_fence:new{
     SkillList = { "Weap_RR_Spawn_Lightning2" }
 }
 
+pawn_spawn_fence2 = pawn_spawn_fence:new{
+    SkillList = { "Weap_RR_Spawn_Lightning3" }
+}
+
 pawn_spawn_dynamite = Pawn:new{
     Name = "Dynamite Charge",
     Health = 1,
