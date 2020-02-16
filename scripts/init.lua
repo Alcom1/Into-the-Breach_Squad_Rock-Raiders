@@ -74,11 +74,11 @@ function mod:init()
             Path = "img/units/player",
             ResourcePath = "units/player",
 
-            Default =           { PosX = -10, PosY = 3 },
-            Animated =          { PosX = -10, PosY = 3, NumFrames = 1},
-            Broken =            { PosX = -10, PosY = 3 },
-            Submerged =         { PosX = -10, PosY = 3 },
-            SubmergedBroken =	{ PosX = -10, PosY = 3 },
+            Default =           { PosX = -11, PosY = -20 },
+            Animated =          { PosX = -11, PosY = -20, NumFrames = 1},
+            Broken =            { PosX = -11, PosY = -20 },
+            Submerged =         { PosX = -11, PosY = -20 },
+            SubmergedBroken =	{ PosX = -11, PosY = -20 },
             Icon =              {},
         },
         {
@@ -99,6 +99,7 @@ function mod:init()
 
     modApi:appendAsset("img/weapons/weapon_drill.png",self.resourcePath.."img/weapons/weapon_drill.png")
     modApi:appendAsset("img/weapons/weapon_scoop.png",self.resourcePath.."img/weapons/weapon_scoop.png")
+    modApi:appendAsset("img/weapons/weapon_fence.png",self.resourcePath.."img/weapons/weapon_fence.png")
     modApi:appendAsset("img/weapons/weapon3.png",self.resourcePath.."img/weapons/weapon3.png")
     modApi:appendAsset("img/weapons/passive_fossilizer.png",self.resourcePath.."img/weapons/passive_fossilizer.png")
     modApi:appendAsset("img/combat/rock_l.png",self.resourcePath.."img/combat/rock_l.png")
