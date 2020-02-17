@@ -13,11 +13,12 @@ function Point:Bresenham(p2, limitStart, limitFinal)
     local lengthX = math.abs(p1.x - p2.x)   -- x distance from here to there
     local lengthY = math.abs(p1.y - p2.y)   -- y distance from here to there
     local tall = lengthY > lengthX          -- if the slope > 1 (Shoutout to Tall Mech!)
-    local start = limitStart or 0 + 1       -- range is limited between start and final
-    local final = math.max(lengthX, lengthY) - (limitFinal or 0) + 1
 
     local horz = math.max(lengthX, lengthY) -- Length of the stairs, steps are always 1px high
     local vert = math.min(lengthX, lengthY) -- Height of the stairs
+
+    local start = limitStart or 0           -- range is limited between start and final
+    local final = horz - (limitFinal or 0) + 1
 
     local diff = -horz                      --Difference in Bresenham's algorithm
     local curr = 0                          --Current height that we're at
