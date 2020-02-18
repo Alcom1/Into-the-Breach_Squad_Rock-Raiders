@@ -88,11 +88,11 @@ function mod:init()
             Path = "img/units/player",
             ResourcePath = "units/player",
 
-            Default =           { PosX = -10, PosY = 8 },
-            Animated =          { PosX = -10, PosY = 8, NumFrames = 1},
-            Broken =            { PosX = -10, PosY = 8 },
-            Submerged =         { PosX = -10, PosY = 8 },
-            SubmergedBroken =	{ PosX = -10, PosY = 8 },
+            Default =           { PosX = -10, PosY = 6 },
+            Animated =          { PosX = -10, PosY = 6, NumFrames = 1},
+            Broken =            { PosX = -10, PosY = 6 },
+            Submerged =         { PosX = -10, PosY = 6 },
+            SubmergedBroken =	{ PosX = -10, PosY = 6 },
             Icon =              {},
         }
     })
