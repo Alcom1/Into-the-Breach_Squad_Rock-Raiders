@@ -100,7 +100,7 @@ function mod:init()
     modApi:appendAsset("img/weapons/weapon_drill.png",self.resourcePath.."img/weapons/weapon_drill.png")
     modApi:appendAsset("img/weapons/weapon_scoop.png",self.resourcePath.."img/weapons/weapon_scoop.png")
     modApi:appendAsset("img/weapons/weapon_fence.png",self.resourcePath.."img/weapons/weapon_fence.png")
-    modApi:appendAsset("img/weapons/weapon3.png",self.resourcePath.."img/weapons/weapon3.png")
+    modApi:appendAsset("img/weapons/weapon_dynamite.png",self.resourcePath.."img/weapons/weapon_dynamite.png")
     modApi:appendAsset("img/weapons/passive_fossilizer.png",self.resourcePath.."img/weapons/passive_fossilizer.png")
     modApi:appendAsset("img/combat/rock_l.png",self.resourcePath.."img/combat/rock_l.png")
 
