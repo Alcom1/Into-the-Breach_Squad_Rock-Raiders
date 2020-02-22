@@ -92,27 +92,17 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
     end
 
     --Repositioning based on conditions
-    local bruteFinal = p2 - DIR_VECTORS[direction]          --The landing location of this mech
     local spawnStart = p1 + DIR_VECTORS[direction]          --The starting location of the rock
+    local spawnFinal = isTargeting and p2 - DIR_VECTORS[direction] or p2
+    local bruteFinal = spawnFinal - DIR_VECTORS[direction]  --The landing location of this mech
 
-    local pointSink = RR_GetEarthPathEnd(p1, p2)            --Get a sink landing point for the rock
+    local pointSink = RR_GetEarthPathEnd(p1, spawnFinal)    --Get a sink landing point for the rock
     local isSink =                                          --If the landing point will cause a sink
-        math.abs(p1:Manhattan(p2)) > 
+        math.abs(p1:Manhattan(spawnFinal)) > 
         math.abs(p1:Manhattan(pointSink))                   --Move comparison over by one if we are targeting something so we still attack it.
-           
-    local spawnFinal =                                      --The landing location of the rock
-        isSink and                                          --Stop at the sink location if we're sinking, go to the target point otherwise
-        pointSink + DIR_VECTORS[direction]                  --Move forward one so the spawn falls into the hole.
-        or p2                                               --Go to the target point
-
-    if isTargeting then                                     --Move landing locations backwards if we're targeting an enemy
-        if not isSink then                                  --Move spawnFinal back if the rock didn't sink
-            spawnFinal = bruteFinal
-        end
-        bruteFinal = bruteFinal - DIR_VECTORS[direction]
-    end
 
     if isSink then
+        spawnFinal = pointSink + DIR_VECTORS[direction]     --Sink here
         bruteFinal = bruteFinal + DIR_VECTORS[direction]    --Wait no go back
     end
 
