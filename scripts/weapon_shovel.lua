@@ -132,40 +132,46 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
     ret:AddCharge(Board:GetSimplePath(p1, bruteFinal), NO_DELAY)            --Shovel charge
     ret:AddCharge(Board:GetSimplePath(spawnStart, spawnFinal), NO_DELAY)    --Rock charge
 
-    local temp = p1                                     --Add bounce effects like charge mech because we charging!
-    while temp ~= p2  do
-        ret:AddBounce(temp, 2)
-        temp = temp + DIR_VECTORS[direction]
-        if temp ~= p2 then
+    local bump = p1                                         --Add bounce effects like charge mech because we charging!
+    while bump ~= p2  do
+        ret:AddBounce(bump, 2)
+        bump = bump + DIR_VECTORS[direction]
+        if bump ~= p2 then
             ret:AddDelay(0.06)
         end
     end
 
     --Damage
-    local damage = SpaceDamage(p2, 0)                   --Will either be a Damage & Push or a rock spawn indicator
-
     local damageMarker = self.DamageMarker..(1 + RR_BoolToInt(self.FFrenzy) - RR_BoolToInt(isTargeting))..".png"
 
     if isTargeting then                                 --Deal damage to and push a target
-        damage.iPush = direction                        --Damage push
-        damage.iDamage = self.Damage                    --Damage damage
+        local damage = SpaceDamage(                     --Damage
+            p2,                                         --Damage location
+            self.Damage,                                --Damage damage
+            direction)                                  --Damage push
         damage.sSound = self.ImpactSound                --Damage sfx
         damage.sAnimation = "airpush_"..(direction % 4) --Damage anim
 
         ret:AddMelee(bruteFinal, SpaceDamage(p2, 0), NO_DELAY)  --Melee animation for pushing rock into enemy
         ret:AddMelee(spawnFinal, SpaceDamage(p2, 0), NO_DELAY)  --Melee animation for pushing rock into enemy
-
-        if not isSink then                              --If a rock lands here show it
-            local marker = SpaceDamage(spawnFinal, 1)   --Show that we're placing a rock before here.
-            marker.sImageMark = damageMarker            --Show
-            ret:AddDamage(marker)                       --Show
-        end
-
-    elseif not isSink then                              --If a rock lands here show it
-        damage.sImageMark = damageMarker                --Show that we're placing a rock here.
-    end
     
-    ret:AddDamage(damage)
+        ret:AddDamage(damage)
+
+        if not isSink then                                  --If a rock lands here show it and damage it.
+            local damageRock = SpaceDamage(spawnFinal, 1)   --Damage the rock here.
+            if not Board:IsFire(spawnFinal) then            --This location isn't on fire. Keep it that way.
+                damageRock.iFire = EFFECT_REMOVE
+            end
+            damageRock.bHide = true                         --Hide damages
+            ret:AddDamage(damageRock)                       --Show
+        end
+    end       
+
+    if not isSink then
+        local marker = SpaceDamage(spawnFinal, 0)          --Show the rock.
+        marker.sImageMark = damageMarker
+        ret:AddDamage(marker)
+    end
 
     --It's finally over
     return ret
