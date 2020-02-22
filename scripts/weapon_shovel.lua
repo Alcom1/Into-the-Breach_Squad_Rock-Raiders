@@ -12,7 +12,7 @@ Weap_RR_Brute_Shovel = Skill:new{
     CreateSound = "/enemy/digger_1/attack_queued",
     ChargeSound = "/weapons/charge",
     ImpactSound = "/impact/generic/explosion",
-    DamageMarker = "combat/rock_l.png",
+    DamageMarker = "combat/rock_",
     FFrenzy = false,
     TipImage = {
         Unit = Point(2, 4),
@@ -37,7 +37,12 @@ Weap_RR_Brute_Shovel_B = Weap_RR_Brute_Shovel:new{
 Weap_RR_Brute_Shovel_AB = Weap_RR_Brute_Shovel:new{
     Damage = 3,
     FFrenzy = true
-}	
+}
+
+--Convert a boolean to an integer
+local function RR_BoolToInt(bool)
+    return bool and 1 or 0
+end
 
 --Get the end of an earth path, a path that continues until before the ground ends
 local function RR_GetEarthPathEnd(p1, p2)
@@ -139,6 +144,8 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
     --Damage
     local damage = SpaceDamage(p2, 0)                   --Will either be a Damage & Push or a rock spawn indicator
 
+    local damageMarker = self.DamageMarker..(1 + RR_BoolToInt(self.FFrenzy) - RR_BoolToInt(isTargeting))..".png"
+
     if isTargeting then                                 --Deal damage to and push a target
         damage.iPush = direction                        --Damage push
         damage.iDamage = self.Damage                    --Damage damage
@@ -150,12 +157,12 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
 
         if not isSink then                              --If a rock lands here show it
             local marker = SpaceDamage(spawnFinal, 1)   --Show that we're placing a rock before here.
-            marker.sImageMark = self.DamageMarker       --Show
+            marker.sImageMark = damageMarker            --Show
             ret:AddDamage(marker)                       --Show
         end
 
     elseif not isSink then                              --If a rock lands here show it
-        damage.sImageMark = self.DamageMarker           --Show that we're placing a rock here.
+        damage.sImageMark = damageMarker                --Show that we're placing a rock here.
     end
     
     ret:AddDamage(damage)

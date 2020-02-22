@@ -102,7 +102,9 @@ function mod:init()
     modApi:appendAsset("img/weapons/weapon_fence.png",self.resourcePath.."img/weapons/weapon_fence.png")
     modApi:appendAsset("img/weapons/weapon_dynamite.png",self.resourcePath.."img/weapons/weapon_dynamite.png")
     modApi:appendAsset("img/weapons/passive_fossilizer.png",self.resourcePath.."img/weapons/passive_fossilizer.png")
-    modApi:appendAsset("img/combat/rock_l.png",self.resourcePath.."img/combat/rock_l.png")
+    modApi:appendAsset("img/combat/rock_0.png",self.resourcePath.."img/combat/rock_0.png")
+    modApi:appendAsset("img/combat/rock_1.png",self.resourcePath.."img/combat/rock_1.png")
+    modApi:appendAsset("img/combat/rock_2.png",self.resourcePath.."img/combat/rock_2.png")
 
     self.modApiExt = require(self.scriptPath .."modApiExt/modApiExt")
     self.modApiExt:init()
@@ -118,7 +120,9 @@ function mod:init()
     require(self.scriptPath.."weapon_shovel")
     require(self.scriptPath.."weapon_fence")
 
-    Location["combat/rock_l.png"] = Point(-18, 0)
+    Location["combat/rock_0.png"] = Point(-35, -13) --Point(-18, 0)
+    Location["combat/rock_1.png"] = Point(-35, -13) --Point(-18, 0)
+    Location["combat/rock_2.png"] = Point(-35, -13) --Point(-18, 0)
 end
 
 function mod:load(options, version)
