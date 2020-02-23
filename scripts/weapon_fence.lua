@@ -69,7 +69,7 @@ function Weap_RR_Spawn_Lightning:GetSkillEffect(p1, p2)
         past[hash(curr)] = true                                             -- Mark tile as past
 
         local damage = SpaceDamage(curr, self.Damage)                       -- Damage adjacent tiles
-        damage.sAnimation = "Lightning_Attack_"..GetDirection(curr - prev)  -- Damage
+        damage.sAnimation = "Lightning_Blue_"..GetDirection(curr - prev)    -- Damage
         ret:AddDamage(damage)                                               -- Damage
 
         for dir = DIR_START, DIR_END do                                     -- Loop through adjacent tiles

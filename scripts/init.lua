@@ -105,6 +105,42 @@ function mod:init()
     modApi:appendAsset("img/combat/rock_0.png",self.resourcePath.."img/combat/rock_0.png")
     modApi:appendAsset("img/combat/rock_1.png",self.resourcePath.."img/combat/rock_1.png")
     modApi:appendAsset("img/combat/rock_2.png",self.resourcePath.."img/combat/rock_2.png")
+    modApi:appendAsset("img/combat/laser_elec_blue_R.png",self.resourcePath.."img/combat/laser_elec_blue_R.png")
+    modApi:appendAsset("img/combat/laser_elec_blue_R1.png",self.resourcePath.."img/combat/laser_elec_blue_R1.png")
+    modApi:appendAsset("img/combat/laser_elec_blue_R2.png",self.resourcePath.."img/combat/laser_elec_blue_R2.png")
+    modApi:appendAsset("img/combat/laser_elec_blue_U.png",self.resourcePath.."img/combat/laser_elec_blue_U.png")
+    modApi:appendAsset("img/combat/laser_elec_blue_U1.png",self.resourcePath.."img/combat/laser_elec_blue_U1.png")
+    modApi:appendAsset("img/combat/laser_elec_blue_U2.png",self.resourcePath.."img/combat/laser_elec_blue_U2.png")
+
+    local baseAnim = Animation:new{
+        NumFrames = 1, 
+        Loop = false, 
+        Time = 0.5
+    }
+
+    ANIMS.Lightning_Blue_0 = baseAnim:new{
+        Image = "combat/laser_elec_blue_U.png",
+        PosX = -12 - 28/2,
+        PosY = 3 + 21/2
+    }
+
+    ANIMS.Lightning_Blue_1 = baseAnim:new{
+        Image = "combat/laser_elec_blue_R.png",
+        PosX = -12 - 28/2, 
+        PosY = 3 - 21/2
+    }
+
+    ANIMS.Lightning_Blue_2 = baseAnim:new{
+        Image = "combat/laser_elec_blue_U.png",
+        PosX = -12 + 28/2,
+        PosY = 3 - 21/2
+    }
+
+    ANIMS.Lightning_Blue_3 = baseAnim:new{
+        Image = "combat/laser_elec_blue_R.png",
+        PosX = -12 + 28/2,
+        PosY = 3 + 21/2
+    }
 
     self.modApiExt = require(self.scriptPath .."modApiExt/modApiExt")
     self.modApiExt:init()
@@ -120,9 +156,9 @@ function mod:init()
     require(self.scriptPath.."weapon_shovel")
     require(self.scriptPath.."weapon_fence")
 
-    Location["combat/rock_0.png"] = Point(-35, -13) --Point(-18, 0)
-    Location["combat/rock_1.png"] = Point(-35, -13) --Point(-18, 0)
-    Location["combat/rock_2.png"] = Point(-35, -13) --Point(-18, 0)
+    Location["combat/rock_0.png"] = Point(-35, -13)
+    Location["combat/rock_1.png"] = Point(-35, -13)
+    Location["combat/rock_2.png"] = Point(-0, -13)
 end
 
 function mod:load(options, version)
