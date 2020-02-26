@@ -158,7 +158,7 @@ function mod:init()
 
     Location["combat/rock_0.png"] = Point(-35, -13)
     Location["combat/rock_1.png"] = Point(-35, -13)
-    Location["combat/rock_2.png"] = Point(-0, -13)
+    Location["combat/rock_2.png"] = Point(-35, -13)
 end
 
 function mod:load(options, version)
