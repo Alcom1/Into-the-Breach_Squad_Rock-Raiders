@@ -58,7 +58,7 @@ pawn_spawn_fence2 = pawn_spawn_fence:new{
     SkillList = { "Weap_RR_Spawn_Lightning2" }
 }
 
-pawn_spawn_fence2 = pawn_spawn_fence:new{
+pawn_spawn_fence3 = pawn_spawn_fence:new{
     SkillList = { "Weap_RR_Spawn_Lightning3" }
 }
 
