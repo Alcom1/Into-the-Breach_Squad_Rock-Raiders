@@ -7,8 +7,8 @@ Weap_RR_Prime_Drill = Skill:new{
     Damage = 1,
     PowerCost = 1,
     Upgrades = 2,
-    UpgradeCost = { 3, 1 },
-    UpgradeList = { "Driller Knight!", "Ally Immune" },
+    UpgradeCost = { 1, 3 },
+    UpgradeList = { "Ally Immune", "Driller Knight!" },
     ImpactRamp = false,
     FriendlyDamage = true,
     DamageAnimation = "rock1d",
@@ -22,21 +22,8 @@ Weap_RR_Prime_Drill = Skill:new{
     }
 }
 
---Damage ramp upgrade
-Weap_RR_Prime_Drill_A = Weap_RR_Prime_Drill:new{
-    UpgradeDescription = "Damage increases by 1 for each unit you pass through.",
-    ImpactRamp = true,
-    TipImage = {
-        Unit = Point(2, 4),
-        Enemy = Point(2, 3),
-        Enemy2 = Point(2, 2),
-        Enemy3 = Point(2, 1),
-        Target = Point(2, 0)
-    }
-}
-
 --Ally Immune upgrade
-Weap_RR_Prime_Drill_B = Weap_RR_Prime_Drill:new{
+Weap_RR_Prime_Drill_A = Weap_RR_Prime_Drill:new{
     UpgradeDescription = "Friendly units will not take damage or be pulled by this attack.",
     FriendlyDamage = false,
     TipImage = {
@@ -44,6 +31,19 @@ Weap_RR_Prime_Drill_B = Weap_RR_Prime_Drill:new{
         Friendly = Point(2, 3),
         Enemy = Point(2, 2),
         Enemy2 = Point(2, 1),
+        Target = Point(2, 0)
+    }
+}
+
+--Damage ramp upgrade
+Weap_RR_Prime_Drill_B = Weap_RR_Prime_Drill:new{
+    UpgradeDescription = "Damage increases by 1 for each unit you pass through.",
+    ImpactRamp = true,
+    TipImage = {
+        Unit = Point(2, 4),
+        Enemy = Point(2, 3),
+        Enemy2 = Point(2, 2),
+        Enemy3 = Point(2, 1),
         Target = Point(2, 0)
     }
 }

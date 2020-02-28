@@ -7,8 +7,8 @@ Weap_RR_Brute_Shovel = Skill:new{
     Damage = 1,
     PowerCost = 1,
     Upgrades = 2,
-    UpgradeCost = { 3, 1 },
-    UpgradeList = { "+2 Damage", "Frozen Frenzy!" },
+    UpgradeCost = { 1, 3 },
+    UpgradeList = { "Frozen Frenzy!", "+2 Damage" },
     CreateSound = "/enemy/digger_1/attack_queued",
     ChargeSound = "/weapons/charge",
     ImpactSound = "/impact/generic/explosion",
@@ -21,16 +21,16 @@ Weap_RR_Brute_Shovel = Skill:new{
     }
 }
 
---Damage ramp upgrade
-Weap_RR_Brute_Shovel_A = Weap_RR_Brute_Shovel:new{
-    UpgradeDescription = "Increases damage by 2.",
-    Damage = 3,
-}
-
 --Ally Immune upgrade
-Weap_RR_Brute_Shovel_B = Weap_RR_Brute_Shovel:new{
+Weap_RR_Brute_Shovel_A = Weap_RR_Brute_Shovel:new{
     UpgradeDescription = "Freeze the rock you dig up.",
     FFrenzy = true
+}
+
+--Damage ramp upgrade
+Weap_RR_Brute_Shovel_B = Weap_RR_Brute_Shovel:new{
+    UpgradeDescription = "Increases damage by 2.",
+    Damage = 3,
 }
 
 --Both upgrades combined
