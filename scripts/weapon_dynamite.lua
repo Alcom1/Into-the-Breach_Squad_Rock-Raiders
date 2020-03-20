@@ -1,6 +1,6 @@
 --Science weapon that deploys a dynamite spawn.
 Weap_RR_Science_Deploy_Dynamite = Weap_RR_Base_Transporter:new{
-    Name = "Dynamite Charge",
+    Name = "Dynamite",
     Description = "Teleport in an explosive that detonates when triggered, pushing adjacent tiles.",
     Class = "Science",
     Icon = "weapons/weapon_dynamite.png",
@@ -9,7 +9,6 @@ Weap_RR_Science_Deploy_Dynamite = Weap_RR_Base_Transporter:new{
     Upgrades = 1,
     UpgradeCost = { 1 },
     UpgradeList = { "Landslide!" },
-    Limited = 2,
     TipImage = {
         Unit = Point(2,4),
         Target = Point(2,2),
