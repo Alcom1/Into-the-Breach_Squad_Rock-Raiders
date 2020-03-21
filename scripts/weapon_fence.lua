@@ -61,12 +61,10 @@ function Weap_RR_Spawn_Lightning:GetSkillEffect(p1, p2)
     local ret = SkillEffect()
 
     if not Board:IsPawnSpace(p2) then return ret end                        -- Don't attack empty spaces
-
-    local hash = function(point) return point.x + point.y * 8 end           -- Hash Point into an int for indexing
-    local past = { [hash(p1)] = true }                                      -- We're not Pichu
+    local past = { [p1:Hash()] = true }                                     -- We're not Pichu
 
     function RR_RecurseLightning(prev, curr, ret)
-        past[hash(curr)] = true                                             -- Mark tile as past
+        past[curr:Hash()] = true                                            -- Mark tile as past
 
         local damage = SpaceDamage(curr, self.Damage)                       -- Damage adjacent tiles
         damage.sAnimation = "Lightning_Blue_"..GetDirection(curr - prev)    -- Damage
@@ -74,14 +72,14 @@ function Weap_RR_Spawn_Lightning:GetSkillEffect(p1, p2)
 
         for dir = DIR_START, DIR_END do                                     -- Loop through adjacent tiles
             local next = curr + DIR_VECTORS[dir]                            -- Adjacent tile Point
-            if not past[hash(next)] and Board:IsPawnSpace(next) then        -- If tile is not past and has a pawn then
-                ret = RR_RecurseLightning(curr, next, ret)                     -- Recurse to adjacent tiles
+            if not past[next:Hash()] and Board:IsPawnSpace(next) then       -- If tile is not past and has a pawn then
+                ret = RR_RecurseLightning(curr, next, ret)                  -- Recurse to adjacent tiles
             end
         end
         
         return ret
     end
     
-    ret = RR_RecurseLightning(p1, p2, ret)                                     -- Start recursion
+    ret = RR_RecurseLightning(p1, p2, ret)                                  -- Start recursion
     return ret
 end

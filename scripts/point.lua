@@ -1,9 +1,14 @@
 -- extension of the point class
 
+-- hash a point into a unique integer
+function Point:Hash()
+    return self.x + self.y * 8 -- Unique hash for each grid position from 0-63
+end
+
 -- returns the points between self and p2, in order from p1 to p2
 function Point:Bresenham(p2, limitStart, limitFinal)
     
-    local function GetSign(x)                   -- Get the sign (-1, 0, 1) of a number
+    local function GetSign(x)               -- Get the sign (-1, 0, 1) of a number
         return x > 0 and 1 or x < 0 and -1 or 0
     end
     
@@ -20,12 +25,12 @@ function Point:Bresenham(p2, limitStart, limitFinal)
     local start = limitStart or 0           -- range is limited between start and final
     local final = horz - (limitFinal or 0) + 1
 
-    local diff = -horz                      --Difference in Bresenham's algorithm
-    local curr = 0                          --Current height that we're at
-    local index = 1                         --Index of insertion
+    local diff = -horz                      -- Difference in Bresenham's algorithm
+    local curr = 0                          -- Current height that we're at
+    local index = 1                         -- Index of insertion
 
-    for i = 0, horz do                      --Bresenham's algorithm
-        diff = diff + 2 * vert              --Diff upwards
+    for i = 0, horz do                      -- Bresenham's algorithm
+        diff = diff + 2 * vert              -- Diff upwards
 
         if(index >= start and index <= final) then  -- limit the range between start and final
             points[index - start] = Point(          -- map stair to actual point, add point
