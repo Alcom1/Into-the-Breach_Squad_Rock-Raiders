@@ -79,6 +79,7 @@ function mod:init()
             Broken =            { PosX = -11, PosY = -20 },
             Submerged =         { PosX = -11, PosY = -20 },
             SubmergedBroken =	{ PosX = -11, PosY = -20 },
+            Death =             { PosX = -21, PosY = -20, NumFrames = 11 },
             Icon =              {},
         },
         {
