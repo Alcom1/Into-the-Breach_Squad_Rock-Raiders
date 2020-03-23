@@ -60,26 +60,26 @@ Weap_RR_Spawn_Lightning3 = Weap_RR_Spawn_Lightning:new{
 function Weap_RR_Spawn_Lightning:GetSkillEffect(p1, p2)
     local ret = SkillEffect()
 
-    if not Board:IsPawnSpace(p2) then return ret end                        -- Don't attack empty spaces
-    local past = { [p1:Hash()] = true }                                     -- We're not Pichu
+    if not Board:IsPawnSpace(p2) then return ret end                        --Don't attack empty spaces
+    local past = { [p1:Hash()] = true }                                     --We're not Pichu
 
     function RR_RecurseLightning(prev, curr, ret)
-        past[curr:Hash()] = true                                            -- Mark tile as past
+        past[curr:Hash()] = true                                            --Mark tile as past
 
-        local damage = SpaceDamage(curr, self.Damage)                       -- Damage adjacent tiles
-        damage.sAnimation = "Lightning_Blue_"..GetDirection(curr - prev)    -- Damage
-        ret:AddDamage(damage)                                               -- Damage
+        local damage = SpaceDamage(curr, self.Damage)                       --Damage adjacent tiles
+        damage.sAnimation = "Lightning_Blue_"..GetDirection(curr - prev)    --Damage
+        ret:AddDamage(damage)                                               --Damage
 
-        for dir = DIR_START, DIR_END do                                     -- Loop through adjacent tiles
-            local next = curr + DIR_VECTORS[dir]                            -- Adjacent tile Point
-            if not past[next:Hash()] and Board:IsPawnSpace(next) then       -- If tile is not past and has a pawn then
-                ret = RR_RecurseLightning(curr, next, ret)                  -- Recurse to adjacent tiles
+        for dir = DIR_START, DIR_END do                                     --Loop through adjacent tiles
+            local next = curr + DIR_VECTORS[dir]                            --Adjacent tile Point
+            if not past[next:Hash()] and Board:IsPawnSpace(next) then       --If tile is not past and has a pawn then
+                ret = RR_RecurseLightning(curr, next, ret)                  --Recurse to adjacent tiles
             end
         end
         
         return ret
     end
     
-    ret = RR_RecurseLightning(p1, p2, ret)                                  -- Start recursion
+    ret = RR_RecurseLightning(p1, p2, ret)                                  --Start recursion
     return ret
 end

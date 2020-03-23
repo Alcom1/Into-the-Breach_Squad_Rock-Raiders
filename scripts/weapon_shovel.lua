@@ -57,9 +57,9 @@ local function RR_GetEarthPathEnd(p1, p2)
     return p2                                   --Return the last point if the ground never ends
 end
 
--- Spawn a rock without a preview
+--Spawn a rock without a preview
 local function RR_HiddenRock(effect, p)
-	-- spawn rock via script so the preview doesn't know about it
+	--spawn rock via script so the preview doesn't know about it
 	effect:AddScript([[
 		local effect = SkillEffect()
         local damage = SpaceDamage(Point(]].. p.x ..",".. p.y ..[[), 0)
@@ -69,7 +69,7 @@ local function RR_HiddenRock(effect, p)
 	]])
 end
 
--- Skill Effect that creates and charges self and a rock
+--Skill Effect that creates and charges self and a rock
 function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
     --Initial points and conditions
     local ret = SkillEffect()
