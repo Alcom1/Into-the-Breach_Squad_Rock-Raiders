@@ -41,8 +41,8 @@ Weap_RR_Science_Deploy_Dynamite_A = Weap_RR_Science_Deploy_Dynamite:new{        
 
 --Generic weapon used by Dynamite spawn, destroys self and push
 Weap_RR_Spawn_Dynamite = Skill:new{
-    LaunchSound = "/weapons/mercury_fist",
-    Icon = "weapons/prime_smash.png",
+    LaunchSound = "/props/exploding_mine",
+    Icon = "weapons/weapon_dynamite_effect.png",
     PathSize = 1,
     Damage = 1,
     ALandslideHasOccured = false
