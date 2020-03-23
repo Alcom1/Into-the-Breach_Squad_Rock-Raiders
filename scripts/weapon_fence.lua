@@ -1,7 +1,7 @@
 --Science weapon that deploys a fence spawn.
 Weap_RR_Science_Deploy_Fence = Weap_RR_Base_Transporter:new{
     Name = "Electric Fence",
-    Description = "Teleport in a stationary electric fence that deals chain damage through adjacent targets.",
+    Description = "Teleport in an electric fence that deals chain damage through adjacent targets.",
     Class = "Science",
     Icon = "weapons/weapon_fence.png",
     Deployed = "pawn_spawn_fence",

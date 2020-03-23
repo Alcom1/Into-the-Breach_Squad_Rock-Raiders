@@ -1,7 +1,7 @@
 --Science weapon that deploys a dynamite spawn.
 Weap_RR_Science_Deploy_Dynamite = Weap_RR_Base_Transporter:new{
     Name = "Dynamite",
-    Description = "Teleport in an explosive that detonates when triggered, pushing adjacent tiles.",
+    Description = "Teleport in an explosive that can detonate, pushing adjacent tiles.",
     Class = "Science",
     Icon = "weapons/weapon_dynamite.png",
     Deployed = "pawn_spawn_dynamite",
@@ -23,7 +23,7 @@ Weap_RR_Science_Deploy_Dynamite = Weap_RR_Base_Transporter:new{
 
 --A LANDSLIDE HAS OCCURRED 
 Weap_RR_Science_Deploy_Dynamite_A = Weap_RR_Science_Deploy_Dynamite:new{                                                        --A LANDSLIDE HAS OCCURRED
-    UpgradeDescription = "Dynamite destroys adjacent mountains when it explodes. Destroyed mountains push adjacent enemies.",   --A LANDSLIDE HAS OCCURRED
+    UpgradeDescription = "Detonating destroys adjacent mountains. Destroyed mountains push adjacent enemies.",   --A LANDSLIDE HAS OCCURRED
     Deployed = "pawn_spawn_dynamite2",                                                                                          --A LANDSLIDE HAS OCCURRED
     TipImage = {                    --A LANDSLIDE HAS OCCURRED
         Unit = Point(2,4),          --A LANDSLIDE HAS OCCURRED
