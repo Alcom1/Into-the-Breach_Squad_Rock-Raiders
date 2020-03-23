@@ -30,7 +30,7 @@ Weap_RR_Prime_Drill_A = Weap_RR_Prime_Drill:new{
         Unit = Point(2, 4),
         Friendly = Point(2, 3),
         Enemy = Point(2, 2),
-        Enemy2 = Point(2, 1),
+        Friendly2 = Point(2, 1),
         Target = Point(2, 0)
     }
 }
