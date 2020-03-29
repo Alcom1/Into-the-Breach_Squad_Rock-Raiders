@@ -33,7 +33,7 @@ function mod:init()
             ResourcePath = "units/player",
 
             Default =           { PosX = -22, PosY = -8 },
-            Animated =          { PosX = -22, PosY = -8, NumFrames = 8, Time = 0.18},
+            Animated =          { PosX = -22, PosY = -8, NumFrames = 8, Time = 0.20},
             Broken =            { PosX = -22, PosY = -8 },
             Submerged =         { PosX = -23, PosY =  4 },
             SubmergedBroken =	{ PosX = -23, PosY =  4 },
@@ -94,7 +94,7 @@ function mod:init()
             Broken =            { PosX = -10, PosY = 6 },
             Submerged =         { PosX = -10, PosY = 6 },
             SubmergedBroken =	{ PosX = -10, PosY = 6 },
-            Death =             { PosX = -14, PosY = -8, NumFrames = 12 },
+            Death =             { PosX = -14, PosY = -8, NumFrames = 12, Time = 0.12 },
             Icon =              {},
         }
     })
