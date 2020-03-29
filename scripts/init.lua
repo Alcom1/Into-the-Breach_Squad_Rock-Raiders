@@ -63,7 +63,6 @@ function mod:init()
             Default =           { PosX = -25, PosY = -17 },
             Animated =          { PosX = -25, PosY = -17, NumFrames = 16, Time = 0.15},
             Broken =            { PosX = -25, PosY =  -7 },
-            Submerged =         { PosX = -25, PosY = -17 },
             SubmergedBroken =	{ PosX = -25, PosY =  -4 },
             Icon =              { PosX = 0, PosY = 0 },
         },
@@ -76,9 +75,6 @@ function mod:init()
 
             Default =           { PosX = -11, PosY = -20 },
             Animated =          { PosX = -11, PosY = -20, NumFrames = 1},
-            Broken =            { PosX = -11, PosY = -20 },
-            Submerged =         { PosX = -11, PosY = -20 },
-            SubmergedBroken =	{ PosX = -11, PosY = -20 },
             Death =             { PosX = -21, PosY = -20, NumFrames = 11 },
             Icon =              {},
         },
@@ -91,9 +87,6 @@ function mod:init()
 
             Default =           { PosX = -10, PosY = 6 },
             Animated =          { PosX = -10, PosY = 6, NumFrames = 1},
-            Broken =            { PosX = -10, PosY = 6 },
-            Submerged =         { PosX = -10, PosY = 6 },
-            SubmergedBroken =	{ PosX = -10, PosY = 6 },
             Death =             { PosX = -14, PosY = -8, NumFrames = 12, Time = 0.12 },
             Icon =              {},
         }
