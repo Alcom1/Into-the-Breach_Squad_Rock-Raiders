@@ -33,10 +33,10 @@ function mod:init()
             ResourcePath = "units/player",
 
             Default =           { PosX = -22, PosY = -8 },
-            Animated =          { PosX = -22, PosY = -8, NumFrames = 2},
+            Animated =          { PosX = -22, PosY = -8, NumFrames = 8, Time = 0.18},
             Broken =            { PosX = -22, PosY = -8 },
-            Submerged =         { PosX = -22, PosY = -8 },
-            SubmergedBroken =	{ PosX = -22, PosY = -8 },
+            Submerged =         { PosX = -23, PosY =  4 },
+            SubmergedBroken =	{ PosX = -23, PosY =  4 },
             Icon =              {},
         },
         {
@@ -47,10 +47,10 @@ function mod:init()
             ResourcePath = "units/player",
 
             Default =           { PosX = -25, PosY = -3 },
-            Animated =          { PosX = -25, PosY = -3, NumFrames = 1},
+            Animated =          { PosX = -25, PosY = -3, NumFrames = 4},
             Broken =            { PosX = -25, PosY = -3 },
-            Submerged =         { PosX = -25, PosY = -3 },
-            SubmergedBroken =	{ PosX = -25, PosY = -3 },
+            Submerged =         { PosX = -24, PosY =  6 },
+            SubmergedBroken =	{ PosX = -24, PosY =  6 },
             Icon =              {},
         },
         {
@@ -62,10 +62,10 @@ function mod:init()
 
             Default =           { PosX = -25, PosY = -17 },
             Animated =          { PosX = -25, PosY = -17, NumFrames = 16, Time = 0.15},
-            Broken =            { PosX = -25, PosY = -17 },
+            Broken =            { PosX = -25, PosY =  -7 },
             Submerged =         { PosX = -25, PosY = -17 },
-            SubmergedBroken =	{ PosX = -25, PosY = -17 },
-            Icon =              {},
+            SubmergedBroken =	{ PosX = -25, PosY =  -4 },
+            Icon =              { PosX = 0, PosY = 0 },
         },
         {
             Type = "mech",
