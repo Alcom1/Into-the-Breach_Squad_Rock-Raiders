@@ -74,7 +74,7 @@ function mod:init()
             ResourcePath = "units/player",
 
             Default =           { PosX = -11, PosY = -20 },
-            Animated =          { PosX = -11, PosY = -20, NumFrames = 1},
+            Animated =          { PosX = -11, PosY = -20, NumFrames = 2, Time = 1.00 },
             Death =             { PosX = -21, PosY = -20, NumFrames = 11 },
             Icon =              {},
         },
@@ -85,9 +85,9 @@ function mod:init()
             Path = "img/units/player",
             ResourcePath = "units/player",
 
-            Default =           { PosX = -10, PosY = 6 },
-            Animated =          { PosX = -10, PosY = 6, NumFrames = 1},
-            Death =             { PosX = -14, PosY = -8, NumFrames = 12, Time = 0.12 },
+            Default =           { PosX = -10, PosY = 7 },
+            Animated =          { PosX = -10, PosY = 7, NumFrames = 20, Time = 0.20},
+            Death =             { PosX = -14, PosY = -7, NumFrames = 12, Time = 0.12 },
             Icon =              {},
         }
     })
