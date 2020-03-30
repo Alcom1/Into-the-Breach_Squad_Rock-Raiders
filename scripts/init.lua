@@ -5,7 +5,6 @@ local mod = {
     version = "0.02",
     icon = "img/icons/mod_icon.png",
     icon_squad = "img/icons/squad_icon.png",
-    description = "Utilizing repurposed mining equipment, these mechs can construct a mighty bulwark against the oncoming vek hoard.",
     requirements = {}
 }
 
@@ -166,7 +165,10 @@ function mod:load(options, version)
         "Pawn_RR_Mech_Drill", 
         "Pawn_RR_Mech_Loader", 
         "Pawn_RR_Mech_Transport"
-    }, "Rock Raiders", self.description, self.resourcePath..self.icon_squad)
+    }, 
+    "Rock Raiders",
+    "Utilizing repurposed mining equipment, these mechs can construct a mighty bulwark against the oncoming vek hoard.",
+    self.resourcePath..self.icon_squad)
     
     require(self.scriptPath .."passive"):load(self.modApiExt)
 end
