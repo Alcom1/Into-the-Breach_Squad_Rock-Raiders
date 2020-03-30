@@ -41,7 +41,7 @@ Weap_RR_Science_Deploy_Fence_AB = Weap_RR_Science_Deploy_Fence:new{
 --Generic weapon used by Electric Fence spawn
 Weap_RR_Spawn_Lightning = Skill:new{
     LaunchSound = "/weapons/electric_whip",
-    Icon = "weapons/prime_lightning.png",
+    Icon = "weapons/weapon_fence_effect.png",
 	PathSize = 1,
     Damage = 1
 }
