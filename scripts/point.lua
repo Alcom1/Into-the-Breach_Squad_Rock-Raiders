@@ -32,7 +32,7 @@ function Point:Bresenham(p2, limitStart, limitFinal)
     for i = 0, horz do                      --Bresenham's algorithm
         diff = diff + 2 * vert              --Diff upwards
 
-        if(index >= start and index <= final) then  --limit the range between start and final
+        if index >= start and index <= final  then  --limit the range between start and final
             points[index - start] = Point(          --map stair to actual point, add point
                 p1.x + (tall and curr or i) * GetSign(p2.x - p1.x), --Tall switches octants, Sign switches quadrants
                 p1.y + (tall and i or curr) * GetSign(p2.y - p1.y))

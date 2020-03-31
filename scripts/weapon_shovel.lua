@@ -81,7 +81,7 @@ function Weap_RR_Brute_Shovel:GetSkillEffect(p1, p2)
     ret:AddSound(self.ChargeSound)                          --Charge SFX
 
     --Special case where we melee a target
-    if(isTargeting and isMeleeRange) then
+    if isTargeting and isMeleeRange then
         local meleeDamage = SpaceDamage(p2, self.Damage, direction) --Damage
         meleeDamage.sSound = self.ImpactSound                       --Damage sfx
         meleeDamage.sAnimation = "airpush_"..(direction % 4)        --Damage anim
