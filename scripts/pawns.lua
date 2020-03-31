@@ -63,7 +63,7 @@ pawn_spawn_fence3 = pawn_spawn_fence:new{
 }
 
 pawn_spawn_dynamite = Pawn:new{
-    Name = "Dynamite Charge",
+    Name = "Dynamite",
     Health = 1,
     MoveSpeed = 0,
     Image = "Dynamite",
@@ -76,5 +76,5 @@ pawn_spawn_dynamite = Pawn:new{
 }
 
 pawn_spawn_dynamite2 = pawn_spawn_dynamite:new{
-    SkillList = { "Weap_RR_Spawn_Dynamite2" }
+    SkillList = { "Weap_RR_Spawn_Dynamite2" }   --A LANDSLIDE HAS OCCURRED
 }
