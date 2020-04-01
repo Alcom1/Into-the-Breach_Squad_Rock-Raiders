@@ -8,8 +8,8 @@ Weap_RR_Science_Deploy_Fence = Weap_RR_Base_Transporter:new{
     PowerCost = 1,
     Upgrades = 2,
     UpgradeCost = { 2, 3 },
-    UpgradeList = { "+1 Damage", "+1 Damage" },
-    Limited = 2,
+    UpgradeList = { "+1 Use", "+1 Damage" },
+    Limited = 1,
     TipImage = {
         Unit = Point(2,4),
         Target = Point(2,2),
@@ -23,8 +23,8 @@ Weap_RR_Science_Deploy_Fence = Weap_RR_Base_Transporter:new{
 
 --More zappy damage
 Weap_RR_Science_Deploy_Fence_A = Weap_RR_Science_Deploy_Fence:new{
-    UpgradeDescription = "Increases the Electric Fence's attack damage by 1.",
-    Deployed = "pawn_spawn_fence2"
+    UpgradeDescription = "Increases uses per battle by 1.",
+    Limited = 2
 }
 
 --More zappy damage (for less!)
@@ -35,7 +35,8 @@ Weap_RR_Science_Deploy_Fence_B = Weap_RR_Science_Deploy_Fence:new{
 
 --Even more zappy damage!
 Weap_RR_Science_Deploy_Fence_AB = Weap_RR_Science_Deploy_Fence:new{
-    Deployed = "pawn_spawn_fence3"
+    Deployed = "pawn_spawn_fence2",
+    Limited = 2
 }
 
 --Generic weapon used by Electric Fence spawn
@@ -43,16 +44,11 @@ Weap_RR_Spawn_Lightning = Skill:new{
     LaunchSound = "/weapons/electric_whip",
     Icon = "weapons/weapon_fence_effect.png",
 	PathSize = 1,
-    Damage = 1
-}
-
---Electric Fence with damage upgrade
-Weap_RR_Spawn_Lightning2 = Weap_RR_Spawn_Lightning:new{
     Damage = 2
 }
 
 --Electric Fence with damage upgrade
-Weap_RR_Spawn_Lightning3 = Weap_RR_Spawn_Lightning:new{
+Weap_RR_Spawn_Lightning2 = Weap_RR_Spawn_Lightning:new{
     Damage = 3
 }
 
