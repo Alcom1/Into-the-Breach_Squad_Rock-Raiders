@@ -79,7 +79,7 @@ function Weap_RR_Prime_Drill:GetSkillEffect(p1, p2)
     local damagePoints = p1:Bresenham(p2, 1, 1)                                 --Points from here to there
     local pullDirection = GetDirection(p1 - p2)                                 --Direction to pull in
     
-    ret:AddAnimation(p1, self.DamageAnimation)                                  --Initial Animation
+    --ret:AddAnimation(p1, self.DamageAnimation)                                  --Initial Animation
     ret:AddSound(self.DamageSound)                                              --Initial Drill Sound
     ret:AddCharge(Board:GetPath(p1, p2, PATH_FLYER), NO_DELAY)                  --Charge!
     
@@ -93,11 +93,15 @@ function Weap_RR_Prime_Drill:GetSkillEffect(p1, p2)
             damage.sSound = self.DamageSound
             ret:AddDamage(damage)                                               --Damage
             ret:AddBounce(point, 4)                                             --Bounce
-            ret:AddDelay(0.1)                                                   --Damage delay as we travel
+        else
+            ret:AddDamage(SpaceDamage(point, DAMAGE_ZERO))                      --0 damage for immune allies
         end
+
         if self.ImpactRamp and Board:IsPawnSpace(point) then                    --If ramp, ramp
             ramp = ramp + 1                                                     --ramp
         end
+        
+        ret:AddDelay(0.1)                                                       --Delay effects as we travel
     end
 
     return ret

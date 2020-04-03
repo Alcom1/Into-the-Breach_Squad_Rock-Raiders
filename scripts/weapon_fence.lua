@@ -17,7 +17,7 @@ Weap_RR_Science_Deploy_Fence = Weap_RR_Base_Transporter:new{
         Enemy2 = Point(2,1),
         Enemy3 = Point(3,1),
         Second_Origin = Point(2,2),
-        Second_Target = Point(2,1),
+        Second_Target = Point(2,1)
     }
 }
 
@@ -32,14 +32,19 @@ Weap_RR_Science_Deploy_Fence_A = Weap_RR_Science_Deploy_Fence:new{
         Friendly = Point(2,1),
         Enemy3 = Point(3,1),
         Second_Origin = Point(2,2),
-        Second_Target = Point(2,1),
+        Second_Target = Point(2,1)
     }
 }
 
 --More zappy damage (for less!)
 Weap_RR_Science_Deploy_Fence_B = Weap_RR_Science_Deploy_Fence:new{
     UpgradeDescription = "Increases uses per battle by 1.",
-    Limited = 2
+    Limited = 2,
+    TipImage = {
+        Unit = Point(1,2),
+        Target = Point(3,2),
+        CustomPawn = "pawn_spawn_fence"
+    }
 }
 
 --Even more zappy damage!
@@ -77,32 +82,29 @@ function Weap_RR_Spawn_Lightning:GetSkillEffect(p1, p2)
     local ret = SkillEffect()
 
     if not Board:IsPawnSpace(p2) then return ret end    --Don't attack empty spaces
-    local isDamage = {}                                 --If we damaged a unit
     local past = { [p1:Hash()] = true }                 --We're not Pichu
 
-    function RR_RecurseLightning(prev, curr, ret, isDamage)                     --Recursive lightning!
-        past[curr:Hash()] = true                                                --Mark tile as past
+    function RR_RecurseLightning(prev, curr, ret)       --Recursive lightning!
+        past[curr:Hash()] = true                        --Mark tile as past
 
-        local damage = SpaceDamage(curr, 0)
+        local damage = SpaceDamage(curr, (
+            self.FriendlyDamage or not Board:IsPawnTeam(curr, TEAM_PLAYER)) and --Ignore friendly targets
+            self.Damage or                                                      --Damage
+            DAMAGE_ZERO)                                                        --Damage for ignored targets
+
         damage.sAnimation = "Lightning_Blue_"..GetDirection(curr - prev)        --Damage Animation
-        
-        if self.FriendlyDamage or not Board:IsPawnTeam(curr, TEAM_PLAYER) then  --Inverted friendly fire check
-            damage.iDamage = self.Damage                                        --Damage
-            isDamage[0] = true                                                  --We damaged something, so don't return an empty SkillEffect
-        end
-
-        ret:AddDamage(damage)                                                   --Damage
-
+        ret:AddDamage(damage)                                                   --Add Damage
+                                
         for dir = DIR_START, DIR_END do                                         --Loop through adjacent tiles
             local next = curr + DIR_VECTORS[dir]                                --Adjacent tile Point
             if not past[next:Hash()] and Board:IsPawnSpace(next) then           --If tile is not past and has a pawn then
-                ret = RR_RecurseLightning(curr, next, ret, isDamage)            --Recurse to adjacent tiles
+                ret = RR_RecurseLightning(curr, next, ret)                      --Recurse to adjacent tiles
             end
         end
         
         return ret
     end
     
-    ret = RR_RecurseLightning(p1, p2, ret, isDamage)    --Start recursion
-    return isDamage[0] and ret or SkillEffect()         --Return an empty skill effect if we damaged a unit
+    ret = RR_RecurseLightning(p1, p2, ret)              --Start recursion
+    return ret
 end
