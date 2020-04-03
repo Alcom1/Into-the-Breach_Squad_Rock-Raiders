@@ -102,11 +102,7 @@ function mod:init()
     modApi:appendAsset("img/combat/rock_1.png",self.resourcePath.."img/combat/rock_1.png")
     modApi:appendAsset("img/combat/rock_2.png",self.resourcePath.."img/combat/rock_2.png")
     modApi:appendAsset("img/combat/laser_elec_blue_R.png",self.resourcePath.."img/combat/laser_elec_blue_R.png")
-    modApi:appendAsset("img/combat/laser_elec_blue_R1.png",self.resourcePath.."img/combat/laser_elec_blue_R1.png")
-    modApi:appendAsset("img/combat/laser_elec_blue_R2.png",self.resourcePath.."img/combat/laser_elec_blue_R2.png")
     modApi:appendAsset("img/combat/laser_elec_blue_U.png",self.resourcePath.."img/combat/laser_elec_blue_U.png")
-    modApi:appendAsset("img/combat/laser_elec_blue_U1.png",self.resourcePath.."img/combat/laser_elec_blue_U1.png")
-    modApi:appendAsset("img/combat/laser_elec_blue_U2.png",self.resourcePath.."img/combat/laser_elec_blue_U2.png")
 
     local baseAnim = Animation:new{
         NumFrames = 1, 
@@ -116,26 +112,26 @@ function mod:init()
 
     ANIMS.Lightning_Blue_0 = baseAnim:new{
         Image = "combat/laser_elec_blue_U.png",
-        PosX = -12 - 28/2,
-        PosY = 3 + 21/2
+        PosX = -26,
+        PosY = 13.5
     }
 
     ANIMS.Lightning_Blue_1 = baseAnim:new{
         Image = "combat/laser_elec_blue_R.png",
-        PosX = -12 - 28/2, 
-        PosY = 3 - 21/2
+        PosX = -26, 
+        PosY = -7.5
     }
 
     ANIMS.Lightning_Blue_2 = baseAnim:new{
         Image = "combat/laser_elec_blue_U.png",
-        PosX = -12 + 28/2,
-        PosY = 3 - 21/2
+        PosX = 2,
+        PosY = -7.5
     }
 
     ANIMS.Lightning_Blue_3 = baseAnim:new{
         Image = "combat/laser_elec_blue_R.png",
-        PosX = -12 + 28/2,
-        PosY = 3 + 21/2
+        PosX = 2,
+        PosY = 13.5
     }
 
     self.modApiExt = require(self.scriptPath .."modApiExt/modApiExt")
