@@ -42,6 +42,7 @@ Weap_RR_Science_Deploy_Dynamite_A = Weap_RR_Science_Deploy_Dynamite:new{        
 --Generic weapon used by Dynamite spawn, destroys self and push
 Weap_RR_Spawn_Dynamite = Skill:new{
     Name = "Detonate",
+    Class = "Unique",
     Description = "Detonate and push adjacent tiles.",
     LaunchSound = "/props/exploding_mine",
     Icon = "weapons/weapon_dynamite_effect.png",
@@ -60,7 +61,6 @@ Weap_RR_Spawn_Dynamite = Skill:new{
 
 --A LANDSLIDE HAS OCCURRED 
 Weap_RR_Spawn_Dynamite2 = Weap_RR_Spawn_Dynamite:new{
-    Name = "Detonate",
     Description = "Detonate and destroy adjacent mountains, pushing all adjacent tiles.",
     ALandslideHasOccured = true,            --A LANDSLIDE HAS OCCURRED
     TipImage = {                            --A LANDSLIDE HAS OCCURRED
