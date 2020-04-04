@@ -86,16 +86,14 @@ function Weap_RR_Spawn_Dynamite:GetSkillEffect(p1, p2)
 
         if self.ALandslideHasOccured and RR_IsMountain(target) then                     --A LANDSLIDE HAS OCCURRED
             LOG('A LANDSLIDE HAS OCCURRED!')                                            --A LANDSLIDE HAS OCCURRED
-                                                                                        --A LANDSLIDE HAS OCCURRED
+            
             ret:AddDamage(SpaceDamage(target, DAMAGE_DEATH))                            --A LANDSLIDE HAS OCCURRED
-                                                                                        --A LANDSLIDE HAS OCCURRED
-            for dir2 = DIR_START, DIR_END do                                            --A LANDSLIDE HAS OCCURRED
-                local target2 = target + DIR_VECTORS[dir2]
-                if not dir2 == (dir - 2) % 4 then       --Don't push Dynamite           --A LANDSLIDE HAS OCCURRED
-                    local damage2 = SpaceDamage(target + DIR_VECTORS[dir2], 0, dir2)    --A LANDSLIDE HAS OCCURRED
-                    damage2.sAnimation = "airpush_"..(dir2 % 4)                         --A LANDSLIDE HAS OCCURRED
-                    ret:AddDamage(damage2)                                              --A LANDSLIDE HAS OCCURRED
-                end
+
+            for dir2 = dir + DIR_START - 1, dir + DIR_END - 2 do                        --A LANDSLIDE HAS OCCURRED
+                dir2 = dir2 % 4                                                         --A LANDSLIDE HAS OCCURRED
+                local damage2 = SpaceDamage(target + DIR_VECTORS[dir2], 0, dir2)        --A LANDSLIDE HAS OCCURRED
+                damage2.sAnimation = "airpush_"..(dir2 % 4)                             --A LANDSLIDE HAS OCCURRED
+                ret:AddDamage(damage2)                                                  --A LANDSLIDE HAS OCCURRED
             end                                                                         --A LANDSLIDE HAS OCCURRED
         else
             damage.iPush = dir                          --Push
