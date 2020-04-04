@@ -5,14 +5,14 @@ local trackedSummons = {}
 
 --The game should not save while the board is busy, so using a local table should be fine.
 --However, we should probably reset it when the data don't make sense anymore.
-local function resetTrackedPawns()
+local function RR_resetTrackedPawns()
     trackedPawns = {}
 end
 
-sdlext.addGameExitedHook(resetTrackedPawns)
+sdlext.addGameExitedHook(RR_resetTrackedPawns)
 
 function this:load(modUtils)
-    modApi:addPreLoadGameHook(resetTrackedPawns)
+    modApi:addPreLoadGameHook(RR_resetTrackedPawns)
     
     --On update, update the tracked pawn locations or both spawn a rock and clear tracked summons
     modApi:addMissionUpdateHook(function(mission)

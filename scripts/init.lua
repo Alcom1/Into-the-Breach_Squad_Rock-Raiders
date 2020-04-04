@@ -2,7 +2,7 @@
 local mod = {
     id = "squad_rock_raiders",
     name = "Rock Raiders",
-    version = "0.02",
+    version = "0.10",
     icon = "img/icons/mod_icon.png",
     icon_squad = "img/icons/squad_icon.png",
     requirements = {}
