@@ -6,9 +6,9 @@ Weap_RR_Science_Deploy_Fence = Weap_RR_Base_Transporter:new{
     Icon = "weapons/weapon_fence.png",
     Deployed = "pawn_spawn_fence",
     PowerCost = 1,
-    Upgrades = 2,
-    UpgradeCost = { 2, 2 },
-    UpgradeList = { "Ally Immune", "+1 Use" },
+    Upgrades = 1,
+    UpgradeCost = { 3 },
+    UpgradeList = { "Ally Immune" },
     Limited = 1,
     TipImage = {
         Unit = Point(2,4),
@@ -34,23 +34,6 @@ Weap_RR_Science_Deploy_Fence_A = Weap_RR_Science_Deploy_Fence:new{
         Second_Origin = Point(2,2),
         Second_Target = Point(2,1)
     }
-}
-
---More zappy damage (for less!)
-Weap_RR_Science_Deploy_Fence_B = Weap_RR_Science_Deploy_Fence:new{
-    UpgradeDescription = "Increases uses per battle by 1.",
-    Limited = 2,
-    TipImage = {
-        Unit = Point(1,2),
-        Target = Point(3,2),
-        CustomPawn = "pawn_spawn_fence"
-    }
-}
-
---Even more zappy damage!
-Weap_RR_Science_Deploy_Fence_AB = Weap_RR_Science_Deploy_Fence:new{
-    Deployed = "pawn_spawn_fence2",
-    Limited = 2
 }
 
 --Generic weapon used by Electric Fence spawn

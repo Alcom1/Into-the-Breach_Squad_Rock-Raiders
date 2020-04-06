@@ -48,9 +48,9 @@ pawn_spawn_fence = Pawn:new{
     Image = "Electric Fence",
     SkillList = { "Weap_RR_Spawn_Lightning" },
 	SoundLocation = "/support/earthmover",
-    ImageOffset = FURL_COLORS.colorsRockRaider,
     DefaultTeam = TEAM_PLAYER,
     ImpactMaterial = IMPACT_METAL,
+	Pushable = false,
     Corpse = false,
 }
 
@@ -65,7 +65,6 @@ pawn_spawn_dynamite = Pawn:new{
     Image = "Dynamite",
     SkillList = { "Weap_RR_Spawn_Dynamite" },
 	SoundLocation = "/support/earthmover",
-    ImageOffset = FURL_COLORS.colorsRockRaider,
     DefaultTeam = TEAM_PLAYER,
     ImpactMaterial = IMPACT_METAL,
     Corpse = false,
