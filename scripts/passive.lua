@@ -60,20 +60,16 @@ function this:load(modUtils)
         end
     end)
     
-    --When a pawn spawns, add it to the list of tracked summon locations so a rock does not spawn there.
+    --When a pawn spawns...
     modUtils:addPawnTrackedHook(function(mission, pawn)
+        --Add the pawn to the list of tracked summon locations so a rock does not spawn there.
         if IsPassiveSkill("lmn_Passive_RockOnDeath") then
             trackedSummons[pawn:GetSpace():Hash()] = 1  --Hash the pawn space, add it to tracked summon locations
         end
 
-        --Trigger dynamite
-        if string.match(pawn:GetType(), "Pawn_RR_Spawn_Dynamite") ~= nil then
-            pawn:FireWeapon(
-                pawn:GetSpace() + (
-                    Board:IsValid(pawn:GetSpace() + Point(1, 0)) and
-                    Point(1, 0) or
-                    Point(-1, 0)), 
-                1)
+        --Arm dynamite pawns when they spawn
+        if string.match(pawn:GetType(), "Pawn_RR_Spawn_Dynamite") then
+            pawn:FireWeapon(pawn:GetSpace(), 1)
         end
     end)
 end

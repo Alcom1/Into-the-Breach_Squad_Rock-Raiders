@@ -1,7 +1,7 @@
 --Science weapon that deploys a dynamite spawn.
 Weap_RR_Science_Deploy_Dynamite = Weap_RR_Base_Transporter:new{
     Name = "Dynamite",
-    Description = "Teleport in an explosive that will detonate, pushing adjacent tiles.",
+    Description = "Teleport in an explosive that will detonate before enemies attack, pushing adjacent tiles.",
     Class = "Science",
     Icon = "weapons/weapon_dynamite.png",
     Deployed = "Pawn_RR_Spawn_Dynamite",
@@ -46,7 +46,6 @@ Weap_RR_Spawn_Dynamite = Skill:new{
     Description = "Detonate and push adjacent tiles.",
     LaunchSound = "/props/exploding_mine",
     Icon = "weapons/weapon_dynamite_effect.png",
-    PathSize = 1,
 	Ordered = true,
     ALandslideHasOccured = false,
     TipImage = {
@@ -76,6 +75,13 @@ Weap_RR_Spawn_Dynamite2 = Weap_RR_Spawn_Dynamite:new{
         CustomPawn = "Pawn_RR_Spawn_Dynamite2" --A LANDSLIDE HAS OCCURRED
     }
 }
+
+--Dynamite trigger is on itself to simplify firing from hook
+function Weap_RR_Spawn_Dynamite:GetTargetArea(p1)
+    local ret = PointList()
+    ret:push_back(p1)
+    return ret
+end
 
 --Skill Effect for self destruction and push
 function Weap_RR_Spawn_Dynamite:GetSkillEffect(p1, p2)
