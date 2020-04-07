@@ -4,7 +4,7 @@ Weap_RR_Science_Deploy_Fence = Weap_RR_Base_Transporter:new{
     Description = "Teleport in an electric fence that chains damage through adjacent targets.",
     Class = "Science",
     Icon = "weapons/weapon_fence.png",
-    Deployed = "pawn_spawn_fence",
+    Deployed = "Pawn_RR_Spawn_Fence",
     PowerCost = 1,
     Upgrades = 1,
     UpgradeCost = { 3 },
@@ -24,7 +24,7 @@ Weap_RR_Science_Deploy_Fence = Weap_RR_Base_Transporter:new{
 --More zappy damage
 Weap_RR_Science_Deploy_Fence_A = Weap_RR_Science_Deploy_Fence:new{
     UpgradeDescription = "Friendly units will not take damage from fence lightning.",
-    Deployed = "pawn_spawn_fence2",
+    Deployed = "Pawn_RR_Spawn_Fence2",
     TipImage = {
         Unit = Point(2,4),
         Target = Point(2,2),
@@ -52,7 +52,7 @@ Weap_RR_Spawn_Lightning = Skill:new{
         Enemy = Point(1,1),
         Enemy2 = Point(2,1),
         Enemy3 = Point(3,1),
-        CustomPawn = "pawn_spawn_fence"
+        CustomPawn = "Pawn_RR_Spawn_Fence"
     }
 }
 

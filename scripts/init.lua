@@ -54,8 +54,8 @@ function mod:init()
             Default =           { PosX = -25, PosY = -3 },
             Animated =          { PosX = -25, PosY = -3, NumFrames = 4},
             Broken =            { PosX = -25, PosY = -3 },
-            Submerged =         { PosX = -24, PosY =  6 },
-            SubmergedBroken =	{ PosX = -24, PosY =  6 },
+            Submerged =         { PosX = -24, PosY =  3 },
+            SubmergedBroken =	{ PosX = -24, PosY =  3 },
             Icon =              {},
         },
         {

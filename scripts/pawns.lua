@@ -41,7 +41,7 @@ Pawn_RR_Mech_Transport = Pawn:new {
     Massive = true
 }
 
-pawn_spawn_fence = Pawn:new{
+Pawn_RR_Spawn_Fence = Pawn:new{
     Name = "Electric Fence",
     Health = 1,
     MoveSpeed = 0,
@@ -54,11 +54,11 @@ pawn_spawn_fence = Pawn:new{
     Corpse = false,
 }
 
-pawn_spawn_fence2 = pawn_spawn_fence:new{
+Pawn_RR_Spawn_Fence2 = Pawn_RR_Spawn_Fence:new{
     SkillList = { "Weap_RR_Spawn_Lightning2" }
 }
 
-pawn_spawn_dynamite = Pawn:new{
+Pawn_RR_Spawn_Dynamite = Pawn:new{
     Name = "Dynamite",
     Health = 1,
     MoveSpeed = 0,
@@ -70,6 +70,6 @@ pawn_spawn_dynamite = Pawn:new{
     Corpse = false,
 }
 
-pawn_spawn_dynamite2 = pawn_spawn_dynamite:new{
+Pawn_RR_Spawn_Dynamite2 = Pawn_RR_Spawn_Dynamite:new{
     SkillList = { "Weap_RR_Spawn_Dynamite2" }   --A LANDSLIDE HAS OCCURRED
 }

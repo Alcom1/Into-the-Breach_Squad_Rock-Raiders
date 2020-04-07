@@ -36,7 +36,7 @@ function Weap_RR_Base_Transporter:GetSkillEffect(p1, p2)
 	local damage = SpaceDamage(p2, 0)   --Damage
     damage.sPawn = self.Deployed        --Damage spawn
 	ret:AddDamage(damage)               --Add damage
-    RR_HiddenTeleport(ret, p2)             --Teleport effect
+    RR_HiddenTeleport(ret, p2)          --Teleport effect
 
     return ret
 end

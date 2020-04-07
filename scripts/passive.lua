@@ -65,6 +65,16 @@ function this:load(modUtils)
         if IsPassiveSkill("lmn_Passive_RockOnDeath") then
             trackedSummons[pawn:GetSpace():Hash()] = 1  --Hash the pawn space, add it to tracked summon locations
         end
+
+        --Trigger dynamite
+        if string.match(pawn:GetType(), "Pawn_RR_Spawn_Dynamite") ~= nil then
+            pawn:FireWeapon(
+                pawn:GetSpace() + (
+                    Board:IsValid(pawn:GetSpace() + Point(1, 0)) and
+                    Point(1, 0) or
+                    Point(-1, 0)), 
+                1)
+        end
     end)
 end
 
