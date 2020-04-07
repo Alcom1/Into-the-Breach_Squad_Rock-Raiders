@@ -14,6 +14,17 @@ sdlext.addGameExitedHook(RR_resetTrackedPawns)
 function this:load(modUtils)
     modApi:addPreLoadGameHook(RR_resetTrackedPawns)
     
+    --After Environment effects, trigger all dynamite
+    modApi:addPostEnvironmentHook(function(mission)
+        pawns = extract_table(Board:GetPawns(TEAM_ANY))
+        for i, id in ipairs(pawns) do
+            local pawn = Board:GetPawn(id)
+            if string.match(pawn:GetType(), "Pawn_RR_Spawn_Dynamite") then
+                pawn:FireWeapon(pawn:GetSpace(), 1)
+            end
+        end
+    end)
+    
     --On update, update the tracked pawn locations or both spawn a rock and clear tracked summons
     modApi:addMissionUpdateHook(function(mission)
         
@@ -60,16 +71,10 @@ function this:load(modUtils)
         end
     end)
     
-    --When a pawn spawns...
+    --When a pawn spawns add the pawn to the list of tracked summon locations so a rock does not spawn there.
     modUtils:addPawnTrackedHook(function(mission, pawn)
-        --Add the pawn to the list of tracked summon locations so a rock does not spawn there.
         if IsPassiveSkill("lmn_Passive_RockOnDeath") then
             trackedSummons[pawn:GetSpace():Hash()] = 1  --Hash the pawn space, add it to tracked summon locations
-        end
-
-        --Arm dynamite pawns when they spawn
-        if string.match(pawn:GetType(), "Pawn_RR_Spawn_Dynamite") then
-            pawn:FireWeapon(pawn:GetSpace(), 1)
         end
     end)
 end
