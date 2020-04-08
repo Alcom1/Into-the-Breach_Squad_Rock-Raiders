@@ -76,7 +76,7 @@ function Weap_RR_Spawn_Lightning:GetSkillEffect(p1, p2)
             self.Damage or                                                      --Damage
             DAMAGE_ZERO)                                                        --Damage for ignored targets
 
-        damage.sAnimation = "Lightning_Blue_"..GetDirection(curr - prev)        --Damage Animation
+        damage.sAnimation = "RR_Lightning_Blue_"..GetDirection(curr - prev)        --Damage Animation
         ret:AddDamage(damage)                                                   --Add Damage
                                 
         for dir = DIR_START, DIR_END do                                         --Loop through adjacent tiles

@@ -90,33 +90,31 @@ end
 function Weap_RR_Spawn_Dynamite:GetSkillEffect(p1, p2)
     local ret = SkillEffect()
 
-    if not IsTestMechScenario() then
-        for dir = DIR_START, DIR_END do                     --Loop through surrounding tiles
-            local target = p1 + DIR_VECTORS[dir]
-            local damage = SpaceDamage(target, 0)           --Damage surrounding tiles
+    for dir = DIR_START, DIR_END do                     --Loop through surrounding tiles
+        local target = p1 + DIR_VECTORS[dir]
+        local damage = SpaceDamage(target, 0)           --Damage surrounding tiles
 
-            if self.ALandslideHasOccured and RR_IsMountain(target) then                 --A LANDSLIDE HAS OCCURRED
-                
-                ret:AddDamage(SpaceDamage(target, DAMAGE_DEATH))                        --A LANDSLIDE HAS OCCURRED
-
-                for dir2 = dir + DIR_START - 1, dir + DIR_END - 2 do                    --A LANDSLIDE HAS OCCURRED
-                    dir2 = dir2 % 4                                                     --A LANDSLIDE HAS OCCURRED
-                    local damage2 = SpaceDamage(target + DIR_VECTORS[dir2], 0, dir2)    --A LANDSLIDE HAS OCCURRED
-                    damage2.sAnimation = "airpush_"..(dir2 % 4)                         --A LANDSLIDE HAS OCCURRED
-                    ret:AddDamage(damage2)                                              --A LANDSLIDE HAS OCCURRED
-                end                                                                     --A LANDSLIDE HAS OCCURRED
-            else
-                damage.iPush = dir                          --Push
-                damage.sAnimation = "airpush_"..(dir % 4)   --Damage
-            end
+        if self.ALandslideHasOccured and RR_IsMountain(target) then                 --A LANDSLIDE HAS OCCURRED
             
-            ret:AddDamage(damage)                           --Damage
-        end
+            ret:AddDamage(SpaceDamage(target, DAMAGE_DEATH))                        --A LANDSLIDE HAS OCCURRED
 
-        local damageSelf = SpaceDamage(p1, DAMAGE_DEATH)    --Dynamite goes kaboom
-        damageSelf.sAnimation = "ExploArt3"                 --Here's the kaboom
-        ret:AddDamage(damageSelf)                           --YES YES YES EXPLODE YES
+            for dir2 = dir + DIR_START - 1, dir + DIR_END - 2 do                    --A LANDSLIDE HAS OCCURRED
+                dir2 = dir2 % 4                                                     --A LANDSLIDE HAS OCCURRED
+                local damage2 = SpaceDamage(target + DIR_VECTORS[dir2], 0, dir2)    --A LANDSLIDE HAS OCCURRED
+                damage2.sAnimation = "airpush_"..(dir2 % 4)                         --A LANDSLIDE HAS OCCURRED
+                ret:AddDamage(damage2)                                              --A LANDSLIDE HAS OCCURRED
+            end                                                                     --A LANDSLIDE HAS OCCURRED
+        else
+            damage.iPush = dir                          --Push
+            damage.sAnimation = "airpush_"..(dir % 4)   --Damage
+        end
+        
+        ret:AddDamage(damage)                           --Damage
     end
+
+    local damageSelf = SpaceDamage(p1, DAMAGE_DEATH)    --Dynamite goes kaboom
+    damageSelf.sAnimation = "ExploArt3"                 --Here's the kaboom
+    ret:AddDamage(damageSelf)                           --YES YES YES EXPLODE YES
 
     return ret
 end

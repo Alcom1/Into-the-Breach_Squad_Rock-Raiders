@@ -1,9 +1,13 @@
 --LEGO Rock Raiders Mech Squad
 --Inspired by the LEGO Rock Raiders LEGO theme and PC game.
+
 --Credits :
 --Alex/Alcom Isst :     Design, scripting, and intial sprites
 --Salt Potato :         Mech animations, shadows, and auxiliary sprites
 --Lemonymous :          Initial Passive script
+--,̶'̶,̶|̶'̶,̶'̶_̶   :          Playtesting
+
+--And Thank you to the rest of the ItB Community!
 
 local mod = {
     id = "squad_rock_raiders",
@@ -107,6 +111,7 @@ function mod:init()
     modApi:appendAsset("img/combat/rock_0.png",self.resourcePath.."img/combat/rock_0.png")
     modApi:appendAsset("img/combat/rock_1.png",self.resourcePath.."img/combat/rock_1.png")
     modApi:appendAsset("img/combat/rock_2.png",self.resourcePath.."img/combat/rock_2.png")
+    modApi:appendAsset("img/combat/skull.png",self.resourcePath.."img/combat/skull.png")
     modApi:appendAsset("img/combat/laser_elec_blue_R.png",self.resourcePath.."img/combat/laser_elec_blue_R.png")
     modApi:appendAsset("img/combat/laser_elec_blue_U.png",self.resourcePath.."img/combat/laser_elec_blue_U.png")
 
@@ -116,25 +121,32 @@ function mod:init()
         Time = 0.5
     }
 
-    ANIMS.Lightning_Blue_0 = baseAnim:new{
+    ANIMS.RR_Skull = baseAnim:new{
+        Time = 0.001,
+        Image = "combat/skull.png",
+        PosX = -16,
+        PosY = -7
+    }
+
+    ANIMS.RR_Lightning_Blue_0 = baseAnim:new{
         Image = "combat/laser_elec_blue_U.png",
         PosX = -26,
         PosY = 13.5
     }
 
-    ANIMS.Lightning_Blue_1 = baseAnim:new{
+    ANIMS.RR_Lightning_Blue_1 = baseAnim:new{
         Image = "combat/laser_elec_blue_R.png",
         PosX = -26, 
         PosY = -7.5
     }
 
-    ANIMS.Lightning_Blue_2 = baseAnim:new{
+    ANIMS.RR_Lightning_Blue_2 = baseAnim:new{
         Image = "combat/laser_elec_blue_U.png",
         PosX = 2,
         PosY = -7.5
     }
 
-    ANIMS.Lightning_Blue_3 = baseAnim:new{
+    ANIMS.RR_Lightning_Blue_3 = baseAnim:new{
         Image = "combat/laser_elec_blue_R.png",
         PosX = 2,
         PosY = 13.5
