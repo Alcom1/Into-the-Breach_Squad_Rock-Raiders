@@ -4,7 +4,7 @@
 --Credits :
 --Alex/Alcom Isst :     Design, scripting, and intial sprites
 --Salt Potato :         Mech animations, shadows, and auxiliary sprites
---Lemonymous :          Initial Passive script
+--Lemonymous :          Initial Passive script, Trait library
 --,̶'̶,̶|̶'̶,̶'̶_̶   :          Playtesting
 
 --And Thank you to the rest of the ItB Community!
@@ -112,6 +112,7 @@ function mod:init()
     modApi:appendAsset("img/combat/rock_1.png",self.resourcePath.."img/combat/rock_1.png")
     modApi:appendAsset("img/combat/rock_2.png",self.resourcePath.."img/combat/rock_2.png")
     modApi:appendAsset("img/combat/skull.png",self.resourcePath.."img/combat/skull.png")
+    modApi:appendAsset("img/combat/skull_glow.png",self.resourcePath.."img/combat/skull_glow.png")
     modApi:appendAsset("img/combat/laser_elec_blue_R.png",self.resourcePath.."img/combat/laser_elec_blue_R.png")
     modApi:appendAsset("img/combat/laser_elec_blue_U.png",self.resourcePath.."img/combat/laser_elec_blue_U.png")
 
@@ -121,9 +122,9 @@ function mod:init()
         Time = 0.5
     }
 
-    ANIMS.RR_Skull = baseAnim:new{
+    ANIMS.RR_Skull_Glow = baseAnim:new{
         Time = 0.001,
-        Image = "combat/skull.png",
+        Image = "combat/skull_glow.png",
         PosX = -16,
         PosY = -7
     }
@@ -165,6 +166,11 @@ function mod:init()
     require(self.scriptPath.."weapon_fossilizer")
     require(self.scriptPath.."weapon_shovel")
     require(self.scriptPath.."weapon_fence")
+    require(self.scriptPath.."trait"):Add({
+        PawnTypes =     { "Pawn_RR_Spawn_Dynamite" },
+        Icon =          { "img/combat/skull.png", Point(-16, -1) },
+        Description =   { "Short Fuse", "Will explode before any enemies attack."}
+    })
 
     Location["combat/rock_0.png"] = Point(-35, -13)
     Location["combat/rock_1.png"] = Point(-35, -13)
@@ -186,6 +192,7 @@ function mod:load(options, version)
     self.resourcePath..self.icon_squad)
     
     require(self.scriptPath .."passive"):load(self.modApiExt)
+    require(self.scriptPath .."trait"):load()
 end
 
 return mod

@@ -1,6 +1,5 @@
 --Fossilizer Passive by Lemonymous, edited by Alcom Isst
 local this = {}
-local selectedPawnId = nil
 local trackedPawns = {}
 local trackedSummons = {}
 
@@ -55,15 +54,6 @@ function this:load(modUtils)
     --On update, update the tracked pawn locations or both spawn a rock and clear tracked summons
     modApi:addMissionUpdateHook(function(mission)
 
-        --Draw dynamite icons
-        dynamiteTestPawns = extract_table(Board:GetPawns(TEAM_ANY))
-        for i, id in ipairs(dynamiteTestPawns) do                               --For each pawn
-            local pawn = Board:GetPawn(id)
-            if RR_IsDynamite(pawn) and id ~= selectedPawnId then                --If the pawn is dynamite and is not selected
-                Board:AddAnimation(pawn:GetSpace(), 'RR_Skull', ANIM_NO_DELAY)  --Draw dynamite icon
-            end
-        end
-
         --If board is not busy, spawn a rock for a tracked pawn
         if Board:GetBusyState() == 0 then                   --Wait for the board to unbusy
             
@@ -91,16 +81,6 @@ function this:load(modUtils)
                 end
             end
         end
-    end)
-
-    --Store selected pawn ID
-    modUtils:addPawnSelectedHook(function(mission, pawn) 
-        selectedPawnId = pawn:GetId()
-    end)
-
-    --Unstore unselected pawn ID
-    modUtils:addPawnDeselectedHook(function() 
-        selectedPawnId = nil 
     end)
     
     --When a pawn dies, validate it and add it to the list of tracked pawns
