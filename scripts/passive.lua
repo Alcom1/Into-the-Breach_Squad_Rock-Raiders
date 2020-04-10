@@ -21,6 +21,13 @@ local function RR_IsDynamite(pawn)
     return string.match(pawn:GetType(), "Pawn_RR_Spawn_Dynamite")
 end
 
+--Do a dynamite check and detonate it if true
+local function RR_DetonateDynamite(pawn)
+    if RR_IsDynamite(pawn) then                 --If the pawn is dynamite
+        pawn:FireWeapon(pawn:GetSpace(), 1)     --Blow it up!
+    end
+end
+
 --If Rock passive is active, the pawn is an enemy, and the pawn is not on top of a summoning unit
 local function RR_IsValidForRock(pawn)
     return IsPassiveSkill("lmn_Passive_RockOnDeath") and pawn:GetTeam() == TEAM_ENEMY and not trackedSummons[pawn:GetSpace():Hash()]
@@ -32,7 +39,7 @@ local function RR_CanTrackSummons()
 end
 
 --Init
-function this:init(mod)
+function this:init()
     sdlext.addGameExitedHook(RR_ResetTrackedPawns)
 end
 
@@ -41,19 +48,18 @@ function this:load(modUtils)
     modApi:addPreLoadGameHook(RR_ResetTrackedPawns)
     
     --After Environment effects, trigger all dynamite
-    modApi:addPostEnvironmentHook(function(mission)
-        dynamiteTestPawns = extract_table(Board:GetPawns(TEAM_ANY))
-        for i, id in ipairs(dynamiteTestPawns) do       --For each pawn
-            local pawn = Board:GetPawn(id)
-            if RR_IsDynamite(pawn) then                 --If the pawn is dynamite
-                pawn:FireWeapon(pawn:GetSpace(), 1)     --Blow it up!
+    modApi:addNextTurnHook(function()
+        if Game:GetTeamTurn() == TEAM_ENEMY then
+            dynamiteTestPawns = extract_table(Board:GetPawns(TEAM_PLAYER))
+            for i, id in ipairs(dynamiteTestPawns) do       --For each pawn
+                RR_DetonateDynamite(Board:GetPawn(id))
             end
         end
     end)
     
     --On update, update the tracked pawn locations or both spawn a rock and clear tracked summons
-    modApi:addMissionUpdateHook(function(mission)
-
+    modApi:addMissionUpdateHook(function()
+        
         --If board is not busy, spawn a rock for a tracked pawn
         if Board:GetBusyState() == 0 then                   --Wait for the board to unbusy
             
@@ -82,6 +88,10 @@ function this:load(modUtils)
             end
         end
     end)
+
+    modUtils:addPawnIsFireHook(function(mission, pawn)
+        RR_DetonateDynamite(pawn)
+    end)
     
     --When a pawn dies, validate it and add it to the list of tracked pawns
     modUtils:addPawnKilledHook(function(mission, pawn)
@@ -90,10 +100,18 @@ function this:load(modUtils)
         end
     end)
     
-    --When a pawn summons, if we are tracking summons, add it to the list of tracked summons.
+    --When a pawn summons
     modUtils:addPawnTrackedHook(function(mission, pawn)
+        local space = pawn:GetSpace()
+
+        --if we are tracking summons, add it to the list of tracked summons.
         if RR_CanTrackSummons() then
-            trackedSummons[pawn:GetSpace():Hash()] = 1      --Track this hashed space
+            trackedSummons[space:Hash()] = 1      --Track this hashed space
+        end
+
+        --if this space is on fire, do dynamite detonation
+        if Board:IsFire(space) then
+            RR_DetonateDynamite(pawn)
         end
     end)
 end
