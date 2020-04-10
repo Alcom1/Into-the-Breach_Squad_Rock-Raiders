@@ -1,7 +1,7 @@
 --Science weapon that deploys a dynamite spawn.
 Weap_RR_Science_Deploy_Dynamite = Weap_RR_Base_Transporter:new{
     Name = "Dynamite",
-    Description = "Teleport in an explosive that will detonate before enemies attack, pushing adjacent tiles.",
+    Description = "Teleport in an explosive that will detonate before enemies emerge, pushing adjacent tiles.",
     Class = "Science",
     Icon = "weapons/weapon_dynamite.png",
     Deployed = "Pawn_RR_Spawn_Dynamite",

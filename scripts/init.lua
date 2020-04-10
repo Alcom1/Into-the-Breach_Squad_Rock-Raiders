@@ -13,7 +13,7 @@
 local mod = {
     id = "squad_rock_raiders",
     name = "Rock Raiders",
-    version = "0.10",
+    version = "1.00",
     icon = "img/icons/mod_icon.png",
     icon_squad = "img/icons/squad_icon.png",
     requirements = {}
@@ -58,9 +58,9 @@ function mod:init()
             Path =              "img/units/player",
             ResourcePath =      "units/player",
 
-            Default =           { PosX = -25, PosY = -3 },
-            Animated =          { PosX = -25, PosY = -3, NumFrames = 4},
-            Broken =            { PosX = -25, PosY = -3 },
+            Default =           { PosX = -24, PosY = -3 },
+            Animated =          { PosX = -24, PosY = -3, NumFrames = 4},
+            Broken =            { PosX = -24, PosY = -3 },
             Submerged =         { PosX = -23, PosY =  5 },
             SubmergedBroken =	{ PosX = -23, PosY =  5 },
             Icon =              {},
