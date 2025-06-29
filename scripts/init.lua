@@ -16,7 +16,10 @@ local mod = {
     version = "1.00",
     icon = "img/icons/mod_icon.png",
     icon_squad = "img/icons/squad_icon.png",
-    requirements = {}
+    requirements = {},
+	dependencies = {
+        memedit = "1.0.4"
+    }
 }
 
 --Initialize mod
@@ -134,7 +137,9 @@ function mod:init()
     modApi:appendAsset("img/combat/decal_glow.png",self.resourcePath.."img/combat/decal_glow.png")
     modApi:appendAsset("img/combat/laser_elec_blue_R.png",self.resourcePath.."img/combat/laser_elec_blue_R.png")
     modApi:appendAsset("img/combat/laser_elec_blue_U.png",self.resourcePath.."img/combat/laser_elec_blue_U.png")
+    modApi:appendAsset("img/combat/crystal.png",self.resourcePath.."img/combat/crystal.png")
 
+    Location["combat/crystal.png"] = Point(-9, 2)
     Location["combat/rock_0.png"] = Point(-35, -13)
     Location["combat/rock_1.png"] = Point(-35, -13)
     Location["combat/rock_2.png"] = Point(-35, -13)
@@ -183,6 +188,7 @@ function mod:init()
     })
     
     --Scripts
+    require(self.scriptPath.."items")
     require(self.scriptPath.."pawns")
     require(self.scriptPath.."point")
     require(self.scriptPath.."terrain")

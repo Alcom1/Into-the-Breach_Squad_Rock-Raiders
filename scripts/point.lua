@@ -47,3 +47,24 @@ function Point:Bresenham(p2, limitStart, limitFinal)
 
     return points
 end
+
+function Point:LaserPoints(direction)
+    
+    local points = {}
+    local index = 1
+    local point = self
+
+    while true do
+        
+		point = point + DIR_VECTORS[direction]
+		
+		if Board:IsBuilding(point) or Board:GetTerrain(point) == TERRAIN_MOUNTAIN or not Board:IsValid(point) then
+			break
+		else
+            points[index] = point
+            index = index + 1
+		end
+	end
+
+    return points
+end

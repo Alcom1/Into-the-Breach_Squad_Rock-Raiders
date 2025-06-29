@@ -8,3 +8,13 @@ end
 function RR_IsMountain(point)
 	return	Board:GetTerrain(point) == TERRAIN_MOUNTAIN
 end
+
+--If terrain has rock on it
+function RR_HasRock(point)
+	local pawn = Board:GetPawn(point)
+	if pawn ~= nil then
+		return string.match(pawn:GetType(), "Wall")
+	else
+		return false
+	end
+end

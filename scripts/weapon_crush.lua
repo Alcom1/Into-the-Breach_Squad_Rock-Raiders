@@ -82,11 +82,9 @@ end
 
 function Weap_RR_Prime_Crush:IsTwoClickException(p1, p2)
     if not RR_IsSink(p2) then
-        LOG("IS SINK")
         return false
     end
 	
-    LOG("SINKN\'T")
 	return true
 end
 
@@ -130,14 +128,42 @@ function Weap_RR_Prime_Crush:GetFinalEffect(p1, p2, p3)
         ret:AddDamage(damage)                                       --Damage
     end
 
+    local laserPoints = p2:LaserPoints(GetDirection(p3 - p2))
+    local crystalPoints = {}
+    local crystalIndex = 1
+    for i, point in ipairs(laserPoints) do
+        if RR_HasRock(point) then
+            crystalPoints[crystalIndex] = point
+            crystalIndex = crystalIndex + 1
+        end
+    end
+
     --if Board:GetPawn(p1):IsFlying() or not RR_IsSink(p2) then
     if not RR_IsSink(p2) then
         ret:AddDelay(0.1 * (distance + 1))
         ret:AddSound("/weapons/burst_beam")
+
+        local lasStart = p2 + DIR_VECTORS[GetDirection(p3 - p2)]
+        local lasDirection = GetDirection(p3 - p2)
+
         self.LaserRef:AddLaser(
             ret,
-            p2 + DIR_VECTORS[GetDirection(p3 - p2)],
-            GetDirection(p3 - p2))
+            lasStart,
+            lasDirection)
+    end
+
+    if crystalIndex > 1 then
+
+        ret:AddDelay(2.0)
+    
+        for i, point in ipairs(crystalPoints) do
+    
+            local damage = SpaceDamage(
+                point,
+                0)
+            damage.sItem = "Item_RR_Crystal_Mine"
+            ret:AddDamage(damage)
+        end
     end
 
     return ret
