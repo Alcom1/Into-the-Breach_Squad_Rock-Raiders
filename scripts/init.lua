@@ -139,7 +139,7 @@ function mod:init()
     modApi:appendAsset("img/combat/laser_elec_blue_U.png",self.resourcePath.."img/combat/laser_elec_blue_U.png")
     modApi:appendAsset("img/combat/crystal.png",self.resourcePath.."img/combat/crystal.png")
 
-    Location["combat/crystal.png"] = Point(-9, 2)
+    Location["combat/crystal.png"] = Point(-15, 3)
     Location["combat/rock_0.png"] = Point(-35, -13)
     Location["combat/rock_1.png"] = Point(-35, -13)
     Location["combat/rock_2.png"] = Point(-35, -13)
