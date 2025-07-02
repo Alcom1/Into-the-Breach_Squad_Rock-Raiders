@@ -1,11 +1,6 @@
 --Reference laser
-Weap_RR_Prime_Crush_Laser1 = Laser_Base:new{
+Weap_RR_Prime_Crush_Laser = Laser_Base:new{
     Damage = 1
-}
-
---Reference laser
-Weap_RR_Prime_Crush_Laser2 = Laser_Base:new{
-    Damage = 2
 }
 
 --Crush weapon with a charge, pass-through, damage, and pull effect
@@ -21,7 +16,7 @@ Weap_RR_Prime_Crush = Skill:new{
     UpgradeCost = { 2, 2 },
     UpgradeList = { "Power Miner!", "+1 Damage" },
     PowerMiner = false,
-    LaserRef = Weap_RR_Prime_Crush_Laser1,
+    LaserRef = Weap_RR_Prime_Crush_Laser,
 	TwoClick = true,
     DamageAnimation = "rock1d",
     DamageSound = "/mech/distance/artillery/death",
@@ -41,15 +36,13 @@ Weap_RR_Prime_Crush_A = Weap_RR_Prime_Crush:new{
 --Damage ramp upgrade
 Weap_RR_Prime_Crush_B = Weap_RR_Prime_Crush:new{
     UpgradeDescription = "Increases drill and laser damage by 1.",
-    Damage = 2,
-    LaserRef = Weap_RR_Prime_Crush_Laser2
+    Damage = 2
 }
 
 --Both upgrades combined
 Weap_RR_Prime_Crush_AB = Weap_RR_Prime_Crush:new{
     PowerMiner = true,
-    Damage = 2,
-    LaserRef = Weap_RR_Prime_Crush_Laser2
+    Damage = 2
 }
 
 --Target Area for pass-through
@@ -128,41 +121,34 @@ function Weap_RR_Prime_Crush:GetFinalEffect(p1, p2, p3)
         ret:AddDamage(damage)                                       --Damage
     end
 
-    local laserPoints = p2:LaserPoints(GetDirection(p3 - p2))
-    local crystalPoints = {}
-    local crystalIndex = 1
-    for i, point in ipairs(laserPoints) do
-        if RR_HasRock(point) then
-            crystalPoints[crystalIndex] = point
-            crystalIndex = crystalIndex + 1
-        end
-    end
-
     --if Board:GetPawn(p1):IsFlying() or not RR_IsSink(p2) then
     if not RR_IsSink(p2) then
+
         ret:AddDelay(0.1 * (distance + 1))
         ret:AddSound("/weapons/burst_beam")
 
-        local lasStart = p2 + DIR_VECTORS[GetDirection(p3 - p2)]
-        local lasDirection = GetDirection(p3 - p2)
-
-        self.LaserRef:AddLaser(
-            ret,
-            lasStart,
-            lasDirection)
-    end
-
-    if crystalIndex > 1 then
-
-        ret:AddDelay(2.0)
+        local laserPoints = p2:LaserPoints(GetDirection(p3 - p2))
     
-        for i, point in ipairs(crystalPoints) do
-    
-            local damage = SpaceDamage(
-                point,
-                0)
-            damage.sItem = "Item_RR_Crystal_Mine"
-            ret:AddDamage(damage)
+        for i, point in ipairs(laserPoints) do
+
+            local damage = SpaceDamage(point, self.Damage)
+
+            if RR_HasFragileRock(point, damage) then
+                damage.sScript = "Board:ClearSpace("..point:GetString()..")"    --Just delete the rock
+                damage.sItem = "Item_RR_Crystal_Mine"
+                damage.sAnimation = "rock1d"
+                damage.sSound = "/support/rock/death"
+            end
+            
+            if i < #laserPoints then
+                ret:AddDamage(damage)
+            else
+                ret:AddProjectile(
+                    p2, 
+                    damage,
+                    self.LaserRef.LaserArt, 
+                    FULL_DELAY)
+            end
         end
     end
 

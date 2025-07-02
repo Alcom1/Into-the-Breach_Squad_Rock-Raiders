@@ -18,3 +18,12 @@ function RR_HasRock(point)
 		return false
 	end
 end
+
+--If terrain has rock on it, which can be smashed with 1 damage
+function RR_HasFragileRock(point, damage)
+	if Board:IsDeadly(damage, Pawn) then
+		return RR_HasRock(point)
+	else
+		return false
+	end
+end
