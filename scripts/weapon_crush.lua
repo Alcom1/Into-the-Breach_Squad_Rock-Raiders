@@ -66,7 +66,7 @@ end
 
 --Target Area for pass-through
 function Weap_RR_Prime_Crush:GetSecondTargetArea(p1, p2)
-    if RR_IsSink(p2) then
+    if not Board:GetPawn(p1):IsFlying() and RR_IsSink(p2) then
         return PointList()
     end
 
@@ -74,7 +74,7 @@ function Weap_RR_Prime_Crush:GetSecondTargetArea(p1, p2)
 end
 
 function Weap_RR_Prime_Crush:IsTwoClickException(p1, p2)
-    if not RR_IsSink(p2) then
+    if Board:GetPawn(p1):IsFlying() or not RR_IsSink(p2) then
         return false
     end
 	
@@ -121,19 +121,18 @@ function Weap_RR_Prime_Crush:GetFinalEffect(p1, p2, p3)
         ret:AddDamage(damage)                                       --Damage
     end
 
-    --if Board:GetPawn(p1):IsFlying() or not RR_IsSink(p2) then
-    if not RR_IsSink(p2) then
-
+    if Board:GetPawn(p1):IsFlying() or not RR_IsSink(p2) then
         ret:AddDelay(0.1 * (distance + 1))
         ret:AddSound("/weapons/burst_beam")
 
         local laserPoints = p2:LaserPoints(GetDirection(p3 - p2))
+        local laserDamage = self.Damage
     
         for i, point in ipairs(laserPoints) do
 
-            local damage = SpaceDamage(point, self.Damage)
+            local damage = SpaceDamage(point, laserDamage)
 
-            if RR_HasFragileRock(point, damage) then
+            if self.PowerMiner and RR_HasFragileRock(point, damage) then
                 damage.sScript = "Board:ClearSpace("..point:GetString()..")"    --Just delete the rock
                 damage.sItem = "Item_RR_Crystal_Mine"
                 damage.sAnimation = "rock1d"
@@ -149,6 +148,8 @@ function Weap_RR_Prime_Crush:GetFinalEffect(p1, p2, p3)
                     self.LaserRef.LaserArt, 
                     FULL_DELAY)
             end
+
+            laserDamage = math.max(laserDamage - 1, 1)
         end
     end
 

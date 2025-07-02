@@ -57,11 +57,14 @@ function Point:LaserPoints(direction)
     while true do
         
 		point = point + DIR_VECTORS[direction]
+        
+        if Board:IsValid(point) then
+            points[index] = point
+        end
 		
 		if Board:IsBuilding(point) or Board:GetTerrain(point) == TERRAIN_MOUNTAIN or not Board:IsValid(point) then
 			break
 		else
-            points[index] = point
             index = index + 1
 		end
 	end
