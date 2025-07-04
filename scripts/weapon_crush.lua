@@ -70,7 +70,17 @@ function Weap_RR_Prime_Crush:GetSecondTargetArea(p1, p2)
         return PointList()
     end
 
-    return self.LaserRef:GetTargetArea(p2)
+    local ret = PointList()
+
+    for j = DIR_START, DIR_END do
+        if j ~= GetDirection(p1 - p2) then
+            for i, point in ipairs(p2:LaserPoints(j)) do
+                ret:push_back(point)
+            end
+        end
+    end
+
+    return ret
 end
 
 function Weap_RR_Prime_Crush:IsTwoClickException(p1, p2)
