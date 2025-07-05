@@ -6,7 +6,7 @@ function Point:Hash()
 end
 
 --returns the points between self and p2, in order from p1 to p2
-function Point:Bresenham(p2, limitStart, limitFinal)
+function Point:RR_Bresenham(p2, limitStart, limitFinal)
     
     local function GetSign(x)               --Get the sign (-1, 0, 1) of a number
         return x > 0 and 1 or x < 0 and -1 or 0
@@ -48,20 +48,25 @@ function Point:Bresenham(p2, limitStart, limitFinal)
     return points
 end
 
-function Point:LaserPoints(direction)
+--Returns all points hit when firing a laser in a given direction
+function Point:RR_LaserPoints(direction)
     
-    local points = {}
-    local index = 1
-    local point = self
+    local points = {}   --Points hit by laser
+    local index = 1     --Index of next point to add
+    local point = self  --Self
 
+    --Just keep looping
     while true do
         
+        --Move point forward
 		point = point + DIR_VECTORS[direction]
         
+        --Add point if it's valid
         if Board:IsValid(point) then
             points[index] = point
         end
 		
+        --Stop adding points if current space blocks lasers or is the the edge of the board
 		if Board:IsBuilding(point) or Board:GetTerrain(point) == TERRAIN_MOUNTAIN or not Board:IsValid(point) then
 			break
 		else

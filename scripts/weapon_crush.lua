@@ -45,7 +45,7 @@ Weap_RR_Prime_Crush_AB = Weap_RR_Prime_Crush:new{
     Damage = 2
 }
 
---Target Area for pass-through
+--Target Area for short-range drill
 function Weap_RR_Prime_Crush:GetTargetArea(p1)
     local ret = PointList()
     for i = DIR_START, DIR_END do                           --For each direction
@@ -64,17 +64,19 @@ function Weap_RR_Prime_Crush:GetTargetArea(p1)
     return ret
 end
 
---Target Area for pass-through
+--Target Area for 3-direction laser
 function Weap_RR_Prime_Crush:GetSecondTargetArea(p1, p2)
+    --Laser cannot be fired if mech is non-flying and sunk
     if not Board:GetPawn(p1):IsFlying() and RR_IsSink(p2) then
         return PointList()
     end
 
     local ret = PointList()
 
+    --All directions
     for j = DIR_START, DIR_END do
-        if j ~= GetDirection(p1 - p2) then
-            for i, point in ipairs(p2:LaserPoints(j)) do
+        if j ~= GetDirection(p1 - p2) then                  --Except don't fire backwards
+            for i, point in ipairs(p2:RR_LaserPoints(j)) do --Get all points for a laser
                 ret:push_back(point)
             end
         end
@@ -83,7 +85,9 @@ function Weap_RR_Prime_Crush:GetSecondTargetArea(p1, p2)
     return ret
 end
 
+--Click check for laser
 function Weap_RR_Prime_Crush:IsTwoClickException(p1, p2)
+    --Laser cannot be fired if mech is non-flying and sunk
     if Board:GetPawn(p1):IsFlying() or not RR_IsSink(p2) then
         return false
     end
@@ -91,64 +95,53 @@ function Weap_RR_Prime_Crush:IsTwoClickException(p1, p2)
 	return true
 end
 
---Skill Effect for charge, damage, pull, and upgrades
+--Skill Effect for charge, damage, and pull
 function Weap_RR_Prime_Crush:GetSkillEffect(p1, p2)
     local ret = SkillEffect()
 
-    ret:AddSound(self.DamageSound)                                  --Initial Drill Sound
-    ret:AddCharge(Board:GetPath(p1, p2, PATH_FLYER), NO_DELAY)      --Charge!
-
-    if p1:Manhattan(p2) >= 2 then
-        local pullDirection = GetDirection(p1 - p2)                 --Direction to pull in
-        local damage = SpaceDamage(
-            p1 + DIR_VECTORS[GetDirection(p2 - p1)], 
-            self.Damage)                                            --Damage
-        damage.iPush = pullDirection                                --Damage pull
-        damage.sAnimation = self.DamageAnimation
-        damage.sSound = self.DamageSound
-        ret:AddDamage(damage)                                       --Damage
+    ret:AddSound(self.DamageSound)                                      --Initial Drill Sound
+    ret:AddCharge(Board:GetPath(p1, p2, PATH_FLYER), NO_DELAY)          --Charge!
+    
+    if p1:Manhattan(p2) >= 2 then   
+        local pullDirection = GetDirection(p1 - p2)                     --Direction to pull in
+        local damage = SpaceDamage( 
+            p1 + DIR_VECTORS[GetDirection(p2 - p1)],    
+            self.Damage)                                                --Damage
+        damage.iPush = pullDirection                                    --Damage pull
+        damage.sAnimation = self.DamageAnimation    
+        damage.sSound = self.DamageSound    
+        ret:AddDamage(damage)                                           --Damage
     end
 
     return ret
 end
 
---Skill Effect for charge, damage, pull, and upgrades
+--Skill Effect for initial effect and then firing the mining laser
 function Weap_RR_Prime_Crush:GetFinalEffect(p1, p2, p3)
-    local ret = SkillEffect()
-    local distance = p1:Manhattan(p2)
+    local ret = self:GetSkillEffect(p1, p2)                             --Initial drill effect
 
-    ret:AddSound(self.DamageSound)                                  --Initial Drill Sound
-    ret:AddCharge(Board:GetPath(p1, p2, PATH_FLYER), NO_DELAY)      --Charge!
-
-    if distance >= 2 then
-        local pullDirection = GetDirection(p1 - p2)                 --Direction to pull in
-        local damage = SpaceDamage(
-            p1 + DIR_VECTORS[GetDirection(p2 - p1)], 
-            self.Damage)                                            --Damage
-        damage.iPush = pullDirection                                --Damage pull
-        damage.sAnimation = self.DamageAnimation
-        damage.sSound = self.DamageSound
-        ret:AddDamage(damage)                                       --Damage
-    end
-
+    --Laser can be fired if mech is flying or on land after drilling
     if Board:GetPawn(p1):IsFlying() or not RR_IsSink(p2) then
-        ret:AddDelay(0.1 * (distance + 1))
-        ret:AddSound("/weapons/burst_beam")
+        ret:AddDelay(0.1 * (p1:Manhattan(p2) + 1))                      --Wait for drilling charge to complete
+        ret:AddSound("/weapons/burst_beam")                             --Laser sound
 
-        local laserPoints = p2:LaserPoints(GetDirection(p3 - p2))
-        local laserDamage = self.Damage
+        local laserPoints = p2:RR_LaserPoints(GetDirection(p3 - p2))    --Get laser points in firing direction
+        local laserDamage = self.Damage                                 --Initial laser damage
     
+        --Deal damage for each lasered gridspace
         for i, point in ipairs(laserPoints) do
 
             local damage = SpaceDamage(point, laserDamage)
 
-            if self.PowerMiner and RR_HasFragileRock(point, damage) then
-                damage.sScript = "Board:ClearSpace("..point:GetString()..")"    --Just delete the rock
+            --Clear the rock and place a crystal there for Power Miner effect and destroyed rock
+            if self.PowerMiner and RR_HasDeadRock(point, damage) then
+                damage.sScript = "Board:ClearSpace("..point:GetString()..")"
                 damage.sItem = "Item_RR_Crystal_Mine"
                 damage.sAnimation = "rock1d"
                 damage.sSound = "/support/rock/death"
             end
             
+            --All but the final effect have no projectile. Laser projectile for final hit
             if i < #laserPoints then
                 ret:AddDamage(damage)
             else
@@ -159,6 +152,7 @@ function Weap_RR_Prime_Crush:GetFinalEffect(p1, p2, p3)
                     FULL_DELAY)
             end
 
+            --Decrement laser damage until it's 1
             laserDamage = math.max(laserDamage - 1, 1)
         end
     end

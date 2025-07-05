@@ -46,7 +46,7 @@ end
 
 --Get the end of an earth path, a path that continues until before the ground ends
 local function RR_GetEarthPathEnd(p1, p2)
-    local travelPoints = p1:Bresenham(p2)       --Get all points from here to there
+    local travelPoints = p1:RR_Bresenham(p2)    --Get all points from here to there
 
     for i, point in ipairs(travelPoints) do
         if RR_IsSink(point) then                --If this point will sink the rock

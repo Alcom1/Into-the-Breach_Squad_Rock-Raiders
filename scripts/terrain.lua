@@ -19,8 +19,8 @@ function RR_HasRock(point)
 	end
 end
 
---If terrain has rock on it, which can be smashed with 1 damage
-function RR_HasFragileRock(point, damage)
+--If terrain has rock on it which will be destroyed by the given damage
+function RR_HasDeadRock(point, damage)
 	if Board:IsDeadly(damage, Pawn) then
 		return RR_HasRock(point)
 	else
