@@ -21,16 +21,28 @@ Weap_RR_Prime_Crush = Skill:new{
     DamageAnimation = "rock1d",
     DamageSound = "/mech/distance/artillery/death",
     TipImage = {
-        Unit = Point(2, 3),
-        Enemy = Point(2, 2),
-        Target = Point(2, 1)
+        Unit = Point(1, 3),
+        Enemy = Point(1, 2),
+        Enemy2 = Point(2, 1),
+        Enemy3 = Point(3, 1),
+		Target = Point(1, 1),
+        Second_Click = Point(4, 1)
     }
 }
 
 --Ally Immune upgrade
 Weap_RR_Prime_Crush_A = Weap_RR_Prime_Crush:new{
     UpgradeDescription = "Destroying a rock with the laser drops an energy crystal tile that gives Mechs Boost.",
-    PowerMiner = true
+    PowerMiner = true,
+    TipImage = {
+        Unit = Point(2, 3),
+        Enemy = Point(2, 1),
+		Target = Point(2, 2),
+        Second_Click = Point(2, 0),
+		CustomEnemy = "Wall",
+        Second_Target = Point(2, 1),
+        Second_Origin = Point(2, 2),
+    }
 }
 
 --Damage ramp upgrade
@@ -119,6 +131,12 @@ end
 --Skill Effect for initial effect and then firing the mining laser
 function Weap_RR_Prime_Crush:GetFinalEffect(p1, p2, p3)
     local ret = self:GetSkillEffect(p1, p2)                             --Initial drill effect
+
+    --TIP IMAGE HACK
+    if Board:IsTipImage() and p2 == Point(2, 1) then
+        ret:AddScript("Board:GetPawn("..p2:GetString().."):SetBoosted(true)")
+        return ret
+    end
 
     --Laser can be fired if mech is flying or on land after drilling
     if Board:GetPawn(p1):IsFlying() or not RR_IsSink(p2) then
