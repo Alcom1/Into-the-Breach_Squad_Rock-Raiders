@@ -91,7 +91,7 @@ function mod:init()
             Default =           { PosX = -25, PosY = -3 },
             Animated =          { PosX = -25, PosY = -3 },
             Broken =            { PosX = -25, PosY = -3 },
-            Submerged =         { PosX = -23, PosY =  5 },
+            Submerged =         { PosX = -26, PosY =  5 },
             SubmergedBroken =	{ PosX = -23, PosY =  5 },
             Icon =              {},
         },
