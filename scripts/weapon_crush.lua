@@ -13,8 +13,8 @@ Weap_RR_Prime_Crush = Skill:new{
     Damage = 1,
     PowerCost = 1,
     Upgrades = 2,
-    UpgradeCost = { 2, 2 },
-    UpgradeList = { "Power Miner!", "+1 Damage" },
+    UpgradeCost = { 1, 3 },
+    UpgradeList = { "Power Miner!", "+2 Damage" },
     PowerMiner = false,
     LaserRef = Weap_RR_Prime_Crush_Laser,
 	TwoClick = true,
@@ -36,13 +36,13 @@ Weap_RR_Prime_Crush_A = Weap_RR_Prime_Crush:new{
 --Damage ramp upgrade
 Weap_RR_Prime_Crush_B = Weap_RR_Prime_Crush:new{
     UpgradeDescription = "Increases drill and laser damage by 1.",
-    Damage = 2
+    Damage = 3
 }
 
 --Both upgrades combined
 Weap_RR_Prime_Crush_AB = Weap_RR_Prime_Crush:new{
     PowerMiner = true,
-    Damage = 2
+    Damage = 3
 }
 
 --Target Area for short-range drill
