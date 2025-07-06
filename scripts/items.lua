@@ -21,7 +21,10 @@ boardEvents.onItemRemoved:subscribe(
 
             if pawn then
                 local mine_damage = SpaceDamage(loc)
-                mine_damage.sScript = "Board:GetPawn("..loc:GetString().."):SetBoosted(true)"
+                mine_damage.sScript = [[
+                    if Board:GetPawn(]]..loc:GetString()..[[):IsMech() then 
+                        Board:GetPawn(]]..loc:GetString()..[[):SetBoosted(true) 
+                    end]]
                 Board:DamageSpace(mine_damage)
             end
         end
