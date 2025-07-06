@@ -89,7 +89,7 @@ function mod:init()
             ResourcePath =      "units/player",
 
             Default =           { PosX = -25, PosY = -3 },
-            Animated =          { PosX = -25, PosY = -3 },
+            Animated =          { PosX = -25, PosY = -3, NumFrames = 8, Time = 0.20},
             Broken =            { PosX = -25, PosY = -3 },
             Submerged =         { PosX = -26, PosY =  5 },
             SubmergedBroken =	{ PosX = -23, PosY =  5 },
@@ -138,11 +138,14 @@ function mod:init()
     modApi:appendAsset("img/combat/laser_elec_blue_R.png",self.resourcePath.."img/combat/laser_elec_blue_R.png")
     modApi:appendAsset("img/combat/laser_elec_blue_U.png",self.resourcePath.."img/combat/laser_elec_blue_U.png")
     modApi:appendAsset("img/combat/crystal.png",self.resourcePath.."img/combat/crystal.png")
+    modApi:appendAsset("img/combat/crystal_purp.png",self.resourcePath.."img/combat/crystal_purp.png")
 
-    Location["combat/crystal.png"] = Point(-15, 3)
+    Location["combat/crystal_purp.png"] = Point(-15, 3)
     Location["combat/rock_0.png"] = Point(-35, -13)
     Location["combat/rock_1.png"] = Point(-35, -13)
     Location["combat/rock_2.png"] = Point(-35, -13)
+
+    TILE_TOOLTIPS["rr_crystal_mine"]  = {"Energy Crystal", "Any friendly mech that stops on this space will be boosted."}
 
     --Animation Assets
     local baseAnim = Animation:new{

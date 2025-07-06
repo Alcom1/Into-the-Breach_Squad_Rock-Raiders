@@ -8,8 +8,8 @@ mine_damage.iCrack = EFFECT_REMOVE
 
 Item_RR_Crystal_Mine = { 
     Image = "combat/crystal.png", 
-    Damage = mine_damage, 
-    Tooltip = "freeze_mine", 
+    Damage = mine_damage,
+    Tooltip = "rr_crystal_mine",
     Icon = "combat/crystal.png", 
     UsedImage = ""}
 
