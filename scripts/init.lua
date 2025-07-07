@@ -90,9 +90,9 @@ function mod:init()
 
             Default =           { PosX = -25, PosY = -3 },
             Animated =          { PosX = -25, PosY = -3, NumFrames = 8, Time = 0.20},
-            Broken =            { PosX = -25, PosY = -3 },
+            Broken =            { PosX = -25, PosY = -1 },
             Submerged =         { PosX = -26, PosY =  5 },
-            SubmergedBroken =	{ PosX = -23, PosY =  5 },
+            SubmergedBroken =	{ PosX = -24, PosY =  9 },
             Icon =              {},
         },
         {
