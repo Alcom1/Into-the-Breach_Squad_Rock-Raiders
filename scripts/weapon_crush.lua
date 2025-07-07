@@ -157,6 +157,7 @@ function Weap_RR_Prime_Crush:GetFinalEffect(p1, p2, p3)
                 damage.sItem = "Item_RR_Crystal_Mine"
                 damage.sAnimation = "rock1d"
                 damage.sSound = "/support/rock/death"
+                damage.sImageMark = "combat/crystal_0.png"
             end
             
             --All but the final effect have no projectile. Laser projectile for final hit
