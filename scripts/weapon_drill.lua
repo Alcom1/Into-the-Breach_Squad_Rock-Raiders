@@ -1,7 +1,7 @@
 --Drill weapon with a charge, pass-through, damage, and pull effect
 Weap_RR_Prime_Drill = Skill:new{
     Name = "Mining Drill",
-    Description = "Charge and drill through tiles, pulling and damaging each one.",
+    Description = "Charge forward, drilling through each tile you pass.",
     Class = "Prime",
     Icon = "weapons/weapon_drill.png",
     Damage = 1,
