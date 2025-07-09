@@ -89,7 +89,9 @@ function Weap_RR_Prime_Drill:GetSkillEffect(p1, p2)
         if self.FriendlyDamage or not Board:IsPawnTeam(point, TEAM_PLAYER) then --If ally immune, skip damage for allies
             local damage = SpaceDamage(point, self.Damage + ramp)               --Damage
             damage.iPush = pullDirection                                        --Damage pull
-            damage.sAnimation = self.DamageAnimation
+            if not RR_IsSink(point) then                                        --vfx if on land
+                damage.sAnimation = self.DamageAnimation
+            end
             damage.sSound = self.DamageSound
             ret:AddDamage(damage)                                               --Damage
             ret:AddBounce(point, 4)                                             --Bounce

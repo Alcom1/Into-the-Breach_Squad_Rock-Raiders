@@ -20,6 +20,9 @@ Weap_RR_Prime_Crush = Skill:new{
 	TwoClick = true,
     DamageAnimation = "rock1d",
     DamageSound = "/mech/distance/artillery/death",
+    DamageSoundMine = "/support/rock/death",
+    DamageSoundLaser = "/weapons/burst_beam",
+    DamageMarker = "combat/crystal_0.png",
     TipImage = {
         Unit = Point(1, 3),
         Enemy = Point(1, 2),
@@ -115,12 +118,15 @@ function Weap_RR_Prime_Crush:GetSkillEffect(p1, p2)
     ret:AddCharge(Board:GetPath(p1, p2, PATH_FLYER), NO_DELAY)          --Charge!
     
     if p1:Manhattan(p2) >= 2 then   
+        local point = p1 + DIR_VECTORS[GetDirection(p2 - p1)]           --Point where damage occurs
         local pullDirection = GetDirection(p1 - p2)                     --Direction to pull in
         local damage = SpaceDamage( 
-            p1 + DIR_VECTORS[GetDirection(p2 - p1)],    
+            point,    
             self.Damage)                                                --Damage
         damage.iPush = pullDirection                                    --Damage pull
-        damage.sAnimation = self.DamageAnimation    
+        if not RR_IsSink(point) then                                    --vfx if on land
+            damage.sAnimation = self.DamageAnimation
+        end
         damage.sSound = self.DamageSound    
         ret:AddDamage(damage)                                           --Damage
     end
@@ -141,7 +147,7 @@ function Weap_RR_Prime_Crush:GetFinalEffect(p1, p2, p3)
     --Laser can be fired if mech is flying or on land after drilling
     if Board:GetPawn(p1):IsFlying() or not RR_IsSink(p2) then
         ret:AddDelay(0.1 * (p1:Manhattan(p2) + 1))                      --Wait for drilling charge to complete
-        ret:AddSound("/weapons/burst_beam")                             --Laser sound
+        ret:AddSound(self.DamageSoundLaser)                             --Laser sound
 
         local laserPoints = p2:RR_LaserPoints(GetDirection(p3 - p2))    --Get laser points in firing direction
         local laserDamage = self.Damage                                 --Initial laser damage
@@ -155,9 +161,9 @@ function Weap_RR_Prime_Crush:GetFinalEffect(p1, p2, p3)
             if self.PowerMiner and RR_HasDeadRock(point, damage) then
                 damage.sScript = "Board:ClearSpace("..point:GetString()..")"
                 damage.sItem = "Item_RR_Crystal_Mine"
-                damage.sAnimation = "rock1d"
-                damage.sSound = "/support/rock/death"
-                damage.sImageMark = "combat/crystal_0.png"
+                damage.sAnimation = self.DamageAnimation
+                damage.sSound = self.DamageSoundMine
+                damage.sImageMark = self.DamageMarker
             end
             
             --All but the final effect have no projectile. Laser projectile for final hit
