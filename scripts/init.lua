@@ -200,10 +200,9 @@ function mod:init()
     require(self.scriptPath.."weapon_crush")
     require(self.scriptPath.."weapon_transporter")
     require(self.scriptPath.."weapon_drill")
-    require(self.scriptPath.."weapon_dynamite")
     require(self.scriptPath.."weapon_fossilizer")
     require(self.scriptPath.."weapon_shovel")
-    require(self.scriptPath.."weapon_fence")
+    require(self.scriptPath.."weapon_cargo")
 
 end
 
@@ -219,7 +218,7 @@ function mod:load(options, version)
     modApi:addSquadTrue(
         {
             "Rock Raiders",
-            "Pawn_RR_Mech_Drill", 
+            "Pawn_RR_Mech_Transport", 
             "Pawn_RR_Mech_Loader", 
             "Pawn_RR_Mech_Crusher"
         }, 
