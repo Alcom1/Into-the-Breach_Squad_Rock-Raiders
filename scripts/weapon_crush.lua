@@ -12,17 +12,14 @@ Weap_RR_Prime_Crush = Skill:new{
     Range = 2,
     Damage = 1,
     PowerCost = 1,
-    Upgrades = 2,
-    UpgradeCost = { 1, 3 },
-    UpgradeList = { "Power Miner!", "+2 Damage" },
-    PowerMiner = false,
+    Upgrades = 1,
+    UpgradeCost = { 3 },
+    UpgradeList = { "+2 Damage" },
     LaserRef = Weap_RR_Prime_Crush_Laser,
 	TwoClick = true,
     DamageAnimation = "rock1d",
     DamageSound = "/mech/distance/artillery/death",
-    DamageSoundMine = "/support/rock/death",
     DamageSoundLaser = "/weapons/burst_beam",
-    DamageMarker = "combat/crystal_0.png",
     TipImage = {
         Unit = Point(1, 3),
         Enemy = Point(1, 2),
@@ -33,30 +30,9 @@ Weap_RR_Prime_Crush = Skill:new{
     }
 }
 
---Ally Immune upgrade
+--Damage upgrade
 Weap_RR_Prime_Crush_A = Weap_RR_Prime_Crush:new{
-    UpgradeDescription = "Destroying a rock with the laser drops an energy crystal tile that gives Mechs Boost.",
-    PowerMiner = true,
-    TipImage = {
-        Unit = Point(2, 3),
-        Enemy = Point(2, 1),
-		Target = Point(2, 2),
-        Second_Click = Point(2, 0),
-		CustomEnemy = "Wall",
-        Second_Target = Point(2, 1),
-        Second_Origin = Point(2, 2),
-    }
-}
-
---Damage ramp upgrade
-Weap_RR_Prime_Crush_B = Weap_RR_Prime_Crush:new{
-    UpgradeDescription = "Increases drill and laser damage by 1.",
-    Damage = 3
-}
-
---Both upgrades combined
-Weap_RR_Prime_Crush_AB = Weap_RR_Prime_Crush:new{
-    PowerMiner = true,
+    UpgradeDescription = "Increases drill and laser damage by 2.",
     Damage = 3
 }
 
@@ -156,15 +132,6 @@ function Weap_RR_Prime_Crush:GetFinalEffect(p1, p2, p3)
         for i, point in ipairs(laserPoints) do
 
             local damage = SpaceDamage(point, laserDamage)
-
-            --Clear the rock and place a crystal there for Power Miner effect and destroyed rock
-            if self.PowerMiner and RR_HasDeadRock(point, damage) then
-                damage.sScript = "Board:ClearSpace("..point:GetString()..")"
-                damage.sItem = "Item_RR_Crystal_Mine"
-                damage.sAnimation = self.DamageAnimation
-                damage.sSound = self.DamageSoundMine
-                damage.sImageMark = self.DamageMarker
-            end
             
             --All but the final effect have no projectile. Laser projectile for final hit
             if i < #laserPoints then
