@@ -53,20 +53,30 @@ end
 ----------------------------------------------------------------
 --Validation functions
 ----------------------------------------------------------------
+--Get tier of current passive
+local function RR_CurrentPassiveTier()
+    if IsPassiveSkill("lmn_Passive_RockOnDeath_2") then
+        return 2
+    elseif IsPassiveSkill("lmn_Passive_RockOnDeath") then
+        return 1
+    end
+
+    return 0
+end
 
 --If Rock passive is active
 local function RR_IsValidSummon()
-    return IsPassiveSkill("lmn_Passive_RockOnDeath")
+    return RR_CurrentPassiveTier() > 0
 end
 
 --If Rock passive is active, the pawn is an enemy, and the pawn is not on top of a summoning unit
 local function RR_IsValidForRock(pawn)
-    return IsPassiveSkill("lmn_Passive_RockOnDeath") and pawn:GetTeam() == TEAM_ENEMY and not trackedSummons[pawn:GetSpace():Hash()]
+    return RR_CurrentPassiveTier() > 0 and pawn:GetTeam() == TEAM_ENEMY and not trackedSummons[pawn:GetSpace():Hash()]
 end
 
 --If Rock passive is active, the pawn is a rock, and the pawn is not on top of a summoning unit
 local function RR_IsValidForCrystal(pawn)
-    return IsPassiveSkill("lmn_Passive_RockOnDeath") and string.match(pawn:GetType(), "Wall") and not trackedSummons[pawn:GetSpace():Hash()]
+    return RR_CurrentPassiveTier() > 1 and string.match(pawn:GetType(), "Wall") and not trackedSummons[pawn:GetSpace():Hash()]
 end
 
 ----------------------------------------------------------------
@@ -92,31 +102,55 @@ end
 
 --Spawn a rock!
 local function RR_CheckSpawnCrystal()
-    local pawnId, loc = next(trackedRaids)          --Get the first tracked raid (mined rock)
 
-    if pawnId then                                  --If the rock exists
-        local fx = SkillEffect()                    --Create effect
-        local d = SpaceDamage(loc)                  --Create damage
-        d.sScript = "Board:ClearSpace("..loc:GetString()..")"
-        d.sItem = "Item_RR_Crystal_Mine"
-        --d.sAnimation = "rock1d"
-        --d.sSound = "/support/rock/death"
-        --d.sImageMark = "combat/crystal_0.png"
-        fx:AddDamage(d)                             --Add damage to effect
-        
-        Board:AddEffect(fx)                         --Add effect to board
-        
-        trackedRaids[pawnId] = nil                  --We're done with this pawn, untrack it
+    local fx = SkillEffect()    --Create effect
+    local isSpawn = false       --If there is a crystal spawning
+
+    --Put all crystal spawns in one fx for timing improvements
+    while true do
+        local pawnId, loc = next(trackedRaids)  --Get the first tracked raid (mined rock)
+
+        if pawnId then                          --If the rock exists
+            local pawn = Board:GetPawn(pawnId)  --Get current pawn
+
+            if pawn then                        --Move current pawn away so it doesn't eat the crystal
+                pawn:SetSpace(Point(-1, -1))
+            end
+
+            local d = SpaceDamage(loc)          --Create damage
+            d.sItem = "Item_RR_Crystal_Mine"
+            --d.sAnimation = "rock1d"
+            --d.sSound = "/support/rock/death"
+            fx:AddDamage(d)                     --Add damage to effect
+
+            isSpawn = true                      --Confirm crystals are spawning
+            
+            trackedRaids[pawnId] = nil          --We're done with this pawn, untrack it
+        else
+            break
+        end
+    end
+            
+    if isSpawn then
+        Board:AddEffect(fx)                     --Add effect to board if there are any crystals to spawn
     end
 end
 
 --Track rock spawning pawns to their new locations
 local function RR_TrackPawns()
-    for pawnId, loc in pairs(trackedKills) do       --For every tracked pawn
-        local pawn = Board:GetPawn(pawnId)          --Track the pawn's position
+    for pawnId, loc in pairs(trackedKills) do           --For every tracked pawn
+        local pawn = Board:GetPawn(pawnId)              --Track the pawn's position
+
+        if pawn then                                    --if pawn still exists
+            trackedKills[pawnId] = pawn:GetSpace()      --update its tracked location.
+        end
+    end
+
+    for pawnId, loc in pairs(trackedRaids) do           --For every tracked pawn
+        local pawn = Board:GetPawn(pawnId)              --Track the pawn's position
         
-        if pawn then                                --if pawn still exists
-            trackedKills[pawnId] = pawn:GetSpace()  --update its tracked location.
+        if pawn and Board:IsValid(pawn:GetSpace()) then --if pawn still exists
+            trackedRaids[pawnId] = pawn:GetSpace()      --update its tracked location.
         end
     end
 end

@@ -6,12 +6,21 @@ Pass_RR_Generic_Fossilizer = PassiveSkill:new{
     Damage = 0,
     Passive = "lmn_Passive_RockOnDeath",
     PowerCost = 0,
+    Upgrades = 1,
+    UpgradeCost = { 1 },
+    UpgradeList = { "Power Miner!" },
     TipImage = {
         Unit = Point(2, 1),
         Enemy = Point(1, 2),
         Enemy2 = Point(2, 2),
         Enemy3 = Point(3, 2)
     }
+}
+
+--Miner upgrade
+Pass_RR_Generic_Fossilizer_A = Pass_RR_Generic_Fossilizer:new{
+    UpgradeDescription = "All rocks will spawn a crystal on death that gives mechs boost.",
+    Passive = "lmn_Passive_RockOnDeath_2"
 }
 
 --Skill Effect for mouseover preview
