@@ -108,30 +108,33 @@ local function RR_CheckSpawnCrystal()
 
     --Put all crystal spawns in one fx for timing improvements
     while true do
-        local pawnId, loc = next(trackedRaids)  --Get the first tracked raid (mined rock)
+        local pawnId, loc = next(trackedRaids)      --Get the first tracked raid (mined rock)
 
-        if pawnId then                          --If the rock exists
-            local pawn = Board:GetPawn(pawnId)  --Get current pawn
+        if pawnId then                              --If the rock exists
 
-            if pawn then                        --Move current pawn away so it doesn't eat the crystal
-                pawn:SetSpace(Point(-1, -1))
+            if not RR_IsSink(loc) then              --Do not spawn crystal on non-solid tiles
+                local pawn = Board:GetPawn(pawnId)  --Get current pawn
+
+                if pawn then                        --Move current pawn away so it doesn't eat the crystal
+                    pawn:SetSpace(Point(-1, -1))
+                end
+
+                local d = SpaceDamage(loc)          --Create damage
+                d.sItem = "Item_RR_Crystal_Mine"
+                fx:AddDamage(d)                     --Add damage to effect
+                fx:AddBurst(loc, "Emitter_Crystal_Purp", DIR_NONE)
+
+                isSpawn = true                      --Confirm crystals are spawning
             end
-
-            local d = SpaceDamage(loc)          --Create damage
-            d.sItem = "Item_RR_Crystal_Mine"
-            fx:AddDamage(d)                     --Add damage to effect
-            fx:AddBurst(loc, "Emitter_Crystal_Purp", DIR_NONE)
-
-            isSpawn = true                      --Confirm crystals are spawning
             
-            trackedRaids[pawnId] = nil          --We're done with this pawn, untrack it
+            trackedRaids[pawnId] = nil              --We're done with this pawn, untrack it
         else
             break
         end
     end
             
     if isSpawn then
-        Board:AddEffect(fx)                     --Add effect to board if there are any crystals to spawn
+        Board:AddEffect(fx)                         --Add effect to board if there are any crystals to spawn
     end
 end
 
