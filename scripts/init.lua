@@ -139,8 +139,8 @@ function mod:init()
     modApi:appendAsset("img/combat/laser_elec_blue_U.png",self.resourcePath.."img/combat/laser_elec_blue_U.png")
     modApi:appendAsset("img/combat/crystal.png",self.resourcePath.."img/combat/crystal.png")
     modApi:appendAsset("img/combat/crystal_purp.png",self.resourcePath.."img/combat/crystal_purp.png")
+    modApi:appendAsset("img/combat/crystal_spark_purp.png",self.resourcePath.."img/combat/crystal_spark_purp.png")
     modApi:appendAsset("img/combat/crystal_0.png",self.resourcePath.."img/combat/crystal_0.png")
-    modApi:appendAsset("img/combat/rock_1_death_s.png",self.resourcePath.."img/combat/rock_1_death_s.png")
 
     Location["combat/crystal_purp.png"] = Point(-15, 3)
     Location["combat/crystal_0.png"] = Point(-15, 3)
@@ -181,15 +181,6 @@ function mod:init()
         PosY = 13.5
     }
 
-    ANIMS.RR_Rock1ds = Animation:new {
-        Image = "combat/rock_1_death_s.png",
-        PosX = -34, 
-        PosY = -9, 
-        NumFrames = 3,
-        Time = 0.09, 
-        Loop = false
-    }
-
     --Initialized Scripts
     self.modApiExt = require(self.scriptPath .."modApiExt/modApiExt")
     self.modApiExt:init()
@@ -205,6 +196,7 @@ function mod:init()
     --Scripts
     require(self.scriptPath.."items")
     require(self.scriptPath.."pawns")
+    require(self.scriptPath.."particles")
     require(self.scriptPath.."point")
     require(self.scriptPath.."terrain")
     require(self.scriptPath.."weapon_crush")

@@ -119,9 +119,8 @@ local function RR_CheckSpawnCrystal()
 
             local d = SpaceDamage(loc)          --Create damage
             d.sItem = "Item_RR_Crystal_Mine"
-            d.sAnimation = "RR_Rock1ds"
-            --d.sSound = "/support/rock/death"
             fx:AddDamage(d)                     --Add damage to effect
+            fx:AddBurst(loc, "Emitter_Crystal_Purp", DIR_NONE)
 
             isSpawn = true                      --Confirm crystals are spawning
             
