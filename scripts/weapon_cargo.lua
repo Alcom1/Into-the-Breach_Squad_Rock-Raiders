@@ -1,7 +1,7 @@
 --Science weapon that deploys a fence spawn.
 Weap_RR_Science_Deploy_Cargo = Weap_RR_Base_Transporter:new{
     Name = "Mining Equipment",
-    Description = "Deploy a dynamite pack that pushes adjacent tiles.\n\nIf boosted, also deploy an electric fence that chains damage through adjacent targets.",
+    Description = "Deploy a dynamite pack. If placed over an energy crystal, upgrade it to an electric fence.",
     Class = "Science",
     Icon = "weapons/weapon_cargo.png",
     Deployed1 = "Pawn_RR_Spawn_Dynamite",

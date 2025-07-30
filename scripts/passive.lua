@@ -64,9 +64,9 @@ local function RR_CurrentPassiveTier()
     return 0
 end
 
---If Rock passive is active
-local function RR_IsValidSummon()
-    return RR_CurrentPassiveTier() > 0
+--If Rock passive is active and the summon is not a rock
+local function RR_IsValidSummon(pawn)
+    return RR_CurrentPassiveTier() > 0 and not string.match(pawn:GetType(), "Wall")
 end
 
 --If Rock passive is active, the pawn is an enemy, and the pawn is not on top of a summoning unit
@@ -119,10 +119,17 @@ local function RR_CheckSpawnCrystal()
                     pawn:SetSpace(Point(-1, -1))
                 end
 
+                if not isSpawn then                 --Play sound once if a crystal is spawning
+                    fx:AddSound("/ui/battle/buff_boost")
+                end
+
                 local d = SpaceDamage(loc)          --Create damage
-                d.sItem = "Item_RR_Crystal_Mine"
+                d.sItem = "Item_RR_Crystal_Mine"    --Spawn a crystal!
                 fx:AddDamage(d)                     --Add damage to effect
-                fx:AddBurst(loc, "Emitter_Crystal_Purp", DIR_NONE)
+                fx:AddBurst(                        --Crystal spawn particles!
+                    loc,
+                    "Emitter_Crystal_Purp",
+                    DIR_NONE)
 
                 isSpawn = true                      --Confirm crystals are spawning
             end
@@ -196,7 +203,7 @@ function this:load(modUtils)
     --When a pawn summons
     modUtils:addPawnTrackedHook(function(mission, pawn)
         --if we are tracking summons, add it to the list of tracked summons.
-        if RR_IsValidSummon() then
+        if RR_IsValidSummon(pawn) then
             RR_TrackSummon(pawn)
         end
     end)

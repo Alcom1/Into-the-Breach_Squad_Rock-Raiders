@@ -19,7 +19,7 @@ Pass_RR_Generic_Fossilizer = PassiveSkill:new{
 
 --Miner upgrade
 Pass_RR_Generic_Fossilizer_A = Pass_RR_Generic_Fossilizer:new{
-    UpgradeDescription = "All rocks will spawn a crystal on death that gives mechs boost.",
+    UpgradeDescription = "All rocks will spawn an energy crystal on death that gives mechs boost.",
     Passive = "lmn_Passive_RockOnDeath_2"
 }
 
