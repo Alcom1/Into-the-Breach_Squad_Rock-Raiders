@@ -35,6 +35,17 @@ end
 ----------------------------------------------------------------
 --Tracking functions
 ----------------------------------------------------------------
+--If a pawn is dynamite
+local function RR_IsSmallBlocking(pawn)
+
+    Board:IsSpawning(pawn:GetSpace())
+
+    return 
+        Board:IsSpawning(pawn:GetSpace()) and (
+        string.match(pawn:GetType(), "Pawn_RR_Spawn_Dynamite") or
+        string.match(pawn:GetType(), "Pawn_RR_Spawn_Fence") )
+end
+
 --Track a pawn
 local function RR_TrackKill(pawn)
     trackedKills[pawn:GetId()] = pawn:GetSpace()    --Track this space
@@ -82,6 +93,12 @@ end
 ----------------------------------------------------------------
 --Action functions
 ----------------------------------------------------------------
+--Detonate Dynamite!
+local function RR_PawnSubItem(pawn)
+    if pawn then
+        pawn:SetSpace(Point(-1, -1))
+    end
+end
 
 --Spawn a rock!
 local function RR_CheckSpawnRock()
@@ -176,6 +193,23 @@ end
 ----------------------------------------------------------------
 function this:load(modUtils)
     modApi:addPreLoadGameHook(RR_ResetAll)
+
+    --After Environment effects, trigger all dynamite
+    modApi:addNextTurnHook(function()
+        if Game:GetTeamTurn() == TEAM_ENEMY then
+            local dynamiteTestPawns = extract_table(Board:GetPawns(TEAM_PLAYER))
+
+            for i, id in ipairs(dynamiteTestPawns) do   --For each pawn id
+
+                local pawn = Board:GetPawn(id)          --Get pawn from pawn id
+
+                if RR_IsSmallBlocking(pawn) then        --If the pawn is too small to block and is blocking
+
+                    RR_PawnSubItem(pawn)                --Blow it up! (Instantly so we don't wait for the busy state)
+                end
+            end
+        end
+    end)
     
     --On update, update the tracked pawn locations or both spawn a rock and clear tracked summons
     modApi:addMissionUpdateHook(function()

@@ -80,13 +80,13 @@ function Weap_RR_Spawn_Lightning:GetSkillEffect(p1, p2)
             self.Damage or                                                      --Damage
             DAMAGE_ZERO)                                                        --Damage for ignored targets
 
-        damage.sAnimation = "RR_Lightning_Blue_"..GetDirection(curr - prev)        --Damage Animation
-        ret2:AddDamage(damage)                                                   --Add Damage
+        damage.sAnimation = "RR_Lightning_Blue_"..GetDirection(curr - prev)     --Damage Animation
+        ret2:AddDamage(damage)                                                  --Add Damage
 
         for dir = DIR_START, DIR_END do                                         --Loop through adjacent tiles
             local next = curr + DIR_VECTORS[dir]                                --Adjacent tile Point
             if not past[next:Hash()] and Board:IsPawnSpace(next) then           --If tile is not past and has a pawn then
-                ret2 = RR_RecurseLightning(curr, next, ret2)                      --Recurse to adjacent tiles
+                ret2 = RR_RecurseLightning(curr, next, ret2)                    --Recurse to adjacent tiles
             end
         end
 
