@@ -9,32 +9,69 @@ Weap_RR_Prime_Crush = Skill:new{
     Description = "Drill to an adjacent tile, then fire a piercing beam.",
     Class = "Brute",
     Icon = "weapons/weapon_crush.png",
-    Range = 2,
+    Range = 1,
     Damage = 1,
     PowerCost = 1,
-    Upgrades = 1,
-    UpgradeCost = { 3 },
-    UpgradeList = { "+2 Damage" },
+    Upgrades = 2,
+    UpgradeCost = { 1, 3 },
+    UpgradeList = { "+2 Range", "+2 Damage" },
     LaserRef = Weap_RR_Prime_Crush_Laser,
 	TwoClick = true,
     DamageAnimation = "rock1d",
     DamageSound = "/mech/distance/artillery/death",
     DamageSoundLaser = "/weapons/burst_beam",
     TipImage = {
-        Unit = Point(1, 3),
-        Enemy = Point(1, 2),
-        Enemy2 = Point(2, 1),
-        Enemy3 = Point(3, 1),
+        Unit = Point(1, 2),
+        Enemy = Point(2, 1),
+        Enemy2 = Point(3, 1),
 		Target = Point(1, 1),
         Second_Click = Point(4, 1)
     }
 }
 
---Damage upgrade
+--Range upgrade
 Weap_RR_Prime_Crush_A = Weap_RR_Prime_Crush:new{
-    UpgradeDescription = "Increases drill and laser damage by 2.",
-    Damage = 3
+    UpgradeDescription = "Increases drill range by 2.",
+    Range = 3,
+    TipImage = {
+        Unit = Point(2, 4),
+        Enemy = Point(2, 3),
+        Enemy2 = Point(2, 2),
+        Enemy3 = Point(3, 1),
+        Enemy4 = Point(4, 1),
+		Target = Point(2, 1),
+        Second_Click = Point(4, 1)
+    }
 }
+
+--Range upgrade
+Weap_RR_Prime_Crush_B = Weap_RR_Prime_Crush:new{
+    UpgradeDescription = "Increases drill and laser damage by 2.",
+    Damage = 3,
+    TipImage = {
+        Unit = Point(1, 2),
+        Enemy = Point(2, 1),
+        Enemy2 = Point(3, 1),
+		Target = Point(1, 1),
+        Second_Click = Point(4, 1)
+    }
+}
+
+--Both upgrades combined
+Weap_RR_Prime_Crush_B = Weap_RR_Prime_Crush:new{
+    Range = 3,
+    Damage = 3,
+    TipImage = {
+        Unit = Point(2, 4),
+        Enemy = Point(2, 3),
+        Enemy2 = Point(2, 2),
+        Enemy3 = Point(3, 1),
+        Enemy4 = Point(4, 1),
+		Target = Point(2, 1),
+        Second_Click = Point(4, 1)
+    }
+}
+
 
 --Target Area for short-range drill
 function Weap_RR_Prime_Crush:GetTargetArea(p1)
@@ -90,21 +127,25 @@ end
 function Weap_RR_Prime_Crush:GetSkillEffect(p1, p2)
     local ret = SkillEffect()
 
-    ret:AddSound(self.DamageSound)                                      --Initial Drill Sound
-    ret:AddCharge(Board:GetPath(p1, p2, PATH_FLYER), NO_DELAY)          --Charge!
-    
-    if p1:Manhattan(p2) >= 2 then   
-        local point = p1 + DIR_VECTORS[GetDirection(p2 - p1)]           --Point where damage occurs
-        local pullDirection = GetDirection(p1 - p2)                     --Direction to pull in
-        local damage = SpaceDamage( 
-            point,    
-            self.Damage)                                                --Damage
-        damage.iPush = pullDirection                                    --Damage pull
-        if not RR_IsSink(point) then                                    --vfx if on land
-            damage.sAnimation = self.DamageAnimation
+    ret:AddSound(self.DamageSound)                              --Initial Drill Sound
+    ret:AddCharge(Board:GetPath(p1, p2, PATH_FLYER), NO_DELAY)  --Charge!
+
+    if p1:Manhattan(p2) >= 2 then
+        local damagePoints = p1:RR_Bresenham(p2, 1, 1)          --Points from here to there
+        local pullDirection = GetDirection(p1 - p2)             --Direction to pull in
+
+        for i, point in ipairs(damagePoints) do
+            local damage = SpaceDamage(point, self.Damage)      --Damage
+            damage.iPush = pullDirection                        --Damage pull
+            if not RR_IsSink(point) then                        --vfx if on land
+                damage.sAnimation = self.DamageAnimation
+            end
+            damage.sSound = self.DamageSound
+            ret:AddDamage(damage)                               --Damage
+            ret:AddBounce(point, 4)                             --Bounce
+            
+            ret:AddDelay(0.1)                                   --Delay effects as we travel
         end
-        damage.sSound = self.DamageSound    
-        ret:AddDamage(damage)                                           --Damage
     end
 
     return ret
@@ -113,12 +154,6 @@ end
 --Skill Effect for initial effect and then firing the mining laser
 function Weap_RR_Prime_Crush:GetFinalEffect(p1, p2, p3)
     local ret = self:GetSkillEffect(p1, p2)                             --Initial drill effect
-
-    --TIP IMAGE HACK
-    if Board:IsTipImage() and p2 == Point(2, 1) then
-        ret:AddScript("Board:GetPawn("..p2:GetString().."):SetBoosted(true)")
-        return ret
-    end
 
     --Laser can be fired if mech is flying or on land after drilling
     if Board:GetPawn(p1):IsFlying() or not RR_IsSink(p2) then
