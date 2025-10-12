@@ -133,8 +133,8 @@ function mod:init()
     modApi:appendAsset("img/combat/rock_0.png",self.resourcePath.."img/combat/rock_0.png")
     modApi:appendAsset("img/combat/rock_1.png",self.resourcePath.."img/combat/rock_1.png")
     modApi:appendAsset("img/combat/rock_2.png",self.resourcePath.."img/combat/rock_2.png")
-    modApi:appendAsset("img/combat/decal.png",self.resourcePath.."img/combat/decal.png")
-    modApi:appendAsset("img/combat/decal_glow.png",self.resourcePath.."img/combat/decal_glow.png")
+    modApi:appendAsset("img/combat/feather.png",self.resourcePath.."img/combat/feather.png")
+    modApi:appendAsset("img/combat/feather_glow.png",self.resourcePath.."img/combat/empty.png")
     modApi:appendAsset("img/combat/laser_elec_blue_R.png",self.resourcePath.."img/combat/laser_elec_blue_R.png")
     modApi:appendAsset("img/combat/laser_elec_blue_U.png",self.resourcePath.."img/combat/laser_elec_blue_U.png")
     modApi:appendAsset("img/combat/crystal.png",self.resourcePath.."img/combat/crystal.png")
@@ -188,9 +188,9 @@ function mod:init()
     self.passive:init()
     self.trait = require(self.scriptPath.."libraries/trait")
     self.trait:Add({
-        PawnTypes =     { "Pawn_RR_Spawn_Dynamite", "Pawn_RR_Spawn_Dynamite2" },
-        Icon =          { "img/combat/decal.png", Point(-16, -1) },
-        Description =   { "Short Fuse", "Will detonate before enemies emerge, and also immediately if on fire."}
+        PawnTypes =     { "Pawn_RR_Spawn_Dynamite", "Pawn_RR_Spawn_Dynamite2", "Pawn_RR_Spawn_Fence", "Pawn_RR_Spawn_Fence2" },
+        Icon =          { "img/combat/feather.png", Point(-16, -1) },
+        Description =   { "Lightweight", "Lightweight units cannot block vek from spawning (and will be destroyed instead)."}
     })
     
     --Scripts
