@@ -23,6 +23,7 @@ Pass_RR_Generic_Fossilizer_A = Pass_RR_Generic_Fossilizer:new{
     Passive = "lmn_Passive_RockOnDeath_2",
     TipImage = {
         Unit = Point(2, 1),
+		Target = Point(2, 2),
         Enemy = Point(1, 2),
         Enemy2 = Point(2, 2),
         Enemy3 = Point(3, 2),
@@ -33,6 +34,7 @@ Pass_RR_Generic_Fossilizer_A = Pass_RR_Generic_Fossilizer:new{
 --Skill Effect for mouseover preview
 function Pass_RR_Generic_Fossilizer:GetSkillEffect(p1, p2)
     local ret = SkillEffect()
+    local isRock = self.Passive == "lmn_Passive_RockOnDeath"
 
     --Kill all 3 vek
     for xPos = 1, 3 do
@@ -40,7 +42,7 @@ function Pass_RR_Generic_Fossilizer:GetSkillEffect(p1, p2)
     end
 
     --Wait a bit
-    ret:AddDelay(self.Passive == "lmn_Passive_RockOnDeath" and 0.25 or 1.50)
+    ret:AddDelay(isRock and 0.25 or 1.00)
 
     --Spawn rocks (main) or crystals (upgrade!)
     for xPos = 1, 3 do
@@ -48,7 +50,7 @@ function Pass_RR_Generic_Fossilizer:GetSkillEffect(p1, p2)
         local damage = SpaceDamage(point, 0)
 
         --Rocks or crystals!
-        if self.Passive == "lmn_Passive_RockOnDeath" then
+        if isRock then
             damage.sPawn = "Wall"
         else
             damage.sScript = "Board:ClearSpace("..point:GetString()..")"
@@ -56,10 +58,22 @@ function Pass_RR_Generic_Fossilizer:GetSkillEffect(p1, p2)
         end
 
         ret:AddDamage(damage)
+        ret:AddBurst(
+            point,
+            "Emitter_Crystal_Purp",
+            DIR_NONE)
     end
 
-    --Wait a bit more
-    ret:AddDelay(self.Passive == "lmn_Passive_RockOnDeath" and 0.00 or 2.00)
+    --Collect the crystal! Get boosted!!!
+    if not isRock then
+        local damage = SpaceDamage(p2, 0)
+        damage.sScript = "Board:GetPawn("..p2:GetString().."):SetBoosted(true)"
+
+        ret:AddDelay(1.00)
+        ret:AddMove(Board:GetPath(p1, p2, PATH_GROUND), FULL_DELAY)
+        ret:AddDamage(damage)
+        ret:AddDelay(1.00)
+    end
 
     return ret
 end
