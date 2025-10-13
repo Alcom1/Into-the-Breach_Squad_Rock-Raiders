@@ -93,10 +93,11 @@ end
 ----------------------------------------------------------------
 --Action functions
 ----------------------------------------------------------------
---Detonate Dynamite!
-local function RR_PawnSubItem(pawn)
+--Removes a pawn (used for lightweight pawns)
+local function RR_RemovePawn(pawn)
     if pawn then
         pawn:SetSpace(Point(-1, -1))
+        Board:RemovePawn(pawn)
     end
 end
 
@@ -205,7 +206,7 @@ function this:load(modUtils)
 
                 if RR_IsSmallBlocking(pawn) then        --If the pawn is too small to block and is blocking
 
-                    RR_PawnSubItem(pawn)                --Blow it up! (Instantly so we don't wait for the busy state)
+                    RR_RemovePawn(pawn)                 --Blow it up! (Instantly so we don't wait for the busy state)
                 end
             end
         end
