@@ -6,11 +6,23 @@ local RR_mine_damage = SpaceDamage(0)
 RR_mine_damage.sAnimation = ""
 RR_mine_damage.iCrack = EFFECT_REMOVE
 
-Item_RR_Crystal_Mine = { 
+Item_RR_Crystal_Mine = {
     Image = "combat/crystal_purp.png", 
-    Damage = RR_mine_damage,
+    Damage = SpaceDamage(0),
     Tooltip = "rr_crystal_mine",
     Icon = "combat/crystal_purp.png", 
+    UsedImage = ""}
+
+Item_RR_Dum_Dynamite = {
+    Image = "combat/itemdum_dynamite.png", 
+    Damage = SpaceDamage(0),
+    Icon = "combat/itemdum_dynamite.png", 
+    UsedImage = ""}
+
+Item_RR_Dum_Fence = {
+    Image = "combat/itemdum_fence.png", 
+    Damage = SpaceDamage(0),
+    Icon = "combat/itemdum_fence.png", 
     UsedImage = ""}
 
 --I do not like this approach to making vek not step on crystals

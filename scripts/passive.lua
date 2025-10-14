@@ -35,15 +35,24 @@ end
 ----------------------------------------------------------------
 --Tracking functions
 ----------------------------------------------------------------
+--Status of if pawn is dynamite or fence
+local function RR_IsSmall(pawn)
+
+    if string.match(pawn:GetType(), "Pawn_RR_Spawn_Dynamite") then
+        return 1
+    end
+
+    if string.match(pawn:GetType(), "Pawn_RR_Spawn_Fence") then
+        return 2
+    end
+
+    return 0
+end
+
 --If a pawn is dynamite
 local function RR_IsSmallBlocking(pawn)
-
-    Board:IsSpawning(pawn:GetSpace())
-
-    return 
-        Board:IsSpawning(pawn:GetSpace()) and (
-        string.match(pawn:GetType(), "Pawn_RR_Spawn_Dynamite") or
-        string.match(pawn:GetType(), "Pawn_RR_Spawn_Fence") )
+    LOG(RR_IsSmall(pawn))
+    return Board:IsSpawning(pawn:GetSpace()) and (RR_IsSmall(pawn) > 0)
 end
 
 --Track a pawn
@@ -93,14 +102,6 @@ end
 ----------------------------------------------------------------
 --Action functions
 ----------------------------------------------------------------
---Removes a pawn (used for lightweight pawns)
-local function RR_RemovePawn(pawn)
-    if pawn then
-        pawn:SetSpace(Point(-1, -1))
-        Board:RemovePawn(pawn)
-    end
-end
-
 --Spawn a rock!
 local function RR_CheckSpawnRock()
     local pawnId, loc = next(trackedKills)          --Get the first tracked pawn
@@ -134,7 +135,7 @@ local function RR_CheckSpawnCrystal()
                 local pawn = Board:GetPawn(pawnId)  --Get current pawn
 
                 if pawn then                        --Move current pawn away so it doesn't eat the crystal
-                    pawn:SetSpace(Point(-1, -1))
+                    Board:RemovePawn(pawn)
                 end
 
                 if not isSpawn then                 --Play sound once if a crystal is spawning
@@ -206,7 +207,16 @@ function this:load(modUtils)
 
                 if RR_IsSmallBlocking(pawn) then        --If the pawn is too small to block and is blocking
 
-                    RR_RemovePawn(pawn)                 --Blow it up! (Instantly so we don't wait for the busy state)
+                    local pawnType = RR_IsSmall(pawn)
+                    Board:RemovePawn(pawn)              --Blow it up! (Instantly so we don't wait for the busy state)
+
+                    --Substitute removed pawns with dummy items
+                    if pawnType == 1 then
+                        Board:SetItem(pawn:GetSpace(),"Item_RR_Dum_Dynamite")
+                    end
+                    if pawnType == 2 then
+                        Board:SetItem(pawn:GetSpace(), "Item_RR_Dum_Fence")
+                    end
                 end
             end
         end
@@ -237,6 +247,7 @@ function this:load(modUtils)
     
     --When a pawn summons
     modUtils:addPawnTrackedHook(function(mission, pawn)
+        LOG("AAAAA! "..pawn:GetType())
         --if we are tracking summons, add it to the list of tracked summons.
         if RR_IsValidSummon(pawn) then
             RR_TrackSummon(pawn)
