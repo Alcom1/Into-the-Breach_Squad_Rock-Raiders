@@ -58,7 +58,7 @@ Weap_RR_Prime_Crush_B = Weap_RR_Prime_Crush:new{
 }
 
 --Both upgrades combined
-Weap_RR_Prime_Crush_B = Weap_RR_Prime_Crush:new{
+Weap_RR_Prime_Crush_AB = Weap_RR_Prime_Crush:new{
     Range = 3,
     Damage = 3,
     TipImage = {
