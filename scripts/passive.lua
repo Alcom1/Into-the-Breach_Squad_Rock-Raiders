@@ -3,6 +3,7 @@ local this = {}
 local trackedKills = {}
 local trackedRaids = {}
 local trackedSummons = {}
+local trackedDummies = {}
 
 --The game should not save while the board is busy, so using a local table should be fine.
 --However, we should probably reset it when the data don't make sense anymore.
@@ -25,11 +26,17 @@ local function RR_ResetTrackedSummons()
     trackedSummons = {}
 end
 
+--Reset tracked summons
+local function RR_ResetTrackedDummies()
+    trackedDummies = {}
+end
+
 --Reset everything
 local function RR_ResetAll()
     RR_ResetTrackedPawns()
     RR_ResetTrackedRaids()
     RR_ResetTrackedSummons()
+    RR_ResetTrackedDummies()
 end
 
 ----------------------------------------------------------------
@@ -51,23 +58,27 @@ end
 
 --If a pawn is dynamite
 local function RR_IsSmallBlocking(pawn)
-    LOG(RR_IsSmall(pawn))
     return Board:IsSpawning(pawn:GetSpace()) and (RR_IsSmall(pawn) > 0)
 end
 
 --Track a pawn
 local function RR_TrackKill(pawn)
-    trackedKills[pawn:GetId()] = pawn:GetSpace()    --Track this space
+    trackedKills[pawn:GetId()] = pawn:GetSpace()                --Track this space
 end
 
 --Track a pawn
 local function RR_TrackRaid(pawn)
-    trackedRaids[pawn:GetId()] = pawn:GetSpace()    --Track this space
+    trackedRaids[pawn:GetId()] = pawn:GetSpace()                --Track this space
 end
 
 --Track a summon
 local function RR_TrackSummon(pawn)
-    trackedSummons[pawn:GetSpace():Hash()] = 1      --Track this hashed space
+    trackedSummons[pawn:GetSpace():Hash()] = 1                  --Track this hashed space
+end
+
+--Track a summon
+local function RR_TrackDummy(pawn)
+    trackedDummies[pawn:GetSpace():Hash()] = RR_IsSmall(pawn)   --Track this space
 end
 
 ----------------------------------------------------------------
@@ -208,6 +219,7 @@ function this:load(modUtils)
                 if RR_IsSmallBlocking(pawn) then        --If the pawn is too small to block and is blocking
 
                     local pawnType = RR_IsSmall(pawn)
+                    RR_TrackDummy(pawn)                 --Track the resulting dummy for later animations
                     Board:RemovePawn(pawn)              --Blow it up! (Instantly so we don't wait for the busy state)
 
                     --Substitute removed pawns with dummy items
@@ -247,10 +259,26 @@ function this:load(modUtils)
     
     --When a pawn summons
     modUtils:addPawnTrackedHook(function(mission, pawn)
-        LOG("AAAAA! "..pawn:GetType())
         --if we are tracking summons, add it to the list of tracked summons.
         if RR_IsValidSummon(pawn) then
             RR_TrackSummon(pawn)
+        end
+
+        local dumCheck = trackedDummies[pawn:GetSpace():Hash()]
+
+        if dumCheck and dumCheck > 0 then
+            trackedDummies[pawn:GetSpace()] = nil
+
+            local dum_damage = SpaceDamage(pawn:GetSpace())
+
+            if dumCheck == 1 then
+                dum_damage.sAnimation = "Dynamited"
+            end
+            if dumCheck == 2 then
+                dum_damage.sAnimation = "Electric Fenced"
+            end
+
+            Board:DamageSpace(dum_damage)
         end
     end)
 end
