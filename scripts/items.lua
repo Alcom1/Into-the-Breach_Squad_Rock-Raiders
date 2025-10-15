@@ -25,16 +25,6 @@ Item_RR_Dum_Fence = {
     Icon = "combat/itemdum_fence.png", 
     UsedImage = ""}
 
---I do not like this approach to making vek not step on crystals
-local RR_OldScorePositioning = ScorePositioning
-function ScorePositioning(point, pawn)
-    local mission = GetCurrentMission()
-
-    if Board:GetItem(point) == "Item_RR_Crystal_Mine" then return -100 end
-
-    return RR_OldScorePositioning(point, pawn)
-end
-
 --If a mech consumes a crystal, give it boost
 boardEvents.onItemRemoved:subscribe(
     function(loc, removed_item)

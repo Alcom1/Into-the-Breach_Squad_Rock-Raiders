@@ -78,7 +78,7 @@ end
 
 --Track a summon
 local function RR_TrackDummy(pawn)
-    trackedDummies[pawn:GetSpace():Hash()] = RR_IsSmall(pawn)   --Track this space
+    trackedDummies[pawn:GetSpace():Hash()] = RR_IsSmall(pawn)   --Track this hashed space
 end
 
 ----------------------------------------------------------------
@@ -125,6 +125,8 @@ local function RR_CheckSpawnRock()
         fx:AddDamage(d)                             --Add damage to effect
         
         Board:AddEffect(fx)                         --Add effect to board
+
+        Board:SetDangerous(loc)                     --Prevent vek from stepping on this rock if it spawned during emergence
         
         trackedKills[pawnId] = nil                  --We're done with this pawn, untrack it
     end
@@ -143,10 +145,9 @@ local function RR_CheckSpawnCrystal()
         if pawnId then                              --If the rock exists
 
             if not RR_IsSink(loc) then              --Do not spawn crystal on non-solid tiles
-                local pawn = Board:GetPawn(pawnId)  --Get current pawn
 
-                if pawn then                        --Move current pawn away so it doesn't eat the crystal
-                    Board:RemovePawn(pawn)
+                if pawn then                        --Delete current pawn away so it doesn't eat the crystal
+                    Board:RemovePawn(Board:GetPawn(pawnId))
                 end
 
                 if not isSpawn then                 --Play sound once if a crystal is spawning
@@ -162,6 +163,8 @@ local function RR_CheckSpawnCrystal()
                     DIR_NONE)
 
                 isSpawn = true                      --Confirm crystals are spawning
+
+                Board:SetDangerous(loc)             --Prevent vek from stepping on this crystal
             end
             
             trackedRaids[pawnId] = nil              --We're done with this pawn, untrack it
@@ -207,8 +210,21 @@ end
 function this:load(modUtils)
     modApi:addPreLoadGameHook(RR_ResetAll)
 
-    --After Environment effects, trigger all dynamite
+    --Next turn, mark crystals as dangerous and substitute lightweight pawns which are blocking
     modApi:addNextTurnHook(function()
+
+        --Check for crystals and mark them as dangerous
+        local board_size = Board:GetSize()
+        for i = 2, board_size.x - 1 do
+            for j = 2, board_size.y - 1  do
+                local loc = Point(i,j)
+                if Board:GetItem(loc) == "Item_RR_Crystal_Mine" then
+                    Board:SetDangerous(loc)
+                end
+            end
+        end
+
+        --Substitute lightweight blocking pawns for their equivalent dummy item so they can't block.
         if Game:GetTeamTurn() == TEAM_ENEMY then
             local dynamiteTestPawns = extract_table(Board:GetPawns(TEAM_PLAYER))
 
