@@ -8,29 +8,53 @@ Weap_RR_Science_Deploy_Cargo = Weap_RR_Base_Transporter:new{
     Deployed2 = "Pawn_RR_Spawn_Fence",
     PowerCost = 1,
     Upgrades = 2,
-    UpgradeCost = { 1, 3 },
+    UpgradeCost = { 1, 2 },
     UpgradeList = { "Landslide!", "Ally Immune" },
-    -- TipImage = {
-    --     Unit = Point(2,4),
-    --     Target = Point(2,2),
-    --     Enemy = Point(1,1),
-    --     Enemy2 = Point(2,1),
-    --     Enemy3 = Point(3,1),
-    --     Second_Origin = Point(2,2),
-    --     Second_Target = Point(2,1)
-    -- }
+    CustomTipImage = "Weap_RR_Science_Deploy_Cargo_Tip",
+    TipImage = {
+        Unit = Point(2,3),
+        Target = Point(1,2),
+        Second_Origin = Point(2,3),
+        Second_Target = Point(1,1),
+        Enemy = Point(2,2),
+        Enemy2 = Point(2,1),
+        Enemy3 = Point(3,1)
+    }
 }
 
---
+--Dynamite cargo upgrade
 Weap_RR_Science_Deploy_Cargo_A = Weap_RR_Science_Deploy_Cargo:new{
     UpgradeDescription = "Dynamite destroys adjacent mountains. Destroyed mountains push adjacent tiles.",
-    Deployed1 = "Pawn_RR_Spawn_Dynamite2"
+    Deployed1 = "Pawn_RR_Spawn_Dynamite2",
+    CustomTipImage = "Weap_RR_Science_Deploy_Cargo_Tip_A",
+    TipImage = {                    --A LANDSLIDE HAS OCCURRED
+        Unit = Point(2,4),          --A LANDSLIDE HAS OCCURRED
+        Mountain = Point(2,1),      --A LANDSLIDE HAS OCCURRED
+        Target = Point(2,2),        --A LANDSLIDE HAS OCCURRED
+        Enemy = Point(1,1),         --A LANDSLIDE HAS OCCURRED
+        Enemy2 = Point(3,1),        --A LANDSLIDE HAS OCCURRED
+        Enemy3 = Point(1,2),        --A LANDSLIDE HAS OCCURRED
+        Enemy4 = Point(3,2),        --A LANDSLIDE HAS OCCURRED
+        Enemy5 = Point(2,3),        --A LANDSLIDE HAS OCCURRED
+        Second_Origin = Point(2,2), --A LANDSLIDE HAS OCCURRED
+        Second_Target = Point(2,1)  --A LANDSLIDE HAS OCCURRED
+    }
 }
 
---
+--Fence cargo upgrade
 Weap_RR_Science_Deploy_Cargo_B = Weap_RR_Science_Deploy_Cargo:new{
     UpgradeDescription = "Friendly units will not take damage from fence lightning.",
-    Deployed2 = "Pawn_RR_Spawn_Fence2"
+    Deployed2 = "Pawn_RR_Spawn_Fence2",
+    CustomTipImage = "Weap_RR_Science_Deploy_Cargo_Tip_B",
+    TipImage = {
+        Unit = Point(2,4),
+        Target = Point(2,2),
+        Enemy = Point(1,1),
+        Friendly = Point(2,1),
+        Enemy3 = Point(3,1),
+        Second_Origin = Point(2,2),
+        Second_Target = Point(2,1)
+    }
 }
 
 --Both upgrades combined
@@ -39,6 +63,51 @@ Weap_RR_Science_Deploy_Cargo_AB = Weap_RR_Science_Deploy_Cargo:new{
     Deployed2 = "Pawn_RR_Spawn_Fence2"
 }
 
+--Tip images
+Weap_RR_Science_Deploy_Cargo_Tip = Weap_RR_Science_Deploy_Cargo:new{}
+Weap_RR_Science_Deploy_Cargo_Tip_A = Weap_RR_Science_Deploy_Cargo_A:new{}
+Weap_RR_Science_Deploy_Cargo_Tip_B = Weap_RR_Science_Deploy_Cargo_B:new{}
+Weap_RR_Science_Deploy_Cargo_Tip_AB = Weap_RR_Science_Deploy_Cargo_AB:new{}
+
+--Custom tip image to start with a crystal, and spawn and trigger Dynamite and Fence
+function Weap_RR_Science_Deploy_Cargo_Tip:GetSkillEffect(p1, p2)
+    Board:SetItem(Point(1,1), "Item_RR_Crystal_Mine")   --Crystal in TipImage
+	local ret = SkillEffect()
+
+    local isDynamite = p2.y == 2                        --Dynamite goes here
+
+    --Damage that sets spawn
+    local spawn1 = SpaceDamage(p2, 0)   --Damage
+    spawn1.sPawn = isDynamite and self.Deployed1 or self.Deployed2
+	ret:AddDamage(spawn1)               --Add damage
+    RR_HiddenTeleport(ret, p2)          --Teleport effect
+
+    ret:AddDelay(1)
+
+    --Damage that activates spawn
+    ret = (
+        isDynamite and
+        Weap_RR_Spawn_Dynamite:GetSkillEffect(p2, p2, ret) or
+        Weap_RR_Spawn_Lightning:GetSkillEffect(p2, Point(2,1), ret))
+
+    ret:AddDelay(1)
+
+	return ret
+end
+
+--Custom tip image to start with a crystal, and spawn a Fence
+function Weap_RR_Science_Deploy_Cargo_Tip_B:GetSkillEffect(p1, p2)
+    Board:SetItem(Point(2,2), "Item_RR_Crystal_Mine")   --Crystal in TipImage
+	local ret = SkillEffect()
+
+    --Damage that sets spawn
+    local spawn1 = SpaceDamage(p2, 0)   --Damage
+    spawn1.sPawn = self.Deployed2
+	ret:AddDamage(spawn1)               --Add damage
+    RR_HiddenTeleport(ret, p2)          --Teleport effect
+
+	return ret
+end
 
 --Generic weapon used by Electric Fence spawn
 Weap_RR_Spawn_Lightning = Skill:new{
@@ -66,8 +135,8 @@ Weap_RR_Spawn_Lightning2 = Weap_RR_Spawn_Lightning:new{
 }
 
 --Skill Effect for lightning attack
-function Weap_RR_Spawn_Lightning:GetSkillEffect(p1, p2)
-    local ret = SkillEffect()
+function Weap_RR_Spawn_Lightning:GetSkillEffect(p1, p2, ese)
+	local ret = ese or SkillEffect()
 
     if not Board:IsPawnSpace(p2) then return ret end    --Don't attack empty spaces
     local past = { [p1:Hash()] = true }                 --We're not Pichu
@@ -145,8 +214,8 @@ function Weap_RR_Spawn_Dynamite:GetTargetArea(p1)
 end
 
 --Skill Effect for self destruction and push
-function Weap_RR_Spawn_Dynamite:GetSkillEffect(p1, p2)
-    local ret = SkillEffect()
+function Weap_RR_Spawn_Dynamite:GetSkillEffect(p1, p2, ese)
+	local ret = ese or SkillEffect()
 
     for dir = DIR_START, DIR_END do                     --Loop through surrounding tiles
         local target = p1 + DIR_VECTORS[dir]

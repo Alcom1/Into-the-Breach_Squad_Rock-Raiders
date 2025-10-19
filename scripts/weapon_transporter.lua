@@ -22,7 +22,7 @@ function Weap_RR_Base_Transporter:GetTargetArea(p1)
 end
 
 
-local function RR_HiddenTeleport(effect, p)
+function RR_HiddenTeleport(effect, p)
 	--Fail a teleport to an invalid point, creating an enter effect here, in a script so it's not in the preview.
 	effect:AddScript([[
 		local effect = SkillEffect()
