@@ -13,8 +13,8 @@ Weap_RR_Prime_Crush = Skill:new{
     Damage = 1,
     PowerCost = 1,
     Upgrades = 2,
-    UpgradeCost = { 1, 3 },
-    UpgradeList = { "+2 Range", "+2 Damage" },
+    UpgradeCost = { 2, 2 },
+    UpgradeList = { "+1 Chrome", "+1 Chrome" },
     LaserRef = Weap_RR_Prime_Crush_Laser,
 	TwoClick = true,
     DamageAnimation = "rock1d",
@@ -31,14 +31,14 @@ Weap_RR_Prime_Crush = Skill:new{
 
 --Range upgrade
 Weap_RR_Prime_Crush_A = Weap_RR_Prime_Crush:new{
-    UpgradeDescription = "Increases drill range by 2.",
-    Range = 3,
+    UpgradeDescription = "Increases damage and range by 1.",
+    Range = 2,
+    Damage = 2,
     TipImage = {
-        Unit = Point(2, 4),
-        Enemy = Point(2, 3),
-        Enemy2 = Point(2, 2),
-        Enemy3 = Point(3, 1),
-        Enemy4 = Point(4, 1),
+        Unit = Point(2, 3),
+        Enemy = Point(2, 2),
+        Enemy2 = Point(3, 1),
+        Enemy3 = Point(4, 1),
 		Target = Point(2, 1),
         Second_Click = Point(4, 1)
     }
@@ -46,13 +46,15 @@ Weap_RR_Prime_Crush_A = Weap_RR_Prime_Crush:new{
 
 --Range upgrade
 Weap_RR_Prime_Crush_B = Weap_RR_Prime_Crush:new{
-    UpgradeDescription = "Increases drill and laser damage by 2.",
-    Damage = 3,
+    UpgradeDescription = "Increases damage and range by 1.",
+    Range = 2,
+    Damage = 2,
     TipImage = {
-        Unit = Point(1, 2),
-        Enemy = Point(2, 1),
+        Unit = Point(2, 3),
+        Enemy = Point(2, 2),
         Enemy2 = Point(3, 1),
-		Target = Point(1, 1),
+        Enemy3 = Point(4, 1),
+		Target = Point(2, 1),
         Second_Click = Point(4, 1)
     }
 }
