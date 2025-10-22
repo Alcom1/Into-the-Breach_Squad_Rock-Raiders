@@ -9,7 +9,7 @@ Weap_RR_Science_Deploy_Cargo = Weap_RR_Base_Transporter:new{
     PowerCost = 1,
     Upgrades = 2,
     UpgradeCost = { 1, 2 },
-    UpgradeList = { "Landslide!", "Ally Immune" },
+    UpgradeList = { "Landslide!", "+1 Damage" },
     CustomTipImage = "Weap_RR_Science_Deploy_Cargo_Tip",
     TipImage = {
         Unit = Point(2,3),
@@ -24,15 +24,13 @@ Weap_RR_Science_Deploy_Cargo = Weap_RR_Base_Transporter:new{
 
 --Dynamite cargo upgrade
 Weap_RR_Science_Deploy_Cargo_A = Weap_RR_Science_Deploy_Cargo:new{
-    UpgradeDescription = "Dynamite destroys adjacent mountains. Destroyed mountains push adjacent tiles.",
+    UpgradeDescription = "Dynamite destroys adjacent mountains, revealing an energy crystal.",
     Deployed1 = "Pawn_RR_Spawn_Dynamite2",
     CustomTipImage = "Weap_RR_Science_Deploy_Cargo_Tip_A",
     TipImage = {                    --A LANDSLIDE HAS OCCURRED
         Unit = Point(2,4),          --A LANDSLIDE HAS OCCURRED
         Mountain = Point(2,1),      --A LANDSLIDE HAS OCCURRED
         Target = Point(2,2),        --A LANDSLIDE HAS OCCURRED
-        Enemy = Point(1,1),         --A LANDSLIDE HAS OCCURRED
-        Enemy2 = Point(3,1),        --A LANDSLIDE HAS OCCURRED
         Enemy3 = Point(1,2),        --A LANDSLIDE HAS OCCURRED
         Enemy4 = Point(3,2),        --A LANDSLIDE HAS OCCURRED
         Enemy5 = Point(2,3),        --A LANDSLIDE HAS OCCURRED
@@ -43,14 +41,14 @@ Weap_RR_Science_Deploy_Cargo_A = Weap_RR_Science_Deploy_Cargo:new{
 
 --Fence cargo upgrade
 Weap_RR_Science_Deploy_Cargo_B = Weap_RR_Science_Deploy_Cargo:new{
-    UpgradeDescription = "Friendly units will not take damage from fence lightning.",
+    UpgradeDescription = "Increases electric fence damage by 1.",
     Deployed2 = "Pawn_RR_Spawn_Fence2",
     CustomTipImage = "Weap_RR_Science_Deploy_Cargo_Tip_B",
     TipImage = {
         Unit = Point(2,4),
         Target = Point(2,2),
         Enemy = Point(1,1),
-        Friendly = Point(2,1),
+        Enemy2 = Point(2,1),
         Enemy3 = Point(3,1),
         Second_Origin = Point(2,2),
         Second_Target = Point(2,1)
@@ -116,7 +114,6 @@ Weap_RR_Spawn_Lightning = Skill:new{
     Description = "Chain damage through adjacent targets.",
     LaunchSound = "/weapons/electric_whip",
     Icon = "weapons/weapon_fence_effect.png",
-    FriendlyDamage = true,
     PathSize = 1,
     Damage = 2,
     TipImage = {
@@ -131,7 +128,7 @@ Weap_RR_Spawn_Lightning = Skill:new{
 
 --Electric Fence with damage upgrade
 Weap_RR_Spawn_Lightning2 = Weap_RR_Spawn_Lightning:new{
-    FriendlyDamage = false,
+    Damage = 3
 }
 
 --Skill Effect for lightning attack
@@ -144,10 +141,7 @@ function Weap_RR_Spawn_Lightning:GetSkillEffect(p1, p2, ese)
     function RR_RecurseLightning(prev, curr, ret2)      --Recursive lightning!
         past[curr:Hash()] = true                        --Mark tile as past
 
-        local damage = SpaceDamage(curr, (
-            self.FriendlyDamage or not Board:IsPawnTeam(curr, TEAM_PLAYER)) and --Ignore friendly targets
-            self.Damage or                                                      --Damage
-            DAMAGE_ZERO)                                                        --Damage for ignored targets
+        local damage = SpaceDamage(curr, self.Damage)
 
         damage.sAnimation = "RR_Lightning_Blue_"..GetDirection(curr - prev)     --Damage Animation
         ret2:AddDamage(damage)                                                  --Add Damage
@@ -188,14 +182,12 @@ Weap_RR_Spawn_Dynamite = Skill:new{
 
 --A LANDSLIDE HAS OCCURRED 
 Weap_RR_Spawn_Dynamite2 = Weap_RR_Spawn_Dynamite:new{
-    Description = "Detonate and destroy adjacent mountains, pushing all adjacent tiles.",
+    Description = "Detonate and destroy adjacent mountains, revealing an energy crystal.",
     ALandslideHasOccured = true,                --A LANDSLIDE HAS OCCURRED
     TipImage = {                                --A LANDSLIDE HAS OCCURRED
         Unit = Point(2,2),                      --A LANDSLIDE HAS OCCURRED
         Mountain = Point(2,1),                  --A LANDSLIDE HAS OCCURRED
         Target = Point(2,1),                    --A LANDSLIDE HAS OCCURRED
-        Enemy = Point(1,1),                     --A LANDSLIDE HAS OCCURRED
-        Enemy2 = Point(3,1),                    --A LANDSLIDE HAS OCCURRED
         Enemy3 = Point(1,2),                    --A LANDSLIDE HAS OCCURRED
         Enemy4 = Point(3,2),                    --A LANDSLIDE HAS OCCURRED
         Enemy5 = Point(2,3),                    --A LANDSLIDE HAS OCCURRED
@@ -217,31 +209,29 @@ end
 function Weap_RR_Spawn_Dynamite:GetSkillEffect(p1, p2, ese)
 	local ret = ese or SkillEffect()
 
-    for dir = DIR_START, DIR_END do                     --Loop through surrounding tiles
+    for dir = DIR_START, DIR_END do                             --Loop through surrounding tiles
         local target = p1 + DIR_VECTORS[dir]
-        local damage = SpaceDamage(target, 0)           --Damage surrounding tiles
 
-        if self.ALandslideHasOccured and RR_IsMountain(target) then                 --A LANDSLIDE HAS OCCURRED
-
-            ret:AddDamage(SpaceDamage(target, DAMAGE_DEATH))                        --A LANDSLIDE HAS OCCURRED
-
-            for dir2 = dir + DIR_START - 1, dir + DIR_END - 2 do                    --A LANDSLIDE HAS OCCURRED
-                dir2 = dir2 % 4                                                     --A LANDSLIDE HAS OCCURRED
-                local damage2 = SpaceDamage(target + DIR_VECTORS[dir2], 0, dir2)    --A LANDSLIDE HAS OCCURRED
-                damage2.sAnimation = "airpush_"..(dir2 % 4)                         --A LANDSLIDE HAS OCCURRED
-                ret:AddDamage(damage2)                                              --A LANDSLIDE HAS OCCURRED
-            end                                                                     --A LANDSLIDE HAS OCCURRED
+        --A LANDSLIDE HAS OCCURRED
+        if self.ALandslideHasOccured and RR_IsMountain(target) then
+            local damage = SpaceDamage(target, DAMAGE_DEATH)    --A LANDSLIDE HAS OCCURRED
+            damage.sItem = "Item_RR_Crystal_Mine"               --A LANDSLIDE HAS OCCURRED
+            ret:AddDamage(damage)
         else
-            damage.iPush = dir                          --Push
-            damage.sAnimation = "airpush_"..(dir % 4)   --Damage
+            local damage = SpaceDamage(target, 0)               --Damage surrounding tiles
+            damage.iPush = dir                                  --Push
+            damage.sAnimation = "airpush_"..(dir % 4)           --Damage
+            ret:AddDamage(damage)                               --Damage
         end
-
-        ret:AddDamage(damage)                           --Damage
     end
 
-    local damageSelf = SpaceDamage(p1, DAMAGE_DEATH)    --Dynamite goes kaboom
-    damageSelf.sAnimation = "ExploArt3"                 --Here's the kaboom
-    ret:AddDamage(damageSelf)                           --YES YES YES EXPLODE YES
+    local damageSelf = SpaceDamage(p1, DAMAGE_DEATH)            --Dynamite goes kaboom
+    damageSelf.sAnimation = "ExploArt3"                         --Here's the kaboom
+    ret:AddDamage(damageSelf)                                   --YES YES YES EXPLODE YES
+
+    if(Board:IsTipImage()) then                                 --Tip Image delay
+        ret:AddDelay(4.0)
+    end
 
     return ret
 end
