@@ -14,7 +14,7 @@ Weap_RR_Prime_Crush = Skill:new{
     PowerCost = 1,
     Upgrades = 2,
     UpgradeCost = { 2, 2 },
-    UpgradeList = { "+1 Chrome", "+1 Chrome" },
+    UpgradeList = { "Range & Damage", "Range & Damage" },
     LaserRef = Weap_RR_Prime_Crush_Laser,
 	TwoClick = true,
     DamageAnimation = "rock1d",
@@ -31,7 +31,7 @@ Weap_RR_Prime_Crush = Skill:new{
 
 --Range upgrade
 Weap_RR_Prime_Crush_A = Weap_RR_Prime_Crush:new{
-    UpgradeDescription = "Increases damage and range by 1.",
+    UpgradeDescription = "Increases damage and drill range by 1.",
     Range = 2,
     Damage = 2,
     TipImage = {
@@ -46,7 +46,7 @@ Weap_RR_Prime_Crush_A = Weap_RR_Prime_Crush:new{
 
 --Range upgrade
 Weap_RR_Prime_Crush_B = Weap_RR_Prime_Crush:new{
-    UpgradeDescription = "Increases damage and range by 1.",
+    UpgradeDescription = "Increases damage and drill range by 1.",
     Range = 2,
     Damage = 2,
     TipImage = {
