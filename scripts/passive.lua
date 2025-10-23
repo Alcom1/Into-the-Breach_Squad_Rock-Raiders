@@ -146,8 +146,9 @@ local function RR_CheckSpawnCrystal()
 
             if not RR_IsSink(loc) then              --Do not spawn crystal on non-solid tiles
 
-                if pawn then                        --Delete current pawn away so it doesn't eat the crystal
-                    Board:RemovePawn(Board:GetPawn(pawnId))
+                local pawn = Board:GetPawn(pawnId)  --Delete current pawn away so it doesn't eat the crystal
+                if pawn then                        
+                    Board:RemovePawn(pawn)
                 end
 
                 if not isSpawn then                 --Play sound once if a crystal is spawning
