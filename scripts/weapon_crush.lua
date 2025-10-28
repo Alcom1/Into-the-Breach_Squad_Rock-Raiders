@@ -6,63 +6,19 @@ Weap_RR_Prime_Crush_Laser = Laser_Base:new{
 --Crush weapon with a charge, pass-through, damage, and pull effect
 Weap_RR_Prime_Crush = Skill:new{
     Name = "Chrome Array",
-    Description = "Drill to an adjacent tile, then fire a piercing beam.",
+    Description = "Drill in a line, then fire a piercing beam.",
     Class = "Brute",
     Icon = "weapons/weapon_crush.png",
-    Range = 1,
     Damage = 1,
     PowerCost = 1,
     Upgrades = 2,
-    UpgradeCost = { 2, 2 },
-    UpgradeList = { "Range & Damage", "Range & Damage" },
+    UpgradeCost = { 2, 3 },
+    UpgradeList = { "+1 Damage", "+1 Damage" },
     LaserRef = Weap_RR_Prime_Crush_Laser,
 	TwoClick = true,
     DamageAnimation = "rock1d",
     DamageSound = "/mech/distance/artillery/death",
     DamageSoundLaser = "/weapons/burst_beam",
-    TipImage = {
-        Unit = Point(1, 2),
-        Enemy = Point(2, 1),
-        Enemy2 = Point(3, 1),
-		Target = Point(1, 1),
-        Second_Click = Point(4, 1)
-    }
-}
-
---Range upgrade
-Weap_RR_Prime_Crush_A = Weap_RR_Prime_Crush:new{
-    UpgradeDescription = "Increases damage and drill range by 1.",
-    Range = 2,
-    Damage = 2,
-    TipImage = {
-        Unit = Point(2, 3),
-        Enemy = Point(2, 2),
-        Enemy2 = Point(3, 1),
-        Enemy3 = Point(4, 1),
-		Target = Point(2, 1),
-        Second_Click = Point(4, 1)
-    }
-}
-
---Range upgrade
-Weap_RR_Prime_Crush_B = Weap_RR_Prime_Crush:new{
-    UpgradeDescription = "Increases damage and drill range by 1.",
-    Range = 2,
-    Damage = 2,
-    TipImage = {
-        Unit = Point(2, 3),
-        Enemy = Point(2, 2),
-        Enemy2 = Point(3, 1),
-        Enemy3 = Point(4, 1),
-		Target = Point(2, 1),
-        Second_Click = Point(4, 1)
-    }
-}
-
---Both upgrades combined
-Weap_RR_Prime_Crush_AB = Weap_RR_Prime_Crush:new{
-    Range = 3,
-    Damage = 3,
     TipImage = {
         Unit = Point(2, 4),
         Enemy = Point(2, 3),
@@ -74,12 +30,29 @@ Weap_RR_Prime_Crush_AB = Weap_RR_Prime_Crush:new{
     }
 }
 
+--Damage upgrade
+Weap_RR_Prime_Crush_A = Weap_RR_Prime_Crush:new{
+    UpgradeDescription = "Increases drill and laser damage by 1.",
+    Damage = 2
+}
 
---Target Area for short-range drill
+--Damage upgrade
+Weap_RR_Prime_Crush_B = Weap_RR_Prime_Crush:new{
+    UpgradeDescription = "Increases drill and laser damage by 1.",
+    Damage = 2
+}
+
+--Both upgrades combined
+Weap_RR_Prime_Crush_AB = Weap_RR_Prime_Crush:new{
+    Damage = 3
+}
+
+
+--Target Area for drill
 function Weap_RR_Prime_Crush:GetTargetArea(p1)
     local ret = PointList()
     for i = DIR_START, DIR_END do                           --For each direction
-        for k = 1, self.Range do                            --For each tile in a line
+        for k = 1, INT_MAX do                               --For each tile in a line
             local point = p1 + DIR_VECTORS[i] * k
             if not Board:IsValid(point) then                --Break when we leave the board
                 break
