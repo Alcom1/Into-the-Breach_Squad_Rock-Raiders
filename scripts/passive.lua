@@ -63,7 +63,14 @@ end
 
 --Track a pawn
 local function RR_TrackKill(pawn)
+
     trackedKills[pawn:GetId()] = pawn:GetSpace()                --Track this space
+
+    --Spider edgecase, skip default spider egg spawn and track for alternative spawn
+    if pawn:IsMutation(9) then
+        pawn:SetMutation(0)
+        trackedKills[-pawn:GetId()] = 1
+    end
 end
 
 --Track a pawn
@@ -115,7 +122,8 @@ end
 ----------------------------------------------------------------
 --Spawn a rock!
 local function RR_CheckSpawnRock()
-    local pawnId, loc = next(trackedKills)          --Get the first tracked pawn
+    local pawnId, loc = next(                       --Get the first tracked pawn
+        filter_table(trackedKills, function (k,v) return k >= 0 end))
 
     if pawnId then                                  --If the tracked pawn exists
         local fx = SkillEffect()                    --Create effect
@@ -123,12 +131,29 @@ local function RR_CheckSpawnRock()
         d.sPawn = "Wall"                            --Damage spawns a rock
         d.sSound = "/enemy/digger_1/attack_queued"  --Damage sfx
         fx:AddDamage(d)                             --Add damage to effect
+
+        --Spider edgecase, summon a spider egg to a random adjacent or adjacent-diagonal tile
+        if trackedKills[-pawnId] then
+            local spiderPoints = loc:RR_RingTarget(1)
+            shuffle_list(spiderPoints)
+
+            for i, point in ipairs(spiderPoints) do
+                if not Board:IsBlocked(point, PATH_GROUND) then
+                    LOG("THE SPIDERING HAS OCCURED")
+                    local spiderDamage = SpaceDamage(point)
+                    spiderDamage.sPawn = "SpiderlingEgg1"
+                    fx:AddArtillery(loc, spiderDamage, "effects/shotup_spider.png", NO_DELAY)
+                    break
+                end
+            end
+        end
         
         Board:AddEffect(fx)                         --Add effect to board
 
         Board:SetDangerous(loc)                     --Prevent vek from stepping on this rock if it spawned during emergence
         
         trackedKills[pawnId] = nil                  --We're done with this pawn, untrack it
+        trackedKills[-pawnId] = nil
     end
 end
 

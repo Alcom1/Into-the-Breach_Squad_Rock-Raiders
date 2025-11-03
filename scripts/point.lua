@@ -48,6 +48,42 @@ function Point:RR_Bresenham(p2, limitStart, limitFinal)
     return points
 end
 
+--Function to return all points in a square ring around the point.
+--Size is the distance from the center to the edge of the ring.
+--A ring of size 2 is drawn like :
+--
+-- aaaab
+-- d   b
+-- d x b
+-- d   b
+-- dcccc
+--
+--Where x is this point (self), and each row/column of the same letter is a bar.
+function Point:RR_RingTarget(size)
+
+    local ret = {}
+    local point = self
+    local barLength = size * 2                                  --Length of each bar
+    
+    --Draw bar for each cardinal direction
+    for dir = DIR_START, DIR_END do
+        local fore = DIR_VECTORS[dir]                           --Foreward direction along the bar
+        local side = DIR_VECTORS[(dir + 1) % 4] * size          --Sideways direction perpendicular to bar
+
+        --For each point along bar
+        for i = 0, barLength - 1 do
+            local curr = point + side + fore * (i + 1 - size)   --Final calculated position of this bar-point
+
+            if Board:IsValid(point) then                        --If the point on the bar is valid
+                ret[#ret + 1] = curr                            --Add it
+            end
+        end
+    end
+    
+    return ret
+
+end
+
 --Returns all points hit when firing a laser in a given direction
 function Point:RR_LaserPoints(direction)
     
@@ -59,20 +95,20 @@ function Point:RR_LaserPoints(direction)
     while true do
         
         --Move point forward
-		point = point + DIR_VECTORS[direction]
+        point = point + DIR_VECTORS[direction]
         
         --Add point if it's valid
         if Board:IsValid(point) then
             points[index] = point
         end
-		
+        
         --Stop adding points if current space blocks lasers or is the the edge of the board
-		if Board:IsBuilding(point) or Board:GetTerrain(point) == TERRAIN_MOUNTAIN or not Board:IsValid(point) then
-			break
-		else
+        if Board:IsBuilding(point) or Board:GetTerrain(point) == TERRAIN_MOUNTAIN or not Board:IsValid(point) then
+            break
+        else
             index = index + 1
-		end
-	end
+        end
+    end
 
     return points
 end
