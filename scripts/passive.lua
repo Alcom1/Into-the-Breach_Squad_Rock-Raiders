@@ -1,7 +1,7 @@
 --Fossilizer Passive by Lemonymous, edited by Alcom Isst
 local this = {}
 local trackedKills = {}
-local trackedRaids = {}
+local trackedRocks = {}
 local trackedSummons = {}
 local trackedDummies = {}
 
@@ -17,8 +17,8 @@ local function RR_ResetTrackedPawns()
 end
 
 --Reset tracked pmineawns
-local function RR_ResetTrackedRaids()
-    trackedRaids = {}
+local function RR_ResetTrackedRocks()
+    trackedRocks = {}
 end
 
 --Reset tracked summons
@@ -34,7 +34,7 @@ end
 --Reset everything
 local function RR_ResetAll()
     RR_ResetTrackedPawns()
-    RR_ResetTrackedRaids()
+    RR_ResetTrackedRocks()
     RR_ResetTrackedSummons()
     RR_ResetTrackedDummies()
 end
@@ -47,9 +47,7 @@ local function RR_IsSmall(pawn)
 
     if string.match(pawn:GetType(), "Pawn_RR_Spawn_Dynamite") then
         return 1
-    end
-
-    if string.match(pawn:GetType(), "Pawn_RR_Spawn_Fence") then
+    elseif string.match(pawn:GetType(), "Pawn_RR_Spawn_Fence") then
         return 2
     end
 
@@ -61,21 +59,35 @@ local function RR_IsSmallBlocking(pawn)
     return Board:IsSpawning(pawn:GetSpace()) and (RR_IsSmall(pawn) > 0)
 end
 
+--Checks if there is an active psider psion psomewhere.
+local function RR_IsSpiders()
+
+    for i, v in ipairs(extract_table(Board:GetPawns(TEAM_ENEMY))) do
+        local pawn = Board:GetPawn(v)
+
+        if pawn:GetLeader() == LEADER_SPIDER and not pawn:IsDead() then
+            return true
+        end
+    end
+
+    return false
+end
+
 --Track a pawn
 local function RR_TrackKill(pawn)
 
     trackedKills[pawn:GetId()] = pawn:GetSpace()                --Track this space
 
     --Spider edgecase, skip default spider egg spawn and track for alternative spawn
-    if pawn:IsMutation(9) then
+    if RR_IsSpiders() and not (pawn:GetLeader() == LEADER_SPIDER) then
         pawn:SetMutation(0)
         trackedKills[-pawn:GetId()] = 1
     end
 end
 
 --Track a pawn
-local function RR_TrackRaid(pawn)
-    trackedRaids[pawn:GetId()] = pawn:GetSpace()                --Track this space
+local function RR_TrackRock(pawn)
+    trackedRocks[pawn:GetId()] = pawn:GetSpace()                --Track this space
 end
 
 --Track a summon
@@ -133,16 +145,16 @@ local function RR_CheckSpawnRock()
         fx:AddDamage(d)                             --Add damage to effect
 
         --Spider edgecase, summon a spider egg to a random adjacent or adjacent-diagonal tile
-        if trackedKills[-pawnId] then
+        if RR_IsSpiders() and trackedKills[-pawnId] then
             local spiderPoints = loc:RR_RingTarget(1)
             shuffle_list(spiderPoints)
 
             for i, point in ipairs(spiderPoints) do
                 if not Board:IsBlocked(point, PATH_GROUND) then
-                    LOG("THE SPIDERING HAS OCCURED")
                     local spiderDamage = SpaceDamage(point)
                     spiderDamage.sPawn = "SpiderlingEgg1"
                     fx:AddArtillery(loc, spiderDamage, "effects/shotup_spider.png", NO_DELAY)
+                    Board:SetDangerous(point)       --Prevent vek from stepping on this spider
                     break
                 end
             end
@@ -165,7 +177,7 @@ local function RR_CheckSpawnCrystal()
 
     --Put all crystal spawns in one fx for timing improvements
     while true do
-        local pawnId, loc = next(trackedRaids)      --Get the first tracked raid (mined rock)
+        local pawnId, loc = next(trackedRocks)      --Get the first tracked raid (mined rock)
 
         if pawnId then                              --If the rock exists
 
@@ -193,7 +205,7 @@ local function RR_CheckSpawnCrystal()
                 Board:SetDangerous(loc)             --Prevent vek from stepping on this crystal
             end
             
-            trackedRaids[pawnId] = nil              --We're done with this pawn, untrack it
+            trackedRocks[pawnId] = nil              --We're done with this pawn, untrack it
         else
             break
         end
@@ -214,11 +226,11 @@ local function RR_TrackPawns()
         end
     end
 
-    for pawnId, loc in pairs(trackedRaids) do           --For every tracked pawn
+    for pawnId, loc in pairs(trackedRocks) do           --For every tracked pawn
         local pawn = Board:GetPawn(pawnId)              --Track the pawn's position
         
         if pawn and Board:IsValid(pawn:GetSpace()) then --if pawn still exists
-            trackedRaids[pawnId] = pawn:GetSpace()      --update its tracked location.
+            trackedRocks[pawnId] = pawn:GetSpace()      --update its tracked location.
         end
     end
 end
@@ -295,7 +307,7 @@ function this:load(modUtils)
         end
 
         if RR_IsValidForCrystal(pawn) then
-            RR_TrackRaid(pawn)
+            RR_TrackRock(pawn)
         end
     end)
     
