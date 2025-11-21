@@ -116,17 +116,29 @@ end
 
 --If Rock passive is active and the summon is not a rock
 local function RR_IsValidSummon(pawn)
-    return RR_CurrentPassiveTier() > 0 and not string.match(pawn:GetType(), "Wall")
+    return
+        RR_CurrentPassiveTier() > 0 and
+        not string.match(pawn:GetType(), "Wall")
 end
 
 --If Rock passive is active, the pawn is an enemy, and the pawn is not on top of a summoning unit
 local function RR_IsValidForRock(pawn)
-    return RR_CurrentPassiveTier() > 0 and pawn:GetTeam() == TEAM_ENEMY and not trackedSummons[pawn:GetSpace():Hash()]
+    local pawnType = _G[pawn:GetType()]
+
+    return
+        RR_CurrentPassiveTier() > 0 and 
+        pawn:GetTeam() == TEAM_ENEMY and
+        not pawnType:GetMinor() and
+        pawnType:GetDefaultFaction() ~= FACTION_BOTS and
+        not trackedSummons[pawn:GetSpace():Hash()]
 end
 
 --If Rock passive is active, the pawn is a rock, and the pawn is not on top of a summoning unit
 local function RR_IsValidForCrystal(pawn)
-    return RR_CurrentPassiveTier() > 1 and string.match(pawn:GetType(), "Wall") and not trackedSummons[pawn:GetSpace():Hash()]
+    return
+        RR_CurrentPassiveTier() > 1 and 
+        string.match(pawn:GetType(), "Wall") and 
+        not trackedSummons[pawn:GetSpace():Hash()]
 end
 
 ----------------------------------------------------------------
