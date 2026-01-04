@@ -156,10 +156,20 @@ local function RR_CheckSpawnRock()
         d.sSound = "/enemy/digger_1/attack_queued"  --Damage sfx
         fx:AddDamage(d)                             --Add damage to effect
 
+        --Copied from EasyEdit enemyList.lua to remove awkward dependancy
+        local rr_shuffle_list = function(list)
+            for i = #list, 2, -1 do
+                local j = math.random(1, i)
+        
+                -- swap entries
+                list[i], list[j] = list[j], list[i]
+            end
+        end
+
         --Spider edgecase, summon a spider egg to a random adjacent or adjacent-diagonal tile
         if RR_IsSpiders() and trackedKills[-pawnId] then
             local spiderPoints = loc:RR_RingTarget(1)
-            shuffle_list(spiderPoints)
+            rr_shuffle_list(spiderPoints)
 
             for i, point in ipairs(spiderPoints) do
                 if not Board:IsBlocked(point, PATH_GROUND) then
