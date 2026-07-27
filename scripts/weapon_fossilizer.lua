@@ -60,7 +60,7 @@ function Pass_RR_Generic_Fossilizer:GetSkillEffect(p1, p2)
         ret:AddDamage(damage)
         ret:AddBurst(
             point,
-            "Emitter_Crystal_Purp",
+            "Emitter_Crystal",
             DIR_NONE)
     end
 

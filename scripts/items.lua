@@ -2,16 +2,10 @@ local mod = modApi:getCurrentMod()
 local path = mod.scriptPath
 local boardEvents = require(path .."libraries/boardEvents")
 
-local RR_mine_damage = SpaceDamage(0)
-RR_mine_damage.sAnimation = ""
-RR_mine_damage.iCrack = EFFECT_REMOVE
-
 Item_RR_Crystal_Mine = {
-    Image = "combat/crystal_purp.png", 
+	--images assigned by options
     Damage = SpaceDamage(0),
-    Tooltip = "rr_crystal_mine",
-    Icon = "combat/crystal_purp.png", 
-    UsedImage = ""}
+    Tooltip = "rr_crystal_mine"}
 
 Item_RR_Dum_Dynamite = {
     Image = "combat/itemdum_dynamite.png", 

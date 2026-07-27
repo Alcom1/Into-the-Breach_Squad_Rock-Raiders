@@ -22,6 +22,15 @@ local mod = {
     }
 }
 
+--Mod Metadata with options
+function mod:metadata()
+	modApi:addGenerationOption(
+        "option_rr_green", 
+        "Use Green Crystals", 
+        "Use classic green for energy crystals instead of purple.", 
+        {enabled = false})
+end
+
 --Initialize mod
 function mod:init()
 
@@ -138,11 +147,13 @@ function mod:init()
     modApi:appendAsset("img/combat/laser_elec_blue_U.png",self.resourcePath.."img/combat/laser_elec_blue_U.png")
     modApi:appendAsset("img/combat/crystal.png",self.resourcePath.."img/combat/crystal.png")
     modApi:appendAsset("img/combat/crystal_purp.png",self.resourcePath.."img/combat/crystal_purp.png")
+    modApi:appendAsset("img/combat/crystal_spark.png",self.resourcePath.."img/combat/crystal_spark.png")
     modApi:appendAsset("img/combat/crystal_spark_purp.png",self.resourcePath.."img/combat/crystal_spark_purp.png")
     modApi:appendAsset("img/combat/crystal_0.png",self.resourcePath.."img/combat/crystal_0.png")
     modApi:appendAsset("img/combat/itemdum_dynamite.png",self.resourcePath.."img/units/player/spawn_dynamite.png")
     modApi:appendAsset("img/combat/itemdum_fence.png",self.resourcePath.."img/units/player/spawn_fence.png")
 
+    Location["combat/crystal.png"] = Point(-15, 3)
     Location["combat/crystal_purp.png"] = Point(-15, 3)
     Location["combat/crystal_0.png"] = Point(-15, 3)
     Location["combat/rock_0.png"] = Point(-35, -13)
@@ -198,6 +209,7 @@ function mod:init()
     
     --Scripts
     require(self.scriptPath.."items")
+    require(self.scriptPath.."options")
     require(self.scriptPath.."pawns")
     require(self.scriptPath.."particles")
     require(self.scriptPath.."point")
@@ -223,9 +235,9 @@ function mod:load(options, version)
     modApi:addSquadTrue(
         {
             "Rock Raiders",
-            "Pawn_RR_Mech_Transport", 
             "Pawn_RR_Mech_Loader", 
-            "Pawn_RR_Mech_Crusher"
+            "Pawn_RR_Mech_Crusher",
+            "Pawn_RR_Mech_Drill",
         }, 
         "Rock Raiders",
         "Utilizing repurposed mining equipment, these mechs can construct a mighty bulwark against the oncoming vek hoard.",

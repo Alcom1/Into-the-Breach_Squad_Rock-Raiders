@@ -219,7 +219,7 @@ local function RR_CheckSpawnCrystal()
                 fx:AddDamage(d)                     --Add damage to effect
                 fx:AddBurst(                        --Crystal spawn particles!
                     loc,
-                    "Emitter_Crystal_Purp",
+                    "Emitter_Crystal",
                     DIR_NONE)
 
                 isSpawn = true                      --Confirm crystals are spawning
