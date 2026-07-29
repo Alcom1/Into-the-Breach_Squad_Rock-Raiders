@@ -11,9 +11,9 @@
 
 --Mod
 local mod = {
-    id = "squad_rock_raiders",
+    id = "squad_rock_raiders_ae",
     name = "Rock Raiders",
-    version = "1.00",
+    version = "2.00",
     icon = "img/icons/mod_icon.png",
     icon_squad = "img/icons/squad_icon.png",
     requirements = {},
@@ -34,134 +34,136 @@ end
 --Initialize mod
 function mod:init()
 
-    --Unit Sprite Assets
-    require(self.scriptPath.."FURL")(self, {
-        {	
-            Type = "color",
-            Name = "colorsRockRaider",
-            
-            PlateHighlight =	{ 204, 204,  31 },	--chickenhole
-            PlateLight =		{ 110, 118, 111 },	--main highlight
-            PlateMid =			{  69,  74,  70 },	--main light
-            PlateDark =			{  36,  41,  36 },	--main mid
-            PlateOutline =		{  14,  15,  15 },	--main dark
-            BodyHighlight =		{ 163, 164, 168 },	--metal light
-            BodyColor =			{  87,  89,  88 },	--metal mid
-            PlateShadow =		{  21,  33,  40 },	--metal dark 
+    modApi:appendMechAssets("img/units/player", "rr_")
+    modApi:appendWeaponAssets("img/weapons",    "rr_")
+    modApi:appendCombatAssets("img/combat",     "rr_")
+
+    --mech sprites
+    local mechSprites = {
+        --Drill Mech
+        rr_mech_drill =                 { PosX = -22, PosY = -7 },
+        rr_mech_drill_ns =              { },
+        rr_mech_drill_a =               { PosX = -22, PosY = -7, NumFrames = 8, Time = 0.20 },
+        rr_mech_drill_broken =          { PosX = -22, PosY = -7 },
+        rr_mech_drill_w =               { PosX = -23, PosY =  4 },
+        rr_mech_drill_w_broken =        { PosX = -23, PosY =  4 },
+
+        --Loader Mech
+        rr_mech_loader =                { PosX = -24, PosY = -3 },
+        rr_mech_loader_ns =             { },
+        rr_mech_loader_a =              { PosX = -24, PosY = -3, NumFrames = 4 },
+        rr_mech_loader_broken =         { PosX = -24, PosY = -3 },
+        rr_mech_loader_w =              { PosX = -23, PosY =  5 },
+        rr_mech_loader_w_broken =       { PosX = -23, PosY =  5 },
+
+        --Transport Mech
+        rr_mech_transport =             { PosX = -25, PosY = -17 },
+        rr_mech_transport_ns =          { },
+        rr_mech_transport_a =           { PosX = -25, PosY = -17, NumFrames = 16, Time = 0.15 },
+        rr_mech_transport_broken =      { PosX = -25, PosY =  -7 },
+        rr_mech_transport_w_broken =    { PosX = -25, PosY =  -4 },
+
+        --Crusher Mech
+        rr_mech_crusher =               { PosX = -25, PosY = -3 },
+        rr_mech_crusher_ns =            { },
+        rr_mech_crusher_a =             { PosX = -25, PosY = -3, NumFrames = 8, Time = 0.20},
+        rr_mech_crusher_broken =        { PosX = -25, PosY = -1 },
+        rr_mech_crusher_w =             { PosX = -26, PosY =  5 },
+        rr_mech_crusher_w_broken =      { PosX = -24, PosY =  8 },
+
+        --Spawned Dynamite
+        rr_spawn_dynamite =             { PosX = -10, PosY = 7 },
+        rr_spawn_dynamite_ns =          { },
+        rr_spawn_dynamite_a =           { PosX = -10, PosY = 7, NumFrames = 20, Time = 0.20 },
+        rr_spawn_dynamite_death =       { PosX = -14, PosY = -7, NumFrames = 12, Time = 0.12 },
+        
+        --Spawned Electric Fence
+        rr_spawn_fence =                { PosX = -11, PosY = -20 },
+        rr_spawn_fence_ns =             { },
+        rr_spawn_fence_a =              { PosX = -11, PosY = -20, NumFrames = 2, Time = 1.00 },
+        rr_spawn_fence_death =          { PosX = -21, PosY = -20, NumFrames = 11 },
+    }
+
+    --Mapping file names for mech sprites
+    local tagmaps = {
+        {"_ns",      "_ns"},
+        {"_a",       "a"},
+        {"_broken",  "_broken"},
+        {"_w",       "w"},
+        {"_w_broken", "w_broken"}
+    }
+
+    local animDefs = {}
+
+    for id, mechSprite in pairs(mechSprites) do
+        mechSprite.Image = "units/player/"..id..".png"
+
+        for _, map in ipairs(tagmaps) do
+            id = id:gsub(map[1].."$", map[2])
+        end
+        
+        animDefs[id] = mechSprite
+    end
+
+    modApi:createMechAnimations(animDefs)
+
+    --Color palette
+    modApi:addPalette{
+        id = mod.id,
+        name = "Rock Raiders Old Gray",
+        image = "img/units/player/mech_drill_ns.png",
+        colorMap = {
+            lights =         { 204, 204,  31 },
+            main_highlight = { 110, 118, 111 },
+            main_light =     {  69,  74,  70 },
+            main_mid =       {  36,  41,  36 },
+            main_dark =      {  14,  15,  15 },
+            metal_light =    { 163, 164, 168 },
+            metal_mid =      {  87,  89,  88 },
+            metal_dark =     {  21,  33,  40 },
         },
-        {
-            Type =              "mech",
-            Name =              "Drill Mech",
-            Filename =          "mech_drill",		
-            Path =              "img/units/player",
-            ResourcePath =      "units/player",
+    }
 
-            Default =           { PosX = -22, PosY = -7 },
-            Animated =          { PosX = -22, PosY = -7, NumFrames = 8, Time = 0.20},
-            Broken =            { PosX = -22, PosY = -7 },
-            Submerged =         { PosX = -23, PosY =  4 },
-            SubmergedBroken =   { PosX = -23, PosY =  4 },
-            Icon =              {},
-        },
-        {
-            Type =              "mech",
-            Name =              "Loader Mech",
-            Filename =          "mech_loader",		
-            Path =              "img/units/player",
-            ResourcePath =      "units/player",
+    --Misc sprite assets
+    local generalSprites = {
+        {"img/weapons/rr_weapon_crush.png",           "img/weapons/weapon_crush.png"},
+        {"img/weapons/rr_weapon_drill.png",           "img/weapons/weapon_drill.png"},
+        {"img/weapons/rr_weapon_scoop.png",           "img/weapons/weapon_scoop.png"},
+        {"img/weapons/rr_weapon_cargo.png",           "img/weapons/weapon_cargo.png"},
+        {"img/weapons/rr_weapon_fence_effect.png",    "img/weapons/weapon_fence_effect.png"},
+        {"img/weapons/rr_weapon_dynamite_effect.png", "img/weapons/weapon_dynamite_effect.png"},
+        {"img/weapons/rr_passive_fossilizer.png",     "img/weapons/passive_fossilizer.png"},
 
-            Default =           { PosX = -24, PosY = -3 },
-            Animated =          { PosX = -24, PosY = -3, NumFrames = 4},
-            Broken =            { PosX = -24, PosY = -3 },
-            Submerged =         { PosX = -23, PosY =  5 },
-            SubmergedBroken =	{ PosX = -23, PosY =  5 },
-            Icon =              {},
-        },
-        {
-            Type =              "mech",
-            Name =              "Transport Mech",
-            Filename =          "mech_transport",
-            Path =              "img/units/player",
-            ResourcePath =      "units/player",
+        {"img/combat/rr_rock_0.png",                  "img/combat/rock_0.png"},
+        {"img/combat/rr_rock_1.png",                  "img/combat/rock_1.png"},
+        {"img/combat/rr_rock_2.png",                  "img/combat/rock_2.png"},
+        {"img/combat/rr_feather.png",                 "img/combat/feather.png"},
+        {"img/combat/rr_feather_glow.png",            "img/combat/empty.png"},
+        {"img/combat/rr_laser_elec_blue_R.png",       "img/combat/laser_elec_blue_R.png"},
+        {"img/combat/rr_laser_elec_blue_U.png",       "img/combat/laser_elec_blue_U.png"},
+        {"img/combat/rr_crystal.png",                 "img/combat/crystal.png"},
+        {"img/combat/rr_crystal_purp.png",            "img/combat/crystal_purp.png"},
+        {"img/combat/rr_crystal_spark.png",           "img/combat/crystal_spark.png"},
+        {"img/combat/rr_crystal_spark_purp.png",      "img/combat/crystal_spark_purp.png"},
+        {"img/combat/rr_crystal_0.png",               "img/combat/crystal_0.png"},
+        {"img/combat/rr_itemdum_dynamite.png",        "img/units/player/spawn_dynamite.png"},
+        {"img/combat/rr_itemdum_fence.png",           "img/units/player/spawn_fence.png"}
+    }
 
-            Default =           { PosX = -25, PosY = -17 },
-            Animated =          { PosX = -25, PosY = -17, NumFrames = 16, Time = 0.15},
-            Broken =            { PosX = -25, PosY =  -7 },
-            SubmergedBroken =	{ PosX = -25, PosY =  -4 },
-            Icon =              { PosX = 0, PosY = 0 },
-        },
-        {
-            Type =              "mech",
-            Name =              "Crusher Mech",
-            Filename =          "mech_crusher",
-            Path =              "img/units/player",
-            ResourcePath =      "units/player",
+    for _, generalSprite in ipairs(generalSprites) do
+        modApi:appendAsset(generalSprite[1], self.resourcePath..generalSprite[2])
+    end
 
-            Default =           { PosX = -25, PosY = -3 },
-            Animated =          { PosX = -25, PosY = -3, NumFrames = 8, Time = 0.20},
-            Broken =            { PosX = -25, PosY = -1 },
-            Submerged =         { PosX = -26, PosY =  5 },
-            SubmergedBroken =	{ PosX = -24, PosY =  8 },
-            Icon =              {},
-        },
-        {
-            Type =              "mech",
-            Name =              "Electric Fence",
-            Filename =          "spawn_fence",		
-            Path =              "img/units/player",
-            ResourcePath =      "units/player",
+    Location["combat/rr_crystal.png"] = Point(-15, 3)
+    Location["combat/rr_crystal_purp.png"] = Point(-15, 3)
+    Location["combat/rr_crystal_0.png"] = Point(-15, 3)
+    Location["combat/rr_rock_0.png"] = Point(-35, -13)
+    Location["combat/rr_rock_1.png"] = Point(-35, -13)
+    Location["combat/rr_rock_2.png"] = Point(-35, -13)
+    Location["combat/rr_itemdum_dynamite.png"] = Point(-10, 7)
+    Location["combat/rr_itemdum_fence.png"] = Point(-11, -20)
 
-            Default =           { PosX = -11, PosY = -20 },
-            Animated =          { PosX = -11, PosY = -20, NumFrames = 2, Time = 1.00 },
-            Death =             { PosX = -21, PosY = -20, NumFrames = 11 },
-            Icon =              {},
-        },
-        {
-            Type =              "mech",
-            Name =              "Dynamite",
-            Filename =          "spawn_dynamite",		
-            Path =              "img/units/player",
-            ResourcePath =      "units/player",
-
-            Default =           { PosX = -10, PosY = 7 },
-            Animated =          { PosX = -10, PosY = 7, NumFrames = 20, Time = 0.20},
-            Death =             { PosX = -14, PosY = -7, NumFrames = 12, Time = 0.12 },
-            Icon =              {},
-        }
-    })
-
-    --Sprite Assets
-    modApi:appendAsset("img/weapons/weapon_crush.png",self.resourcePath.."img/weapons/weapon_crush.png")
-    modApi:appendAsset("img/weapons/weapon_drill.png",self.resourcePath.."img/weapons/weapon_drill.png")
-    modApi:appendAsset("img/weapons/weapon_scoop.png",self.resourcePath.."img/weapons/weapon_scoop.png")
-    modApi:appendAsset("img/weapons/weapon_cargo.png",self.resourcePath.."img/weapons/weapon_cargo.png")
-    modApi:appendAsset("img/weapons/weapon_fence_effect.png",self.resourcePath.."img/weapons/weapon_fence_effect.png")
-    modApi:appendAsset("img/weapons/weapon_dynamite_effect.png",self.resourcePath.."img/weapons/weapon_dynamite_effect.png")
-    modApi:appendAsset("img/weapons/passive_fossilizer.png",self.resourcePath.."img/weapons/passive_fossilizer.png")
-    modApi:appendAsset("img/combat/rock_0.png",self.resourcePath.."img/combat/rock_0.png")
-    modApi:appendAsset("img/combat/rock_1.png",self.resourcePath.."img/combat/rock_1.png")
-    modApi:appendAsset("img/combat/rock_2.png",self.resourcePath.."img/combat/rock_2.png")
-    modApi:appendAsset("img/combat/feather.png",self.resourcePath.."img/combat/feather.png")
-    modApi:appendAsset("img/combat/feather_glow.png",self.resourcePath.."img/combat/empty.png")
-    modApi:appendAsset("img/combat/laser_elec_blue_R.png",self.resourcePath.."img/combat/laser_elec_blue_R.png")
-    modApi:appendAsset("img/combat/laser_elec_blue_U.png",self.resourcePath.."img/combat/laser_elec_blue_U.png")
-    modApi:appendAsset("img/combat/crystal.png",self.resourcePath.."img/combat/crystal.png")
-    modApi:appendAsset("img/combat/crystal_purp.png",self.resourcePath.."img/combat/crystal_purp.png")
-    modApi:appendAsset("img/combat/crystal_spark.png",self.resourcePath.."img/combat/crystal_spark.png")
-    modApi:appendAsset("img/combat/crystal_spark_purp.png",self.resourcePath.."img/combat/crystal_spark_purp.png")
-    modApi:appendAsset("img/combat/crystal_0.png",self.resourcePath.."img/combat/crystal_0.png")
-    modApi:appendAsset("img/combat/itemdum_dynamite.png",self.resourcePath.."img/units/player/spawn_dynamite.png")
-    modApi:appendAsset("img/combat/itemdum_fence.png",self.resourcePath.."img/units/player/spawn_fence.png")
-
-    Location["combat/crystal.png"] = Point(-15, 3)
-    Location["combat/crystal_purp.png"] = Point(-15, 3)
-    Location["combat/crystal_0.png"] = Point(-15, 3)
-    Location["combat/rock_0.png"] = Point(-35, -13)
-    Location["combat/rock_1.png"] = Point(-35, -13)
-    Location["combat/rock_2.png"] = Point(-35, -13)
-    Location["combat/itemdum_dynamite.png"] = Point(-10, 7)
-    Location["combat/itemdum_fence.png"] = Point(-11, -20)
-
+    --Special text
     TILE_TOOLTIPS["rr_crystal_mine"]  = {"Energy Crystal", "Any friendly mech that stops on this space will be boosted."}
 
     --Animation Assets
@@ -172,25 +174,25 @@ function mod:init()
     }
 
     ANIMS.RR_Lightning_Blue_0 = baseAnim:new{
-        Image = "combat/laser_elec_blue_U.png",
+        Image = "combat/rr_laser_elec_blue_U.png",
         PosX = -26,
         PosY = 13.5
     }
 
     ANIMS.RR_Lightning_Blue_1 = baseAnim:new{
-        Image = "combat/laser_elec_blue_R.png",
+        Image = "combat/rr_laser_elec_blue_R.png",
         PosX = -26, 
         PosY = -7.5
     }
 
     ANIMS.RR_Lightning_Blue_2 = baseAnim:new{
-        Image = "combat/laser_elec_blue_U.png",
+        Image = "combat/rr_laser_elec_blue_U.png",
         PosX = 2,
         PosY = -7.5
     }
 
     ANIMS.RR_Lightning_Blue_3 = baseAnim:new{
-        Image = "combat/laser_elec_blue_R.png",
+        Image = "combat/rr_laser_elec_blue_R.png",
         PosX = 2,
         PosY = 13.5
     }
@@ -203,7 +205,7 @@ function mod:init()
     self.trait = require(self.scriptPath.."libraries/trait")
     self.trait:Add({
         PawnTypes =     { "Pawn_RR_Spawn_Dynamite", "Pawn_RR_Spawn_Dynamite2", "Pawn_RR_Spawn_Fence", "Pawn_RR_Spawn_Fence2" },
-        Icon =          { "img/combat/feather.png", Point(-16, -1) },
+        Icon =          { "img/combat/rr_feather.png", Point(-16, -1) },
         Description =   { "Lightweight", "Lightweight units cannot block vek from spawning (and will be destroyed instead)."}
     })
     
@@ -237,7 +239,7 @@ function mod:load(options, version)
             "Rock Raiders",
             "Pawn_RR_Mech_Loader", 
             "Pawn_RR_Mech_Crusher",
-            "Pawn_RR_Mech_Drill",
+            "Pawn_RR_Mech_Transport",
         }, 
         "Rock Raiders",
         "Utilizing repurposed mining equipment, these mechs can construct a mighty bulwark against the oncoming vek hoard.",

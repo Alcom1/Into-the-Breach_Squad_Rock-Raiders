@@ -2,7 +2,7 @@
 Pass_RR_Generic_Fossilizer = PassiveSkill:new{
     Name = "Vek Fossilizer",
     Description = "All enemies will spawn a rock on death.",
-    Icon = "weapons/passive_fossilizer.png",
+    Icon = "weapons/rr_passive_fossilizer.png",
     Damage = 0,
     Passive = "lmn_Passive_RockOnDeath",
     PowerCost = 0,

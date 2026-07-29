@@ -3,20 +3,21 @@ local path = mod.scriptPath
 local boardEvents = require(path .."libraries/boardEvents")
 
 Item_RR_Crystal_Mine = {
+    Damage =    SpaceDamage(0),
 	--images assigned by options
-    Damage = SpaceDamage(0),
-    Tooltip = "rr_crystal_mine"}
+    Tooltip =   "rr_crystal_mine",
+    UsedImage = ""}
 
 Item_RR_Dum_Dynamite = {
-    Image = "combat/itemdum_dynamite.png", 
-    Damage = SpaceDamage(0),
-    Icon = "combat/itemdum_dynamite.png", 
+    Damage =    SpaceDamage(0),
+    Image =     "combat/rr_itemdum_dynamite.png", 
+    Icon =      "combat/rr_itemdum_dynamite.png", 
     UsedImage = ""}
 
 Item_RR_Dum_Fence = {
-    Image = "combat/itemdum_fence.png", 
-    Damage = SpaceDamage(0),
-    Icon = "combat/itemdum_fence.png", 
+    Damage =    SpaceDamage(0),
+    Image =     "combat/rr_itemdum_fence.png", 
+    Icon =      "combat/rr_itemdum_fence.png", 
     UsedImage = ""}
 
 --If a mech consumes a crystal, give it boost

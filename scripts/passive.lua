@@ -268,6 +268,7 @@ end
 --Load
 ----------------------------------------------------------------
 function this:load(modUtils)
+
     modApi:addPreLoadGameHook(RR_ResetAll)
 
     --Next turn, mark crystals as dangerous and substitute lightweight pawns which are blocking
