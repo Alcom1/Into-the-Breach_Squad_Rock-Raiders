@@ -29,6 +29,21 @@ function mod:metadata()
         "Use Green Crystals", 
         "Use classic green for energy crystals instead of purple.", 
         {enabled = false})
+
+	modApi:addGenerationOption(
+        "option_rr_squad",
+        "Squad Composition",
+        "The 3 Mechs for Rock Raiders that are picked from the 4 available.",
+        {
+            values = { "no_d", "no_l", "no_c", "no_t" },
+            strings = { "No Drill Mech", "No Loader Mech", "No Crusher Mech", "No Transport Mech" },
+            tooltips = {
+                "Loader, Crusher, and Transport Mechs", 
+                "Drill, Crusher, and Transport Mechs", 
+                "Drill, Loader, and Transport Mechs", 
+                "Drill, Loader, and Crusher Mechs" },
+            value = "no_t"
+        })
 end
 
 --Initialize mod
@@ -233,14 +248,33 @@ function mod:load(options, version)
     self.passive:load(self.modApiExt)
     self.trait:load()
 
+    --Remove mech selected in options, so squad has only 3 members.
+    local squadOptionMap = {
+        no_d = 2, 
+        no_l = 3, 
+        no_c = 4, 
+        no_t = 5}
+
+    local squadMechs = {
+        "Rock Raiders",
+        "Pawn_RR_Mech_Drill", 
+        "Pawn_RR_Mech_Loader", 
+        "Pawn_RR_Mech_Crusher",
+        "Pawn_RR_Mech_Transport",
+    }
+
+    table.remove(squadMechs, squadOptionMap[options.option_rr_squad.value])
+
+    -- --Give fossilizer passive weapon to squad, regardless of which mechs are in it
+    -- if options.option_rr_squad.value == "no_l" then
+    --     table.insert(Pawn_RR_Mech_Transport.SkillList, "Pass_RR_Generic_Fossilizer")
+    -- else
+    --     table.insert(Pawn_RR_Mech_Loader.SkillList, "Pass_RR_Generic_Fossilizer")
+    -- end
+
     --Squad
     modApi:addSquadTrue(
-        {
-            "Rock Raiders",
-            "Pawn_RR_Mech_Loader", 
-            "Pawn_RR_Mech_Crusher",
-            "Pawn_RR_Mech_Transport",
-        }, 
+        squadMechs, 
         "Rock Raiders",
         "Utilizing repurposed mining equipment, these mechs can construct a mighty bulwark against the oncoming vek hoard.",
         self.resourcePath..self.icon_squad)
