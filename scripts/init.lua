@@ -225,6 +225,7 @@ function mod:init()
     })
     
     --Scripts
+    require(self.scriptPath.."achievements")
     require(self.scriptPath.."items")
     require(self.scriptPath.."options")
     require(self.scriptPath.."pawns")
@@ -273,6 +274,7 @@ function mod:load(options, version)
     end
 
     --Squad
+    squadMechs.id = "rr_rockraiders"
     modApi:addSquadTrue(
         squadMechs, 
         "Rock Raiders",
