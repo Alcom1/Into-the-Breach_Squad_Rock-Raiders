@@ -265,12 +265,12 @@ function mod:load(options, version)
 
     table.remove(squadMechs, squadOptionMap[options.option_rr_squad.value])
 
-    -- --Give fossilizer passive weapon to squad, regardless of which mechs are in it
-    -- if options.option_rr_squad.value == "no_l" then
-    --     table.insert(Pawn_RR_Mech_Transport.SkillList, "Pass_RR_Generic_Fossilizer")
-    -- else
-    --     table.insert(Pawn_RR_Mech_Loader.SkillList, "Pass_RR_Generic_Fossilizer")
-    -- end
+    --Give fossilizer passive to Crusher Mech if Transport is not present. Otherwise remove it.
+    if options.option_rr_squad.value == "no_t" then
+        table.insert(Pawn_RR_Mech_Crusher.SkillList, "Pass_RR_Generic_Fossilizer")
+    elseif #Pawn_RR_Mech_Crusher.SkillList > 1 then
+        table.remove(Pawn_RR_Mech_Crusher.SkillList, #Pawn_RR_Mech_Crusher.SkillList)
+    end
 
     --Squad
     modApi:addSquadTrue(
