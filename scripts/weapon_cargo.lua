@@ -131,6 +131,18 @@ Weap_RR_Spawn_Lightning2 = Weap_RR_Spawn_Lightning:new{
     Damage = 3
 }
 
+--Achievement
+local function RR_Check_Ach3(effect, p)
+	--spawn rock via script so the preview doesn't know about it
+	effect:AddScript([[
+        local target = Board:GetPawn(Point(]].. p.x ..",".. p.y ..[[))
+
+        if target ~= nil and target:GetType():find("^Pawn_RR_Spawn_Fence") ~= nil then 
+            RR_CheckAch3Trigger()
+        end
+	]])
+end
+
 --Skill Effect for lightning attack
 function Weap_RR_Spawn_Lightning:GetSkillEffect(p1, p2, ese)
 	local ret = ese or SkillEffect()
@@ -140,6 +152,8 @@ function Weap_RR_Spawn_Lightning:GetSkillEffect(p1, p2, ese)
 
     function RR_RecurseLightning(prev, curr, ret2)      --Recursive lightning!
         past[curr:Hash()] = true                        --Mark tile as past
+
+        RR_Check_Ach3(ret2, curr)
 
         local damage = SpaceDamage(curr, self.Damage)
 
