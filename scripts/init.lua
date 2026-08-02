@@ -18,7 +18,8 @@ local mod = {
     icon_squad = "img/icons/squad_icon.png",
     requirements = {},
 	dependencies = {
-        memedit = "1.0.4"
+        memedit = "1.0.4",
+        modApiExt = "1.2"
     }
 }
 
@@ -213,16 +214,21 @@ function mod:init()
     }
 
     --Initialized Scripts
-    self.modApiExt = require(self.scriptPath .."modApiExt/modApiExt")
-    self.modApiExt:init()
     self.passive = require(self.scriptPath.."passive")
     self.passive:init()
     self.trait = require(self.scriptPath.."libraries/trait")
-    self.trait:Add({
-        PawnTypes =     { "Pawn_RR_Spawn_Dynamite", "Pawn_RR_Spawn_Dynamite2", "Pawn_RR_Spawn_Fence", "Pawn_RR_Spawn_Fence2" },
-        Icon =          { "img/combat/rr_feather.png", Point(-16, -1) },
-        Description =   { "Lightweight", "Lightweight units cannot block vek from spawning (and will be destroyed instead)."}
-    })
+
+    local lightweightPawns = { "Pawn_RR_Spawn_Dynamite", "Pawn_RR_Spawn_Dynamite2", "Pawn_RR_Spawn_Fence", "Pawn_RR_Spawn_Fence2" }
+
+    for _, pawn in ipairs(lightweightPawns) do
+        self.trait:add({
+            pawnType =      pawn,
+            icon =          "img/combat/rr_feather.png", 
+            icon_offset =   Point(-16, -1),
+            desc_title =    "Lightweight",
+            desc_text =     "This unit cannot block vek from spawning (and will be destroyed instead)."
+        })
+    end
     
     --Scripts
     require(self.scriptPath.."achievements")
@@ -245,9 +251,7 @@ end
 function mod:load(options, version)
 
     --Load initialized scripts
-    self.modApiExt:load(self, options, version)
-    self.passive:load(self.modApiExt)
-    self.trait:load()
+    self.passive:load()
 
     --Remove mech selected in options, so squad has only 3 members.
     local squadOptionMap = {

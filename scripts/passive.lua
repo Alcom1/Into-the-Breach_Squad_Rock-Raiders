@@ -1,4 +1,6 @@
 --Fossilizer Passive by Lemonymous, edited by Alcom Isst
+local modApiExt = modapiext or require(mod.scriptPath.."modApiExt/modApiExt")
+
 local this = {}
 local trackedKills = {}
 local trackedRocks = {}
@@ -267,7 +269,7 @@ end
 ----------------------------------------------------------------
 --Load
 ----------------------------------------------------------------
-function this:load(modUtils)
+function this:load()
 
     modApi:addPreLoadGameHook(RR_ResetAll)
 
@@ -323,7 +325,7 @@ function this:load(modUtils)
     end)
     
     --When a pawn dies
-    modUtils:addPawnKilledHook(function(mission, pawn)
+    modApiExt:addPawnKilledHook(function(mission, pawn)
         --Validate it and add it to the list of tracked pawns
         if RR_IsValidForRock(pawn) then
             RR_TrackKill(pawn)
@@ -335,7 +337,7 @@ function this:load(modUtils)
     end)
     
     --When a pawn summons
-    modUtils:addPawnTrackedHook(function(mission, pawn)
+    modApiExt:addPawnTrackedHook(function(mission, pawn)
         --if we are tracking summons, add it to the list of tracked summons.
         if RR_IsValidSummon(pawn) then
             RR_TrackSummon(pawn)
