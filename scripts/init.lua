@@ -229,21 +229,28 @@ function mod:init()
             desc_text =     "This unit cannot block vek from spawning (and will be destroyed instead)."
         })
     end
-    
+
     --Scripts
-    require(self.scriptPath.."achievements")
-    require(self.scriptPath.."items")
-    require(self.scriptPath.."options")
-    require(self.scriptPath.."pawns")
-    require(self.scriptPath.."particles")
-    require(self.scriptPath.."point")
-    require(self.scriptPath.."terrain")
-    require(self.scriptPath.."weapon_crush")
-    require(self.scriptPath.."weapon_transporter")
-    require(self.scriptPath.."weapon_drill")
-    require(self.scriptPath.."weapon_fossilizer")
-    require(self.scriptPath.."weapon_shovel")
-    require(self.scriptPath.."weapon_cargo")
+    local scripts = {
+        "libraries/achievementsExt",
+        "achievements",
+        "items",
+        "options",
+        "pawns",
+        "particles",
+        "point",
+        "terrain",
+        "weapon_crush",
+        "weapon_transporter",
+        "weapon_drill",
+        "weapon_fossilizer",
+        "weapon_shovel",
+        "weapon_cargo"
+    }
+
+    for _, script in ipairs(scripts) do
+        require(self.scriptPath..script)
+    end
 
 end
 
