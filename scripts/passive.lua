@@ -278,8 +278,8 @@ function this:load()
 
         --Check for crystals and mark them as dangerous
         local board_size = Board:GetSize()
-        for i = 2, board_size.x - 1 do
-            for j = 2, board_size.y - 1  do
+        for i = 1, board_size.x - 2 do
+            for j = 1, board_size.y - 2  do
                 local loc = Point(i,j)
                 if Board:GetItem(loc) == "Item_RR_Crystal_Mine" then
                     Board:SetDangerous(loc)
