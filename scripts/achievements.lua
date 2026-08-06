@@ -1,4 +1,5 @@
 local RR_CRYSTAL_TARGET = 12
+local RR_BURP_TARGET = 4
 
 local mod = modApi:getCurrentMod()
 local modApiExt = modapiext
@@ -21,7 +22,7 @@ local function getCrystalCount()
 
 	--Count crystals on board
 	local board_size = Board:GetSize()
-	for i = 1, board_size.x - 1 do
+	for i = 0, board_size.x - 1 do
 		for j = 1, board_size.y - 1  do
 			local loc = Point(i,j)
 			if Board:GetItem(loc) == "Item_RR_Crystal_Mine" then
@@ -31,20 +32,6 @@ local function getCrystalCount()
 	end
 
 	return crystalCount
-end
-
---If pawn is valid for achievement 2
-local function RR_IsValidForBlock(pawn)
-	local pawnType = _G[pawn:GetType()]
-
-	return 
-		pawn:GetTeam() == TEAM_ENEMY
-		and not pawnType:GetMinor() 
-		and pawnType:GetLeader() == LEADER_NONE 
-		and pawnType:GetDefaultFaction() ~= FACTION_BOTS
-		and not pawn:IsFlying()
-		and not pawn:IsJumper()
-		and not pawn:IsBurrower()
 end
 
 --Achievement 1
@@ -72,11 +59,11 @@ end
 local ach_rr_block = modApi.achievements:addExt{
 	--Required
 	id = "rr_ach2",
-	name = "Difficult Terrain",
+	name = "B.U.R.P!",
 	image = mod.resourcePath.."img/achievements/ach_2.png",
 
 	--Optional
-	tooltip = "Surround a vek and stop it from moving with rock, mountain, or water tiles.",
+	tooltip = "Place 4 rocks in an adjacent row or column. (No diagonals.)",
 	squad = "rr_rockraiders",
 }
 
@@ -84,7 +71,7 @@ local ach_rr_block = modApi.achievements:addExt{
 local ach_rr_fence = modApi.achievements:addExt{
 	--Required
 	id = "rr_ach3",
-	name = "Complete Circuit",
+	name = "Circuit Breaker",
 	image = mod.resourcePath.."img/achievements/ach_3.png",
 
 	--Optional
@@ -93,7 +80,7 @@ local ach_rr_fence = modApi.achievements:addExt{
 }
 
 -- Hooks!!!
---Achievement 1 hook
+--Achievement 1 hook - Check if mission ends with required crystals
 local function HOOK_onMissionEnded(mission)
 
 	--Skip for test missions
@@ -110,50 +97,70 @@ local function HOOK_onMissionEnded(mission)
 
 end
 
---Achievement 2 hook
-local function HOOK_onNextTurnHook()
+--Achievement 2 hook - Check if a summoned rock creates 4-in-a-row
+local function HOOK_onPawnTracked(mission, pawn1)
 
 	--Skip for test missions
 	if not isRealMission() then
 		return
 	end
 
-	--At the start of player's turn
-	if Game:GetTeamTurn() == TEAM_PLAYER then
+	--If pawn is a rock, check for 4-in-a-row
+	if pawn1 ~= nil and string.match(pawn1:GetType(), "Wall") then
 
-		--For all pawns
-		for _, pawnId in ipairs(extract_table(Board:GetPawns(TEAM_ENEMY))) do
+		local rockPoints = {}	--Will contain hashed points with rocks
+		
+		--For all TEAM_NONE pawns, if it's a wall, store its point-hash
+		for _, id in ipairs(extract_table(Board:GetPawns(TEAM_NONE))) do
+			local pawn2 = Board:GetPawn(id)
 
-			local pawn = Board:GetPawn(pawnId)
-
-			--Pawn is valid, check if it's surrounded
-			if RR_IsValidForBlock(pawn) then
-
-				local isBlocked = true
-
-				--Check adjacent squares, if each one blocks the vek
-				for dir = DIR_START, DIR_END do                         --Loop through adjacent tiles
-					local point = pawn:GetSpace() + DIR_VECTORS[dir]    --Adjacent tile Point
-
-					if not Board:IsValid(point) then
-						--LOG("VM - TILE OUTSIDE MAP")
-					elseif RR_IsSink(point) then
-						--LOG("VM - SINK TILE")
-					elseif RR_IsMountain(point) then
-						--LOG("VM - MOUNTAIN TILE")
-					elseif RR_HasRock(point) then
-						--LOG("VM - ROCK TILE") 
-					else
-						isBlocked = false
-						break
-					end
-				end
-				
-				if isBlocked then
-					ach_rr_block:addProgress{ complete = true }
-					break
-				end
+			if string.match(pawn2:GetType(), "Wall") then
+				local space = pawn2:GetSpace()
+				rockPoints[space:Hash()] = 1
 			end
+		end
+
+		--Point of new rock for reference, and the size of the board
+		local point = pawn1:GetSpace()
+		local board_size = Board:GetSize()
+
+		--Count of current row/column, and the maximum adjacent count
+		local curr = 0
+		local max = 0
+
+		--Check horizontal
+		for i = 0, board_size.x - 1 do
+
+			local check = Point(i, point.y)
+
+			if rockPoints[check:Hash()] ~= nil then
+				curr = curr + 1
+				max = math.max(max, curr)
+			else
+				curr = 0
+			end
+
+		end
+
+		--Reset check
+		curr = 0
+
+		--Check vertical
+		for i = 0, board_size.y - 1 do
+
+			local check = Point(point.x, i)
+
+			if rockPoints[check:Hash()] ~= nil then
+				curr = curr + 1
+				max = math.max(max, curr)
+			else
+				curr = 0
+			end
+		end
+
+		--If max is greater or equal to target, then there are 4? rocks in a row. Achievement complete!!!
+		if max >= RR_BURP_TARGET then
+			ach_rr_block:addProgress{ complete = true }
 		end
 	end
 end
@@ -169,8 +176,9 @@ function RR_CheckAch3Trigger()
 	ach_rr_fence:addProgress{ complete = true }
 end
 
+--Add hooks
 modApi.events.onModsLoaded:subscribe(
 	function()
 		modApi:addMissionEndHook(HOOK_onMissionEnded)
-		modApi:addNextTurnHook(HOOK_onNextTurnHook)
+		modApiExt:addPawnTrackedHook(HOOK_onPawnTracked)
 	end)
