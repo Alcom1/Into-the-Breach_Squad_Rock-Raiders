@@ -148,10 +148,10 @@ function Weap_RR_Spawn_Lightning:GetSkillEffect(p1, p2, ese)
 	local ret = ese or SkillEffect()
 
     if not Board:IsPawnSpace(p2) then return ret end    --Don't attack empty spaces
-    local past = { [p1:Hash()] = true }                 --We're not Pichu
+    local past = { [p1:RR_Hash()] = true }              --We're not Pichu
 
     function RR_RecurseLightning(prev, curr, ret2)      --Recursive lightning!
-        past[curr:Hash()] = true                        --Mark tile as past
+        past[curr:RR_Hash()] = true                     --Mark tile as past
 
         RR_Check_Ach3(ret2, curr)
 
@@ -162,7 +162,7 @@ function Weap_RR_Spawn_Lightning:GetSkillEffect(p1, p2, ese)
 
         for dir = DIR_START, DIR_END do                                         --Loop through adjacent tiles
             local next = curr + DIR_VECTORS[dir]                                --Adjacent tile Point
-            if not past[next:Hash()] and Board:IsPawnSpace(next) then           --If tile is not past and has a pawn then
+            if not past[next:RR_Hash()] and Board:IsPawnSpace(next) then        --If tile is not past and has a pawn then
                 ret2 = RR_RecurseLightning(curr, next, ret2)                    --Recurse to adjacent tiles
             end
         end

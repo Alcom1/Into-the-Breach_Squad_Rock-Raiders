@@ -116,7 +116,7 @@ local function HOOK_onPawnTracked(mission, pawn1)
 
 			if string.match(pawn2:GetType(), "Wall") then
 				local space = pawn2:GetSpace()
-				rockPoints[space:Hash()] = 1
+				rockPoints[space:RR_Hash()] = 1
 			end
 		end
 
@@ -133,7 +133,7 @@ local function HOOK_onPawnTracked(mission, pawn1)
 
 			local check = Point(i, point.y)
 
-			if rockPoints[check:Hash()] ~= nil then
+			if rockPoints[check:RR_Hash()] ~= nil then
 				curr = curr + 1
 				max = math.max(max, curr)
 			else
@@ -150,7 +150,7 @@ local function HOOK_onPawnTracked(mission, pawn1)
 
 			local check = Point(point.x, i)
 
-			if rockPoints[check:Hash()] ~= nil then
+			if rockPoints[check:RR_Hash()] ~= nil then
 				curr = curr + 1
 				max = math.max(max, curr)
 			else

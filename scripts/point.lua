@@ -1,7 +1,7 @@
 --extension of the point class
 
 --hash a point into a unique integer
-function Point:Hash()
+function Point:RR_Hash()
     return self.x + self.y * 8 --Unique hash for each grid position from 0-63
 end
 

@@ -78,7 +78,7 @@ end
 --Track a pawn
 local function RR_TrackKill(pawn)
 
-    trackedKills[pawn:GetId()] = pawn:GetSpace()                --Track this space
+    trackedKills[pawn:GetId()] = pawn:GetSpace()                    --Track this space
 
     --Spider edgecase, skip default spider egg spawn and track for alternative spawn
     if RR_IsSpiders() and not (pawn:GetLeader() == LEADER_SPIDER) then
@@ -89,17 +89,17 @@ end
 
 --Track a pawn
 local function RR_TrackRock(pawn)
-    trackedRocks[pawn:GetId()] = pawn:GetSpace()                --Track this space
+    trackedRocks[pawn:GetId()] = pawn:GetSpace()                    --Track this space
 end
 
 --Track a summon
 local function RR_TrackSummon(pawn)
-    trackedSummons[pawn:GetSpace():Hash()] = 1                  --Track this hashed space
+    trackedSummons[pawn:GetSpace():RR_Hash()] = 1                   --Track this hashed space
 end
 
 --Track a summon
 local function RR_TrackDummy(pawn)
-    trackedDummies[pawn:GetSpace():Hash()] = RR_IsSmall(pawn)   --Track this hashed space
+    trackedDummies[pawn:GetSpace():RR_Hash()] = RR_IsSmall(pawn)    --Track this hashed space
 end
 
 ----------------------------------------------------------------
@@ -132,7 +132,7 @@ local function RR_IsValidForRock(pawn)
         pawn:GetTeam() == TEAM_ENEMY and
         not pawnType:GetMinor() and
         pawnType:GetDefaultFaction() ~= FACTION_BOTS and
-        not trackedSummons[pawn:GetSpace():Hash()]
+        not trackedSummons[pawn:GetSpace():RR_Hash()]
 end
 
 --If Rock passive is active, the pawn is a rock, and the pawn is not on top of a summoning unit
@@ -140,7 +140,7 @@ local function RR_IsValidForCrystal(pawn)
     return
         RR_CurrentPassiveTier() > 1 and 
         string.match(pawn:GetType(), "Wall") and 
-        not trackedSummons[pawn:GetSpace():Hash()]
+        not trackedSummons[pawn:GetSpace():RR_Hash()]
 end
 
 ----------------------------------------------------------------
@@ -343,7 +343,7 @@ function this:load()
             RR_TrackSummon(pawn)
         end
 
-        local dumCheck = trackedDummies[pawn:GetSpace():Hash()]
+        local dumCheck = trackedDummies[pawn:GetSpace():RR_Hash()]
 
         if dumCheck and dumCheck > 0 then
             trackedDummies[pawn:GetSpace()] = nil
