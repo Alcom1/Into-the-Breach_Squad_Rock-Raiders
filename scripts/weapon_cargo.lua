@@ -223,6 +223,8 @@ end
 function Weap_RR_Spawn_Dynamite:GetSkillEffect(p1, p2, ese)
 	local ret = ese or SkillEffect()
 
+    local sparkPoints = {}
+
     for dir = DIR_START, DIR_END do                             --Loop through surrounding tiles
         local target = p1 + DIR_VECTORS[dir]
 
@@ -231,6 +233,8 @@ function Weap_RR_Spawn_Dynamite:GetSkillEffect(p1, p2, ese)
             local damage = SpaceDamage(target, DAMAGE_DEATH)    --A LANDSLIDE HAS OCCURRED
             damage.sItem = "Item_RR_Crystal_Mine"               --A LANDSLIDE HAS OCCURRED
             ret:AddDamage(damage)
+
+            table.insert(sparkPoints, target)
         else
             local damage = SpaceDamage(target, 0)               --Damage surrounding tiles
             damage.iPush = dir                                  --Push
@@ -243,8 +247,19 @@ function Weap_RR_Spawn_Dynamite:GetSkillEffect(p1, p2, ese)
     damageSelf.sAnimation = "ExploArt3"                         --Here's the kaboom
     ret:AddDamage(damageSelf)                                   --YES YES YES EXPLODE YES
 
+    ret:AddDelay(1.5)
+    if next(sparkPoints) ~= nil then                            --Play crystal sound if one has been summoned
+        ret:AddSound("/ui/battle/buff_boost")
+    end
+    for _, sparkPoint in ipairs(sparkPoints) do                 --Spark effects on each summoned crystal
+        ret:AddBurst(
+            sparkPoint,
+            "Emitter_Crystal",
+            DIR_NONE)
+    end
+
     if(Board:IsTipImage()) then                                 --Tip Image delay
-        ret:AddDelay(4.0)
+        ret:AddDelay(2.5)
     end
 
     return ret
