@@ -82,7 +82,7 @@ function mod:init()
         --Crusher Mech
         rr_mech_crusher =               { PosX = -25, PosY = -3 },
         rr_mech_crusher_ns =            { },
-        rr_mech_crusher_a =             { PosX = -25, PosY = -3, NumFrames = 8, Time = 0.20},
+        rr_mech_crusher_a =             { PosX = -25, PosY = -3, NumFrames = 8, Time = 0.20 },
         rr_mech_crusher_broken =        { PosX = -25, PosY = -1 },
         rr_mech_crusher_w =             { PosX = -26, PosY =  5 },
         rr_mech_crusher_w_broken =      { PosX = -24, PosY =  8 },
@@ -91,22 +91,23 @@ function mod:init()
         rr_spawn_dynamite =             { PosX = -10, PosY = 7 },
         rr_spawn_dynamite_ns =          { },
         rr_spawn_dynamite_a =           { PosX = -10, PosY = 7, NumFrames = 20, Time = 0.20 },
-        rr_spawn_dynamite_death =       { PosX = -14, PosY = -7, NumFrames = 12, Time = 0.12 },
+        rr_spawn_dynamite_death =       { PosX = -14, PosY = -7, NumFrames = 12, Time = 0.12, Loop = false },
         
         --Spawned Electric Fence
         rr_spawn_fence =                { PosX = -11, PosY = -20 },
         rr_spawn_fence_ns =             { },
         rr_spawn_fence_a =              { PosX = -11, PosY = -20, NumFrames = 2, Time = 1.00 },
-        rr_spawn_fence_death =          { PosX = -21, PosY = -20, NumFrames = 11 },
+        rr_spawn_fence_death =          { PosX = -21, PosY = -20, NumFrames = 11, Time = 0.12, Loop = false },
     }
 
     --Mapping file names for mech sprites
     local tagmaps = {
-        {"_ns",      "_ns"},
-        {"_a",       "a"},
-        {"_broken",  "_broken"},
-        {"_w",       "w"},
-        {"_w_broken", "w_broken"}
+        {"_ns",         "_ns"},
+        {"_a",          "a"},
+        {"_broken",     "_broken"},
+        {"_w",          "w"},
+        {"_w_broken",   "w_broken"},
+        {"_death",      "d"}
     }
 
     local animDefs = {}
