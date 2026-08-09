@@ -155,7 +155,7 @@ function mod:init()
         {"img/combat/rr_rock_1.png",                  "img/combat/rock_1.png"},
         {"img/combat/rr_rock_2.png",                  "img/combat/rock_2.png"},
         {"img/combat/rr_feather.png",                 "img/combat/feather.png"},
-        {"img/combat/rr_feather_glow.png",            "img/combat/empty.png"},
+        {"img/combat/rr_feather2.png",                "img/combat/feather2.png"},
         {"img/combat/rr_laser_elec_blue_R.png",       "img/combat/laser_elec_blue_R.png"},
         {"img/combat/rr_laser_elec_blue_U.png",       "img/combat/laser_elec_blue_U.png"},
         {"img/combat/rr_crystal.png",                 "img/combat/crystal.png"},
@@ -219,17 +219,55 @@ function mod:init()
     self.passive:init()
     self.trait = require(self.scriptPath.."libraries/trait")
 
-    local lightweightPawns = { "Pawn_RR_Spawn_Dynamite", "Pawn_RR_Spawn_Dynamite2", "Pawn_RR_Spawn_Fence", "Pawn_RR_Spawn_Fence2" }
+    lightweightPawns = { "Pawn_RR_Spawn_Dynamite", "Pawn_RR_Spawn_Dynamite2", "Pawn_RR_Spawn_Fence", "Pawn_RR_Spawn_Fence2" }
 
-    for _, pawn in ipairs(lightweightPawns) do
-        self.trait:add({
-            pawnType =      pawn,
-            icon =          "img/combat/rr_feather.png", 
-            icon_offset =   Point(-16, -1),
-            desc_title =    "Lightweight",
-            desc_text =     "This unit cannot block vek from spawning (and will be destroyed instead)."
-        })
+    local traitFunc1 = function(trait, pawn)
+
+        if Board:IsSpawning(pawn:GetSpace()) then
+            return false
+        end
+
+        for _, name in ipairs(lightweightPawns) do
+            if pawn:GetType() == name then
+                return true
+            end
+        end
+
+        return false
     end
+
+    local traitFunc2 = function(trait, pawn)
+
+        if not Board:IsSpawning(pawn:GetSpace()) then
+            return false
+        end
+
+        for _, name in ipairs(lightweightPawns) do
+            if pawn:GetType() == name then
+                return true
+            end
+        end
+
+        return false
+    end
+
+    self.trait:add({
+        func = traitFunc1,
+        icon =          "img/combat/rr_feather.png", 
+        
+        
+        desc_title =    "Lightweight",
+        desc_text =     "This unit cannot block vek from spawning (and will be destroyed instead)."
+    })
+
+    self.trait:add({
+        func = traitFunc2,
+        icon =          "img/combat/rr_feather.png", 
+        icon_glow =     "img/combat/rr_feather2.png",
+        icon_offset =   Point(-13, 10),
+        desc_title =    "Lightweight",
+        desc_text =     "This unit cannot block vek from spawning (and will be destroyed instead)."
+    })
 
     --Scripts
     local scripts = {
