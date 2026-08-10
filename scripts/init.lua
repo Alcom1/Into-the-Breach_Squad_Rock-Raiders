@@ -43,7 +43,7 @@ function mod:metadata()
                 "Drill, Crusher, and Transport Mechs", 
                 "Drill, Loader, and Transport Mechs", 
                 "Drill, Loader, and Crusher Mechs" },
-            value = "no_t"
+            value = "no_c"
         })
 end
 
