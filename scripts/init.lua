@@ -1,11 +1,15 @@
 --LEGO Rock Raiders Mech Squad
 --Inspired by the LEGO Rock Raiders LEGO theme and PC game.
 
---Credits :
+--Credits (Original Edition) :
 --Alex/Alcom Isst :     Design, scripting, and intial sprites
 --Salt Potato :         Mech animations, shadows, and auxiliary sprites
 --Lemonymous :          Initial Passive script, Trait library
 --,̶'̶,̶|̶'̶,̶'̶_̶   :          Playtesting
+
+--Credits (Advanced Edition) :
+--Alexandria/Alcom :    Lead developer
+--Rachel :              <3
 
 --And Thank you to the rest of the ItB Community!
 
