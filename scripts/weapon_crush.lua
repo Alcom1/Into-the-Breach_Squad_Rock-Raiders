@@ -10,10 +10,11 @@ Weap_RR_Prime_Crush = Skill:new{
     Class = "Brute",
     Icon = "weapons/rr_weapon_crush.png",
     Damage = 1,
+    Range = 3,
     PowerCost = 1,
     Upgrades = 2,
-    UpgradeCost = { 2, 3 },
-    UpgradeList = { "+1 Damage", "+1 Damage" },
+    UpgradeCost = { 1, 3 },
+    UpgradeList = { "Unlimited Range", "+2 Damage" },
     LaserRef = Weap_RR_Prime_Crush_Laser,
 	TwoClick = true,
     DamageAnimation = "rock1d",
@@ -32,27 +33,36 @@ Weap_RR_Prime_Crush = Skill:new{
 
 --Damage upgrade
 Weap_RR_Prime_Crush_A = Weap_RR_Prime_Crush:new{
-    UpgradeDescription = "Increases drill and laser damage by 1.",
-    Damage = 2
+    UpgradeDescription = "Drill range is unlimited.",
+    Range = INT_MAX,
+    TipImage = {
+        Unit = Point(2, 4),
+        Enemy = Point(2, 3),
+        Enemy2 = Point(2, 2),
+        Enemy3 = Point(2, 1),
+        Enemy4 = Point(3, 0),
+		Target = Point(2, 0),
+        Second_Click = Point(4, 0)
+    }
 }
 
 --Damage upgrade
 Weap_RR_Prime_Crush_B = Weap_RR_Prime_Crush:new{
-    UpgradeDescription = "Increases drill and laser damage by 1.",
-    Damage = 2
+    UpgradeDescription = "Increases drill and laser damage by 2.",
+    Damage = 3
 }
 
 --Both upgrades combined
 Weap_RR_Prime_Crush_AB = Weap_RR_Prime_Crush:new{
+    Range = INT_MAX,
     Damage = 3
 }
-
 
 --Target Area for drill
 function Weap_RR_Prime_Crush:GetTargetArea(p1)
     local ret = PointList()
     for i = DIR_START, DIR_END do                           --For each direction
-        for k = 1, INT_MAX do                               --For each tile in a line
+        for k = 1, self.Range do                            --For each tile in a line
             local point = p1 + DIR_VECTORS[i] * k
             if not Board:IsValid(point) then                --Break when we leave the board
                 break
