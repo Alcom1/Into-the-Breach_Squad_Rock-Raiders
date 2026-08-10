@@ -4,6 +4,8 @@ local RR_BURP_TARGET = 4
 local mod = modApi:getCurrentMod()
 local modApiExt = modapiext
 
+local SQUAD_ROCK_RAIDERS = "rr_rockraiders"
+
 --If this is a real mission, and not a fake mission, because it's not a test mission or whatever
 local function isRealMission()
     local mission = GetCurrentMission()
@@ -43,7 +45,7 @@ local ach_rr_crystal = modApi.achievements:addExt{
 
 	--Optional
 	tooltip = "End a battle with at least "..RR_CRYSTAL_TARGET.." crystals present.",
-	squad = "rr_rockraiders",
+	squad = SQUAD_ROCK_RAIDERS,
 
 	--Extension
 	textDiffComplete = "$highscore crystals mined",
@@ -64,7 +66,7 @@ local ach_rr_block = modApi.achievements:addExt{
 
 	--Optional
 	tooltip = "Place 4 rocks in an adjacent row or column. (No diagonals.)",
-	squad = "rr_rockraiders",
+	squad = SQUAD_ROCK_RAIDERS,
 }
 
 --Achievement 3
@@ -76,12 +78,12 @@ local ach_rr_fence = modApi.achievements:addExt{
 
 	--Optional
 	tooltip = "Attack an electric fence with another electric fence.",
-	squad = "rr_rockraiders",
+	squad = SQUAD_ROCK_RAIDERS,
 }
 
--- Hooks!!!
---Achievement 1 hook - Check if mission ends with required crystals
-local function HOOK_onMissionEnded(mission)
+-- EVENTs!!!
+--Achievement 1 EVENT - Check if mission ends with required crystals
+local function EVENT_onMissionEnded(mission)
 
 	--Skip for test missions
 	if not isRealMission() then
@@ -97,8 +99,8 @@ local function HOOK_onMissionEnded(mission)
 
 end
 
---Achievement 2 hook - Check if a summoned rock creates 4-in-a-row
-local function HOOK_onPawnTracked(mission, pawn1)
+--Achievement 2 EVENT - Check if a summoned rock creates 4-in-a-row
+local function EVENT_onPawnTracked(mission, pawn1)
 
 	--Skip for test missions
 	if not isRealMission() then
@@ -165,7 +167,7 @@ local function HOOK_onPawnTracked(mission, pawn1)
 	end
 end
 
---Achievement 3... is not based on a hook. It's triggered from a weapon.
+--Achievement 3... is not based on a EVENT. It's triggered from a weapon.
 function RR_CheckAch3Trigger()
 
 	--Skip for test missions
@@ -173,12 +175,26 @@ function RR_CheckAch3Trigger()
 		return
 	end
 
+	--Skip if Rock Raiders is not the current squad
+	if not GAME.additionalSquadData.squad == "rr_rockraiders" then
+		return
+	end
+
 	ach_rr_fence:addProgress{ complete = true }
 end
 
---Add hooks
-modApi.events.onModsLoaded:subscribe(
-	function()
-		modApi:addMissionEndHook(HOOK_onMissionEnded)
-		modApiExt:addPawnTrackedHook(HOOK_onPawnTracked)
-	end)
+-- Subscribe to events
+modApi.events.onSquadEnteredGame:subscribe(function(squadId)
+	if squadId == SQUAD_ROCK_RAIDERS then
+		modApi.events.onMissionEnd:subscribe(EVENT_onMissionEnded)
+		modApiExt.events.onPawnTracked:subscribe(EVENT_onPawnTracked)
+	end
+end)
+
+-- Unsubscribe from events
+modApi.events.onSquadExitedGame:subscribe(function(squadId)
+	if squadId == SQUAD_ROCK_RAIDERS then
+		modApi.events.onMissionEnd:unsubscribe(EVENT_onMissionEnded)
+		modApiExt.events.onPawnTracked:subscribe(EVENT_onPawnTracked)
+	end
+end)
