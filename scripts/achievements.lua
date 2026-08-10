@@ -1,4 +1,4 @@
-local RR_CRYSTAL_TARGET = 12
+local RR_CRYSTAL_TARGET = 7
 local RR_BURP_TARGET = 4
 
 local mod = modApi:getCurrentMod()
@@ -38,7 +38,7 @@ end
 local ach_rr_crystal = modApi.achievements:addExt{
 	--Required
 	id = "rr_ach1",
-	name = "Earth's Bounty",
+	name = "Jet's Lucky Number",
 	image = mod.resourcePath.."img/achievements/ach_1.png",
 
 	--Optional
