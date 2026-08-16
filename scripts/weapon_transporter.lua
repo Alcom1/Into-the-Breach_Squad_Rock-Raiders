@@ -1,5 +1,6 @@
 Weap_RR_Base_Transporter = Skill:new{
-    Deployed = "TBA",
+    Deployed1 = "TBA",
+    Deployed2 = "TBA",
     Range = 3,
     LaunchSound = "/weapons/swap"
 }
@@ -20,7 +21,8 @@ function Weap_RR_Base_Transporter:GetTargetArea(p1)
     return ret
 end
 
-local function RR_HiddenTeleport(effect, p)
+
+function RR_HiddenTeleport(effect, p)
 	--Fail a teleport to an invalid point, creating an enter effect here, in a script so it's not in the preview.
 	effect:AddScript([[
 		local effect = SkillEffect()
@@ -34,7 +36,11 @@ function Weap_RR_Base_Transporter:GetSkillEffect(p1, p2)
     local ret = SkillEffect()
 
 	local damage = SpaceDamage(p2, 0)   --Damage
-    damage.sPawn = self.Deployed        --Damage spawn
+    if Board:GetItem(p2) == "Item_RR_Crystal_Mine" then
+        damage.sPawn = self.Deployed2       --Damage spawn
+    else 
+        damage.sPawn = self.Deployed1       --Damage spawn
+    end
 	ret:AddDamage(damage)               --Add damage
     RR_HiddenTeleport(ret, p2)          --Teleport effect
 

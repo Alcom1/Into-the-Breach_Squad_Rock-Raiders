@@ -3,16 +3,16 @@ Weap_RR_Brute_Shovel = Skill:new{
     Name = "Mining Scoop",
     Description = "Dig up a rock and dash in a line with it, damaging and pushing a target.",
     Class = "Brute",
-    Icon = "weapons/weapon_scoop.png",
+    Icon = "weapons/rr_weapon_scoop.png",
     Damage = 1,
-    PowerCost = 1,
+    PowerCost = 0,
     Upgrades = 2,
     UpgradeCost = { 1, 3 },
     UpgradeList = { "Frozen Frenzy!", "+2 Damage" },
     CreateSound = "/enemy/digger_1/attack_queued",
     ChargeSound = "/weapons/charge",
     ImpactSound = "/impact/generic/explosion",
-    DamageMarker = "combat/rock_",
+    DamageMarker = "combat/rr_rock_",
     FFrenzy = false,
     TipImage = {
         Unit = Point(2, 4),
@@ -46,7 +46,7 @@ end
 
 --Get the end of an earth path, a path that continues until before the ground ends
 local function RR_GetEarthPathEnd(p1, p2)
-    local travelPoints = p1:Bresenham(p2)       --Get all points from here to there
+    local travelPoints = p1:RR_Bresenham(p2)    --Get all points from here to there
 
     for i, point in ipairs(travelPoints) do
         if RR_IsSink(point) then                --If this point will sink the rock

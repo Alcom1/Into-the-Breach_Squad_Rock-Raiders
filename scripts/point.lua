@@ -1,12 +1,12 @@
 --extension of the point class
 
 --hash a point into a unique integer
-function Point:Hash()
+function Point:RR_Hash()
     return self.x + self.y * 8 --Unique hash for each grid position from 0-63
 end
 
 --returns the points between self and p2, in order from p1 to p2
-function Point:Bresenham(p2, limitStart, limitFinal)
+function Point:RR_Bresenham(p2, limitStart, limitFinal)
     
     local function GetSign(x)               --Get the sign (-1, 0, 1) of a number
         return x > 0 and 1 or x < 0 and -1 or 0
@@ -42,6 +42,71 @@ function Point:Bresenham(p2, limitStart, limitFinal)
         if diff > 0 then                    --If difference has gone above 0, go up a step
             curr = curr + 1                 --Step upwards
             diff = diff - 2 * horz          --Diff downwards
+        end
+    end
+
+    return points
+end
+
+--Function to return all points in a square ring around the point.
+--Size is the distance from the center to the edge of the ring.
+--A ring of size 2 is drawn like :
+--
+-- aaaab
+-- d   b
+-- d x b
+-- d   b
+-- dcccc
+--
+--Where x is this point (self), and each row/column of the same letter is a bar.
+function Point:RR_RingTarget(size)
+
+    local ret = {}
+    local point = self
+    local barLength = size * 2                                  --Length of each bar
+    
+    --Draw bar for each cardinal direction
+    for dir = DIR_START, DIR_END do
+        local fore = DIR_VECTORS[dir]                           --Foreward direction along the bar
+        local side = DIR_VECTORS[(dir + 1) % 4] * size          --Sideways direction perpendicular to bar
+
+        --For each point along bar
+        for i = 0, barLength - 1 do
+            local curr = point + side + fore * (i + 1 - size)   --Final calculated position of this bar-point
+
+            if Board:IsValid(point) then                        --If the point on the bar is valid
+                ret[#ret + 1] = curr                            --Add it
+            end
+        end
+    end
+    
+    return ret
+
+end
+
+--Returns all points hit when firing a laser in a given direction
+function Point:RR_LaserPoints(direction)
+    
+    local points = {}   --Points hit by laser
+    local index = 1     --Index of next point to add
+    local point = self  --Self
+
+    --Just keep looping
+    while true do
+        
+        --Move point forward
+        point = point + DIR_VECTORS[direction]
+        
+        --Add point if it's valid
+        if Board:IsValid(point) then
+            points[index] = point
+        end
+        
+        --Stop adding points if current space blocks lasers or is the the edge of the board
+        if Board:IsBuilding(point) or Board:GetTerrain(point) == TERRAIN_MOUNTAIN or not Board:IsValid(point) then
+            break
+        else
+            index = index + 1
         end
     end
 

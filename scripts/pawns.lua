@@ -1,10 +1,13 @@
+local mod = mod_loader.mods[modApi.currentMod]
+local imageOffset = modApi:getPaletteImageOffset(mod.id)
+
 Pawn_RR_Mech_Drill = Pawn:new {
     Name = "Drill Mech",
     Class = "Prime",
     Health = 3,
     MoveSpeed = 3,
-    Image = "Drill Mech",
-    ImageOffset = FURL_COLORS.colorsRockRaider,
+    Image = "rr_mech_drill",
+    ImageOffset = imageOffset,
     SkillList = { "Weap_RR_Prime_Drill" },
     SoundLocation = "/mech/prime/punch_mech/",
     DefaultTeam = TEAM_PLAYER,
@@ -17,25 +20,39 @@ Pawn_RR_Mech_Loader = Pawn:new {
     Class = "Brute",
     Health = 3,
     MoveSpeed = 3,
-    Image = "Loader Mech",
-    ImageOffset = FURL_COLORS.colorsRockRaider,
-    SkillList = { "Weap_RR_Brute_Shovel", "Pass_RR_Generic_Fossilizer" },
+    Image = "rr_mech_loader",
+    ImageOffset = imageOffset,
+    SkillList = { "Weap_RR_Brute_Shovel" },
     SoundLocation = "/mech/brute/tank/",
     DefaultTeam = TEAM_PLAYER,
     ImpactMaterial = IMPACT_METAL,
-    Massive = true,
+    Massive = true
 }
 
 Pawn_RR_Mech_Transport = Pawn:new {
     Name = "Transport Mech",
     Class = "Science",
-    Health = 2,
-    MoveSpeed = 3,
-    Image = "Transport Mech",
-    ImageOffset = FURL_COLORS.colorsRockRaider,
-    SkillList = { "Weap_RR_Science_Deploy_Fence", "Weap_RR_Science_Deploy_Dynamite" },
+    Health = 3,
+    MoveSpeed = 2,
+    Image = "rr_mech_transport",
+    ImageOffset = imageOffset,
+    SkillList = { "Weap_RR_Science_Deploy_Cargo", "Pass_RR_Generic_Fossilizer" },
 	SoundLocation = "/mech/flying/jet_mech/",
     Flying = true,
+    DefaultTeam = TEAM_PLAYER,
+    ImpactMaterial = IMPACT_METAL,
+    Massive = true
+}
+
+Pawn_RR_Mech_Crusher = Pawn:new {
+    Name = "Crusher Mech",
+    Class = "Brute",
+    Health = 3,
+    MoveSpeed = 2,
+    Image = "rr_mech_crusher",
+    ImageOffset = imageOffset,
+    SkillList = { "Weap_RR_Prime_Crush" },
+    SoundLocation = "/mech/brute/tank/",
     DefaultTeam = TEAM_PLAYER,
     ImpactMaterial = IMPACT_METAL,
     Massive = true
@@ -45,13 +62,13 @@ Pawn_RR_Spawn_Fence = Pawn:new{
     Name = "Electric Fence",
     Health = 1,
     MoveSpeed = 0,
-    Image = "Electric Fence",
+    Image = "rr_spawn_fence",
     SkillList = { "Weap_RR_Spawn_Lightning" },
 	SoundLocation = "/support/earthmover",
     DefaultTeam = TEAM_PLAYER,
     ImpactMaterial = IMPACT_METAL,
 	Pushable = false,
-    Corpse = false,
+    Corpse = false
 }
 
 Pawn_RR_Spawn_Fence2 = Pawn_RR_Spawn_Fence:new{
@@ -62,12 +79,12 @@ Pawn_RR_Spawn_Dynamite = Pawn:new{
     Name = "Dynamite",
     Health = 1,
     MoveSpeed = 0,
-    Image = "Dynamite",
+    Image = "rr_spawn_dynamite",
     SkillList = { "Weap_RR_Spawn_Dynamite" },
 	SoundLocation = "/support/earthmover",
     DefaultTeam = TEAM_PLAYER,
     ImpactMaterial = IMPACT_METAL,
-    Corpse = false,
+    Corpse = false
 }
 
 Pawn_RR_Spawn_Dynamite2 = Pawn_RR_Spawn_Dynamite:new{
