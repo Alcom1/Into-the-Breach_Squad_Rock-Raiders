@@ -332,7 +332,7 @@ function mod:load(options, version)
     modApi:addSquadTrue(
         squadMechs, 
         "Rock Raiders",
-        "Utilizing repurposed mining equipment, these mechs can construct a mighty bulwark against the oncoming vek hoard.",
+        "Utilizing repurposed mining equipment, these Mechs can construct a mighty bulwark against the oncoming vek hoard.",
         self.resourcePath..self.icon_squad)
 
 end
