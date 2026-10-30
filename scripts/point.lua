@@ -112,3 +112,10 @@ function Point:RR_LaserPoints(direction)
 
     return points
 end
+
+--Cross product. Very useful.
+function Point:MD_Cross(p2)
+    local p1 = self
+
+    return p1.x * p2.y - p2.x * p1.y
+end
