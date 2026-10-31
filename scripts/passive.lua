@@ -3,6 +3,7 @@ local modApiExt = modapiext or require(mod.scriptPath.."modApiExt/modApiExt")
 
 local this = {}
 local trackedKills = {}
+local trackedSeggs = {}
 local trackedRocks = {}
 local trackedSummons = {}
 local trackedDummies = {}
@@ -14,11 +15,16 @@ local trackedDummies = {}
 --Reset functions
 ----------------------------------------------------------------
 --Reset tracked pawns
-local function RR_ResetTrackedPawns()
+local function RR_ResetTrackedKills()
     trackedKills = {}
 end
 
---Reset tracked pmineawns
+--Reset tracked spider eggs
+local function RR_ResetTrackedSeggs()
+    trackedSeggs = {}
+end
+
+--Reset tracked rocks
 local function RR_ResetTrackedRocks()
     trackedRocks = {}
 end
@@ -35,7 +41,8 @@ end
 
 --Reset everything
 local function RR_ResetAll()
-    RR_ResetTrackedPawns()
+    RR_ResetTrackedKills()
+    RR_ResetTrackedSeggs()
     RR_ResetTrackedRocks()
     RR_ResetTrackedSummons()
     RR_ResetTrackedDummies()
@@ -83,11 +90,11 @@ local function RR_TrackKill(pawn)
     --Spider edgecase, skip default spider egg spawn and track for alternative spawn
     if RR_IsSpiders() and not (pawn:GetLeader() == LEADER_SPIDER) then
         pawn:SetMutation(0)
-        trackedKills[-pawn:GetId()] = 1
+        trackedSeggs[pawn:GetId()] = pawn:GetSpace()
     end
 end
 
---Track a pawn
+--Track a rock
 local function RR_TrackRock(pawn)
     trackedRocks[pawn:GetId()] = pawn:GetSpace()                    --Track this space
 end
@@ -148,8 +155,7 @@ end
 ----------------------------------------------------------------
 --Spawn a rock!
 local function RR_CheckSpawnRock()
-    local pawnId, loc = next(                       --Get the first tracked pawn
-        filter_table(trackedKills, function (k,v) return k >= 0 end))
+    local pawnId, loc = next(trackedKills)          --Get the first tracked pawn
 
     if pawnId then                                  --If the tracked pawn exists
         local fx = SkillEffect()                    --Create effect
@@ -169,12 +175,23 @@ local function RR_CheckSpawnRock()
         end
 
         --Spider edgecase, summon a spider egg to a random adjacent or adjacent-diagonal tile
-        if RR_IsSpiders() and trackedKills[-pawnId] then
+        if RR_IsSpiders() and trackedSeggs[pawnId] then
             local spiderPoints = loc:RR_RingTarget(1)
             rr_shuffle_list(spiderPoints)
 
+            --Checkif a point will spawn a rock
+            local isRockSpawn = function(point)
+                for pawnId, loc in pairs(trackedKills) do       --For every tracked egg
+                    if loc == point then
+                        return true
+                    end
+                end
+
+                return false
+            end
+
             for i, point in ipairs(spiderPoints) do
-                if not Board:IsBlocked(point, PATH_GROUND) then
+                if not Board:IsBlocked(point, PATH_GROUND) and not isRockSpawn(point) then
                     local spiderDamage = SpaceDamage(point)
                     spiderDamage.sPawn = "SpiderlingEgg1"
                     fx:AddArtillery(loc, spiderDamage, "effects/shotup_spider.png", NO_DELAY)
@@ -189,7 +206,7 @@ local function RR_CheckSpawnRock()
         Board:SetDangerous(loc)                     --Prevent vek from stepping on this rock if it spawned during emergence
         
         trackedKills[pawnId] = nil                  --We're done with this pawn, untrack it
-        trackedKills[-pawnId] = nil
+        trackedSeggs[pawnId] = nil
     end
 end
 
@@ -240,23 +257,22 @@ local function RR_CheckSpawnCrystal()
     end
 end
 
---Track rock spawning pawns to their new locations
+--Track kills, spider eggs, and rocks to their new locations
 local function RR_TrackPawns()
-    for pawnId, loc in pairs(trackedKills) do           --For every tracked pawn
-        local pawn = Board:GetPawn(pawnId)              --Track the pawn's position
 
-        if pawn then                                    --if pawn still exists
-            trackedKills[pawnId] = pawn:GetSpace()      --update its tracked location.
+    local updateTrackedPawns = function(trackedPawns)
+        for pawnId, loc in pairs(trackedPawns) do       --For every tracked pawn
+            local pawn = Board:GetPawn(pawnId)          --Track the pawn's position
+
+            if pawn then                                --if pawn still exists
+                trackedPawns[pawnId] = pawn:GetSpace()  --update its tracked location.
+            end
         end
     end
 
-    for pawnId, loc in pairs(trackedRocks) do           --For every tracked pawn
-        local pawn = Board:GetPawn(pawnId)              --Track the pawn's position
-        
-        if pawn and Board:IsValid(pawn:GetSpace()) then --if pawn still exists
-            trackedRocks[pawnId] = pawn:GetSpace()      --update its tracked location.
-        end
-    end
+    updateTrackedPawns(trackedKills)
+    updateTrackedPawns(trackedSeggs)
+    updateTrackedPawns(trackedRocks)
 end
 
 ----------------------------------------------------------------
