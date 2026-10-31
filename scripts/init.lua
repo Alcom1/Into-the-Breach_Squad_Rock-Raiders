@@ -275,7 +275,6 @@ function mod:init()
 
     --Scripts
     local scripts = {
-        "libraries/achievementsExt",
         "achievements",
         "items",
         "options",

@@ -37,7 +37,7 @@ local function getCrystalCount()
 end
 
 --Achievement 1
-local ach_rr_crystal = modApi.achievements:addExt{
+local ach_rr_crystal = modApi.achievements:add{
 	--Required
 	id = "rr_ach1",
 	name = "Jet's Lucky Number",
@@ -51,14 +51,21 @@ local ach_rr_crystal = modApi.achievements:addExt{
 	textDiffComplete = "$highscore crystals mined",
 }
 
-function ach_rr_crystal:getTextProgress()
+function ach_rr_crystal:getTooltip()
+
+	local ret = self.tooltip
+	
+	--Show tracker during missions
 	if isRealMission() then
-		return getCrystalCount().." crystals mined"
+		local addon = getCrystalCount().." energy crystals found!"
+		ret = ret.."\n\n"..addon
 	end
+
+	return ret
 end
 
 --Achievement 2
-local ach_rr_block = modApi.achievements:addExt{
+local ach_rr_block = modApi.achievements:add{
 	--Required
 	id = "rr_ach2",
 	name = "B.U.R.P!",
@@ -70,7 +77,7 @@ local ach_rr_block = modApi.achievements:addExt{
 }
 
 --Achievement 3
-local ach_rr_fence = modApi.achievements:addExt{
+local ach_rr_fence = modApi.achievements:add{
 	--Required
 	id = "rr_ach3",
 	name = "Circuit Breaker",
@@ -94,7 +101,7 @@ local function EVENT_onMissionEnded(mission)
 	
 	--If crystals equal or exceed requirement, unlock achievement
 	if crystalCount >= RR_CRYSTAL_TARGET then
-		ach_rr_crystal:completeWithHighscore(crystalCount)
+		ach_rr_crystal:addProgress{ complete = true }
 	end
 
 end
